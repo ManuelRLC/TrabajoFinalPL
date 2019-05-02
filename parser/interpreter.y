@@ -148,8 +148,8 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 
 %type <stmts> stmtlist
 
-// New in example 17: if, while, block
-%type <st> stmt asgn print read if while block
+// New in example 17: if, while
+%type <st> stmt asgn print read if while
 
 %type <prog> program
 
@@ -164,9 +164,6 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 
 // NEW in example 17: IF, ELSE, WHILE 
 %token PRINT READ IF ELSE WHILE
-
-// NEW in example 17
-%token LETFCURLYBRACKET RIGHTCURLYBRACKET
 
 /* NEW in example 7 */
 %right ASSIGNMENT
@@ -294,32 +291,20 @@ stmt: SEMICOLON  /* Empty statement: ";" */
 		// Default action
 		// $$ = $1;
 	 }
-	/*  NEW in example 17 */
-	| block 
-	 {
-		// Default action
-		// $$ = $1;
-	 }
 ;
 
 
-block: LETFCURLYBRACKET stmtlist RIGHTCURLYBRACKET  
-		{
-			// Create a new block of statements node
-			$$ = new lp::BlockStmt($2); 
-		}
-;
  
 	/*  NEW in example 17 */
 if:	/* Simple conditional statement */
-	IF cond stmt 
+	IF cond stmtlist 
     {
 		// Create a new if statement node
 		$$ = new lp::IfStmt($2, $3);
 	}
 
 	/* Compound conditional statement */
-	| IF cond stmt  ELSE stmt 
+	| IF cond stmtlist  ELSE stmtlist
 	 {
 		// Create a new if statement node
 		$$ = new lp::IfStmt($2, $3, $5);
@@ -327,7 +312,7 @@ if:	/* Simple conditional statement */
 ;
 
 	/*  NEW in example 17 */
-while:  WHILE cond stmt 
+while:  WHILE cond stmtlist 
 		{
 			// Create a new while statement node
 			$$ = new lp::WhileStmt($2, $3);

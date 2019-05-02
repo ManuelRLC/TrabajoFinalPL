@@ -1388,6 +1388,41 @@ class Statement {
 
 
 /*!	
+  \class   StatementList
+  \brief   Definition of atributes and methods of StatementList class
+*/
+class StatementList {
+ private:
+
+ 	std::list<Statement *> *_stmts; //!< List of statements
+
+
+ public:
+
+
+/*!
+	\brief   Print the list of Statemets
+	\return  void
+	\sa		 evaluate
+*/
+
+  void print();
+
+/*!	
+	\brief   Evaluate the list of Statemets
+	\return  void
+	\sa		 print
+*/
+  void evaluate();
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*!	
   \class   AssignmentStmt
   \brief   Definition of atributes and methods of AssignmentStmt class
   \note    AssignmentStmt Class publicly inherits from Statement class 
@@ -1583,36 +1618,36 @@ class IfStmt : public Statement
 {
  private:
   ExpNode *_cond; //!< Condicion of the if statement
-  Statement *_stmt1; //!< Statement of the consequent
-  Statement *_stmt2; //!< Statement of the alternative
+  StatementList* _consequent; //!< StatementList of the consequent
+  StatementList* _alternative; //!< StatementList of the alternative
 
   public:
 /*!		
 	\brief Constructor of Single IfStmt (without alternative)
 	\param condition: ExpNode of the condition
-	\param statement1: Statement of the consequent
+	\param consequent: StatementList of the consequent
 	\post  A new IfStmt is created with the parameters
 */
-  IfStmt(ExpNode *condition, Statement *statement1)
+  IfStmt(ExpNode *condition, StatementList* consequent)
 	{
 		this->_cond = condition;
-		this->_stmt1 = statement1;
-		this->_stmt2 = NULL;
+		this->_consequent = consequent;
+		this->_alternative = NULL;
 	}
 
 
 /*!		
 	\brief Constructor of Compound IfStmt (with alternative)
 	\param condition: ExpNode of the condition
-	\param statement1: Statement of the consequent
-	\param statement2: Statement of the alternative
+	\param consequent: StatementList of the consequent
+	\param alternative: StatementList of the alternative
 	\post  A new IfStmt is created with the parameters
 */
-  IfStmt(ExpNode *condition, Statement *statement1, Statement *statement2)
+  IfStmt(ExpNode *condition, StatementList* consequent, StatementList* alternative)
 	{
 		this->_cond = condition;
-		this->_stmt1 = statement1;
-		this->_stmt2 = statement2;
+		this->_consequent = consequent;
+		this->_alternative = alternative;
 	}
 
 
@@ -1649,19 +1684,19 @@ class WhileStmt : public Statement
 {
  private:
   ExpNode *_cond; //!< Condicion of the while statement
-  Statement *_stmt; //!< Statement of the body of the while loop
+  std::list<Statement *> *_stmts; //!< Statements of the body of the while loop
 
   public:
 /*!		
 	\brief Constructor of  WhileStmt
 	\param condition: ExpNode of the condition
-	\param statement: Statement of the body of the loop 
+	\param statement: Statements of the body of the loop 
 	\post  A new WhileStmt is created with the parameters
 */
-  WhileStmt(ExpNode *condition, Statement *statement)
+  WhileStmt(ExpNode *condition, std::list<Statement *> * statements)
 	{
 		this->_cond = condition;
-		this->_stmt = statement;
+		this->_stmts = statements;
 	}
 
 
@@ -1692,6 +1727,9 @@ class WhileStmt : public Statement
   \note    BlockStmt Class publicly inherits from Statement class 
 		   and adds its own print and evaluate functions
 */
+
+
+
 class BlockStmt : public Statement 
 {
  private:
@@ -1723,6 +1761,8 @@ class BlockStmt : public Statement
 */
   void evaluate();
 };
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
