@@ -987,6 +987,10 @@ void lp::StatementList::evaluate(){
 
 }
 
+void addStatement(lp::Statement* stmt){
+	_stmts->push_back(stmt);
+}
+
 
 
 
@@ -1273,16 +1277,18 @@ void lp::EmptyStmt::evaluate()
 
 void lp::IfStmt::print() 
 {
-  std::cout << "IfStmt: "  << std::endl;
+
+
+  std::cout << "IfStmts: "  << std::endl;
   // Condition
   this->_cond->print();
 
-  // Consequent
-  this->_stmt1->print();
+  // Consequents
+	this->_consequent->print("Consequents: ");
 
  // The alternative is printed if exists
-  if (this->_stmt2 != NULL)
-	  this->_stmt2->print();
+  if (this->_alternative != NULL)
+	  this->_alternative->print("Alternatives: ");
 
   std::cout << std::endl;
 }
@@ -1293,11 +1299,11 @@ void lp::IfStmt::evaluate()
    // If the condition is true,
 	if (this->_cond->evaluateBool() == true )
      // the consequent is run 
-	  this->_stmt1->evaluate();
+	  this->_consequent->evaluate();
 
     // Otherwise, the alternative is run if exists
-	else if (this->_stmt2 != NULL)
-		  this->_stmt2->evaluate();
+	else if (this->_alternative != NULL)
+		  this->_alternative->evaluate();
 }
 
 
@@ -1309,12 +1315,12 @@ void lp::IfStmt::evaluate()
 
 void lp::WhileStmt::print() 
 {
-  std::cout << "WhileStmt: "  << std::endl;
+  std::cout << "WhileStmts: "  << std::endl;
   // Condition
   this->_cond->print();
 
   // Body of the while loop
-  this->_stmt->print();
+  this->_stmt->print("Stmts body of the loop");
 
   std::cout << std::endl;
 }
@@ -1373,23 +1379,13 @@ void lp::BlockStmt::evaluate()
 
 void lp::AST::print() 
 {
-  std::list<Statement *>::iterator stmtIter;
-
-  for (stmtIter = stmts->begin(); stmtIter != stmts->end(); stmtIter++) 
-  {
-     (*stmtIter)->print();
-  }
+	stmts->print();
 }
 
 
 
 void lp::AST::evaluate() 
 {
-  std::list<Statement *>::iterator stmtIter;
-
-  for (stmtIter = stmts->begin(); stmtIter != stmts->end(); stmtIter++) 
-  {
-    (*stmtIter)->evaluate();
-  }
+  stmts->evaluate();
 }
 
