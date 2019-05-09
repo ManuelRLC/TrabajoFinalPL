@@ -959,6 +959,35 @@ bool lp::NotNode::evaluateBool()
 }
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void lp::StatementList::print(std::string msg){
+
+  std::list<Statement *>::iterator stmtIter;
+
+  std::cout << msg  << std::endl;
+
+  for (stmtIter = this->_stmts->begin(); stmtIter != this->_stmts->end(); stmtIter++) 
+  {
+     (*stmtIter)->print();
+  }
+
+}
+
+void lp::StatementList::evaluate(){
+
+  std::list<Statement *>::iterator stmtIter;
+
+  for (stmtIter = this->_stmts->begin(); stmtIter != this->_stmts->end(); stmtIter++) 
+  {
+    (*stmtIter)->evaluate();
+  }
+
+}
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1309,6 +1338,9 @@ void lp::WhileStmt::evaluate()
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // NEW in example 17
 
+
+/*
+
 void lp::BlockStmt::print() 
 {
   std::list<Statement *>::iterator stmtIter;
@@ -1333,7 +1365,7 @@ void lp::BlockStmt::evaluate()
 }
 
 
-
+*/
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

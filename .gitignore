@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+parser/interpreter\.dot
+
+parser/interpreter\.tab\.c
+
+parser/interpreter\.tab\.h
+
+parser/lex\.yy\.c

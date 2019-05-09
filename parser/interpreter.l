@@ -178,10 +178,6 @@ IDENTIFIER  {LETTER}({LETTER}|{DIGIT})*
 
 "&&"	{ return AND; }				/* NEW in example 15 */
 
-"{"		{ return LETFCURLYBRACKET; } 	/* NEW in example 17 */
-
-"}"		{ return RIGHTCURLYBRACKET; }	/* NEW in example 17 */
-
 
 
 ^# { /* The interpreter finishes when the symbol # is written at the beginning of the line */
