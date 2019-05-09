@@ -1661,7 +1661,7 @@ class IfStmt : public Statement
 	\return  void
 	\sa		 evaluate
 */
-  void print(std::string msg);
+  void print();
 
 /*!	
 	\brief   Evaluate the IfStmt

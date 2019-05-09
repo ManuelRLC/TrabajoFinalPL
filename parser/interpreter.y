@@ -163,7 +163,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 /*******************************************/
 
 // NEW in example 17: IF, ELSE, WHILE 
-%token PRINT READ IF THEN ELSE ENDIF WHILE DO ENDWHILE 
+%token PRINT PRINT_STRING READ READ_STRING IF THEN ELSE ENDIF WHILE DO ENDWHILE REPEAT UNTIL FOR FROM STEP ENDFOR ERASE PLACE
 
 /* NEW in example 7 */
 %right ASSIGNMENT
