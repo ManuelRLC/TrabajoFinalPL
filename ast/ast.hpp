@@ -1406,7 +1406,7 @@ class StatementList {
 	\sa		 evaluate
 */
 
-  void print();
+  void print(std::string smg);
 
 /*!	
 	\brief   Evaluate the list of Statemets
@@ -1414,6 +1414,11 @@ class StatementList {
 	\sa		 print
 */
   void evaluate();
+
+
+  void addStatement(Statement* stmt);
+
+
 };
 
 
@@ -1656,7 +1661,7 @@ class IfStmt : public Statement
 	\return  void
 	\sa		 evaluate
 */
-  void print();
+  void print(std::string msg);
 
 /*!	
 	\brief   Evaluate the IfStmt
@@ -1684,7 +1689,7 @@ class WhileStmt : public Statement
 {
  private:
   ExpNode *_cond; //!< Condicion of the while statement
-  std::list<Statement *> *_stmts; //!< Statements of the body of the while loop
+  StatementList* _stmts; //!< Statements of the body of the while loop
 
   public:
 /*!		
@@ -1693,7 +1698,7 @@ class WhileStmt : public Statement
 	\param statement: Statements of the body of the loop 
 	\post  A new WhileStmt is created with the parameters
 */
-  WhileStmt(ExpNode *condition, std::list<Statement *> * statements)
+  WhileStmt(ExpNode *condition, StatementList* statements)
 	{
 		this->_cond = condition;
 		this->_stmts = statements;
@@ -1730,39 +1735,41 @@ class WhileStmt : public Statement
 
 
 
+/*
+
 class BlockStmt : public Statement 
 {
  private:
    std::list<Statement *> *_stmts;  //!< List of statements
 
   public:
-/*!		
+		
 	\brief Constructor of  WhileStmt
 	\param stmtList: list of Statement
 	\post  A new BlockStmt is created with the parameters
-*/
+
   BlockStmt(std::list<Statement *> *stmtList): _stmts(stmtList)
 	{
 		// Empty
 	}
 
 
-/*!
+
 	\brief   Print the BlockStmt
 	\return  void
 	\sa		 evaluate
-*/
+
   void print();
 
-/*!	
+
 	\brief   Evaluate the BlockStmt
 	\return  void
 	\sa		 print
-*/
+
   void evaluate();
 };
 
-
+*/
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1775,16 +1782,16 @@ class BlockStmt : public Statement
 */
 class AST {
  private:
-  std::list<Statement *> *stmts;  //!< List of statements
+  StatementList *stmts;  //!< List of statements
 
  public:
 
 /*!		
 	\brief Constructor of PrintStmt 
-	\param stmtList: pointer to a list of pointers to Statement
+	\param stmtList: pointer to a StatementList of pointers to Statement
 	\post  A new PrintStmt is created with the parameter
 */
-  AST(std::list<Statement *> *stmtList): stmts(stmtList)
+  AST(StatementList *stmtList): stmts(stmtList)
 	{
 		// Empty
 	}
