@@ -38,3 +38,5 @@ parser/interpreter\.tab\.c
 parser/interpreter\.tab\.h
 
 parser/lex\.yy\.c
+
+html/
