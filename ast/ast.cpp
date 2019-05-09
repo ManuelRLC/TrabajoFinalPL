@@ -987,7 +987,7 @@ void lp::StatementList::evaluate(){
 
 }
 
-void addStatement(lp::Statement* stmt){
+void lp::StatementList::addStatement(lp::Statement* stmt){
 	_stmts->push_back(stmt);
 }
 
@@ -1320,7 +1320,7 @@ void lp::WhileStmt::print()
   this->_cond->print();
 
   // Body of the while loop
-  this->_stmt->print("Stmts body of the loop");
+  this->_stmts->print("Stmts body of the loop");
 
   std::cout << std::endl;
 }
@@ -1331,7 +1331,7 @@ void lp::WhileStmt::evaluate()
   // While the condition is true. the body is run 
   while (this->_cond->evaluateBool() == true)
   {	
-	  this->_stmt->evaluate();
+	  this->_stmts->evaluate();
   }
 
 }
@@ -1379,7 +1379,7 @@ void lp::BlockStmt::evaluate()
 
 void lp::AST::print() 
 {
-	stmts->print();
+	stmts->print("");
 }
 
 
