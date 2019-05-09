@@ -142,18 +142,20 @@ IDENTIFIER  {LETTER}({LETTER}|{DIGIT})*
 							}
                      }
 
+
+
 "-"		{ return MINUS;  } 			/* NEW in example 3 */
 "+"		{ return PLUS;   } 			/* NEW in example 3 */
 
 "*"	    { return MULTIPLICATION; } 	/* NEW in example 3 */
-"/"     { return DIVISION; } 		/* NEW in example 3 */
+(?i:_div)     { return DIVISION; } 		/* NEW in example 3 */
 
 "("     { return LPAREN; } 			/* NEW in example 3 */
 ")"	    { return RPAREN; } 			/* NEW in example 3 */
 
 
 
-"%"     { return MODULO; }			/* NEW in example 5 */
+(?i:_mod)    { return MODULO; }			/* NEW in example 5 */
 
 "^"	    { return POWER; }			/* NEW in example 5 */
 
@@ -172,17 +174,15 @@ IDENTIFIER  {LETTER}({LETTER}|{DIGIT})*
 
 "<"		{ return LESS_THAN; }		/* NEW in example 15 */
 
-"!"		{ return NOT; }				/* NEW in example 15 */
+(?i:_no)		{ return NOT; }				/* NEW in example 15 */
 
-"||"	{ return OR; }				/* NEW in example 15 */
+(?i:_o)	{ return OR; }				/* NEW in example 15 */
 
-"&&"	{ return AND; }				/* NEW in example 15 */
+(?i:_y)	{ return AND; }				/* NEW in example 15 */
 
-"{"		{ return LETFCURLYBRACKET; } 	/* NEW in example 17 */
+(?i:_borrar)	{ return ERASE; }
 
-"}"		{ return RIGHTCURLYBRACKET; }	/* NEW in example 17 */
-
-
+(?i:_lugar)		{ return PLACE; }
 
 ^# { /* The interpreter finishes when the symbol # is written at the beginning of the line */
 	// std::cout << CLEAR_SCREEN; 
