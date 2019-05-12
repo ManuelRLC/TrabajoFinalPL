@@ -153,9 +153,11 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 
 "'"						{BEGIN ESTADO_CADENA;}
 
-<ESTADO_CADENA>"'" 		{BEGIN 0;
-						 yytext[yyleng-1]='\0';
-						 printf("\n Cadena: %s --> token %d\n",yytext,CADENA);
+<ESTADO_CADENA>"'" 		{	BEGIN 0;
+						 	yytext[yyleng-1]='\0';
+
+						 	yylval.str =  new std::string(strdup(yytext));
+						 	return STRING;
 						}
 
 <ESTADO_CADENA>"\\\'"	{yymore();}

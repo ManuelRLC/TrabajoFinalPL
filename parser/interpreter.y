@@ -132,6 +132,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
   char * identifier; 				 /* NEW in example 7 */
   double number;  
   bool logic;						 /* NEW in example 15 */
+  std::string *str;
   lp::ExpNode *expNode;  			 /* NEW in example 16 */
   std::list<lp::ExpNode *>  *parameters;    // New in example 16; NOTE: #include<list> must be in interpreter.l, init.cpp, interpreter.cpp
   lp::StatementList *stmts; /* NEW in example 16 */
@@ -175,6 +176,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 /* MODIFIED in example 4 */
 %token <number> NUMBER
 /*******************************************/
+%token <str> STRING
 
 /*******************************************/
 /* NEW in example 15 */
@@ -239,14 +241,17 @@ stmtlist:  /* empty: epsilon rule */
 
         | stmtlist stmt 
 		  { 
+
 			// copy up the list and add the stmt to it
 			$$ = $1;
-			$$->addStatement($2);
 
+			$$->addStatement($2);
 			// Control the interative mode of execution of the interpreter
 			if (interactiveMode == true)
  			   $2->evaluate();
+
            }
+
 
 
         | stmtlist error 
@@ -378,6 +383,12 @@ exp:	NUMBER
 		{ 
 			// Create a new number node
 			$$ = new lp::NumberNode($1);
+		}
+
+	|	STRING
+		{
+			//Create a new string node
+			$$ = new lp::StringNode($1);
 		}
 
 	| 	exp PLUS exp 

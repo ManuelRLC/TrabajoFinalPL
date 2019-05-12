@@ -246,6 +246,55 @@ class NumberNode : public ExpNode
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 /*!	
+  \class StringNode
+  \brief Definition of atributes and methods of StringNode class
+  \note  StringNode Class publicly inherits from ExpNode class
+*/
+
+class StringNode : public ExpNode 
+{
+ private: 	
+   std::string *_string; //!< \brief number of the StringNode
+ 
+ public:
+
+/*!		
+	\brief Constructor of StringNode
+	\param value: string
+	\post  A new StringNode is created with the value of the parameter
+	\note  Inline function
+*/
+  StringNode(std::string * value)
+	{
+	    this->_string = value;
+	}
+
+	/*!	
+	\brief   Get the type of the expression: NUMBER
+	\return  int
+	\sa		 print
+	*/
+	int getType();
+
+	/*!
+		\brief   Print the expression
+		\return  void
+		\sa		 evaluate()
+	*/
+	void print();
+
+	/*!	
+		\brief   Evaluate the expression
+		\return  string
+		\sa		 print
+	*/
+	std::string evaluateString();
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!	
   \class   UnaryOperatorNode
   \brief   Definition of atributes and methods of UnaryOperatorNode class
   \note    UnaryOperatorNode Class publicly inherits from ExpNode class
@@ -1399,6 +1448,10 @@ class StatementList {
 
  public:
 
+ 	StatementList(){
+ 		_stmts=new std::list<Statement *>();
+
+ 	}
 
 /*!
 	\brief   Print the list of Statemets
