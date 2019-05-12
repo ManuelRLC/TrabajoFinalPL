@@ -134,7 +134,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
   bool logic;						 /* NEW in example 15 */
   lp::ExpNode *expNode;  			 /* NEW in example 16 */
   std::list<lp::ExpNode *>  *parameters;    // New in example 16; NOTE: #include<list> must be in interpreter.l, init.cpp, interpreter.cpp
-  std::list<lp::Statement *> *stmts; /* NEW in example 16 */
+  lp::StatementList *stmts; /* NEW in example 16 */
   lp::Statement *st;				 /* NEW in example 16 */
   lp::AST *prog;					 /* NEW in example 16 */
 }
@@ -163,7 +163,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 /*******************************************/
 
 // NEW in example 17: IF, ELSE, WHILE 
-%token PRINT READ IF ELSE WHILE
+%token PRINT PRINT_STRING READ READ_STRING IF THEN ELSE ENDIF WHILE DO ENDWHILE REPEAT UNTIL FOR FROM STEP ENDFOR ERASE PLACE
 
 /* NEW in example 7 */
 %right ASSIGNMENT
@@ -233,14 +233,15 @@ program : stmtlist
 stmtlist:  /* empty: epsilon rule */
 		  { 
 			// create a empty list of statements
-			$$ = new std::list<lp::Statement *>(); 
+			//$$ = new std::list<lp::Statement *>(); 
+		  	$$ = new lp::StatementList();
 		  }  
 
         | stmtlist stmt 
 		  { 
 			// copy up the list and add the stmt to it
 			$$ = $1;
-			$$->push_back($2);
+			$$->addStatement($2);
 
 			// Control the interative mode of execution of the interpreter
 			if (interactiveMode == true)
@@ -297,25 +298,25 @@ stmt: SEMICOLON  /* Empty statement: ";" */
  
 	/*  NEW in example 17 */
 if:	/* Simple conditional statement */
-	IF cond stmtlist 
+	IF cond THEN stmtlist ENDIF
     {
 		// Create a new if statement node
-		$$ = new lp::IfStmt($2, $3);
+		$$ = new lp::IfStmt($2, $4);
 	}
 
 	/* Compound conditional statement */
-	| IF cond stmtlist  ELSE stmtlist
+	| IF cond THEN stmtlist ELSE stmtlist ENDIF
 	 {
 		// Create a new if statement node
-		$$ = new lp::IfStmt($2, $3, $5);
+		$$ = new lp::IfStmt($2, $4, $6);
 	 }
 ;
 
 	/*  NEW in example 17 */
-while:  WHILE cond stmtlist 
+while:  WHILE cond DO stmtlist ENDWHILE
 		{
 			// Create a new while statement node
-			$$ = new lp::WhileStmt($2, $3);
+			$$ = new lp::WhileStmt($2, $4);
         }
 ;
 

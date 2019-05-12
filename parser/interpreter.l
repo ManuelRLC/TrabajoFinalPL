@@ -44,6 +44,8 @@ extern lp::Table table; //!< External Table of Symbols
 
 extern int lineNumber; //!< External line counter
 
+void changeStringToLower(char* identifier);
+
 %}
 
 
@@ -57,7 +59,10 @@ NUMBER1 {DIGIT}+\.?
 
 NUMBER2 {DIGIT}*\.{DIGIT}+
 
-IDENTIFIER  {LETTER}({LETTER}|{DIGIT})*
+IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
+
+
+%x ESTADO_CADENA
 
 /* NEW in example 3 */
 /* STATE  */
@@ -98,6 +103,9 @@ IDENTIFIER  {LETTER}({LETTER}|{DIGIT})*
 
 
 {IDENTIFIER}   		 {
+
+						changeStringToLower(yytext);
+
 						 /* NEW in example 7 */
 						 std::string identifier(yytext);
 
@@ -106,6 +114,7 @@ IDENTIFIER  {LETTER}({LETTER}|{DIGIT})*
                           which  is a duplicate of the string yytext
                         */
 						  yylval.identifier =  strdup(yytext); 
+
 
 						/* If the identifier is not in the table of symbols then it is inserted */	
 						 if (table.lookupSymbol(identifier) == false)
@@ -141,6 +150,20 @@ IDENTIFIER  {LETTER}({LETTER}|{DIGIT})*
 								return s->getToken();
 							}
                      }
+
+"'"						{BEGIN ESTADO_CADENA;}
+
+<ESTADO_CADENA>"'" 		{BEGIN 0;
+						 yytext[yyleng-1]='\0';
+						 printf("\n Cadena: %s --> token %d\n",yytext,CADENA);
+						}
+
+<ESTADO_CADENA>"\\\'"	{yymore();}
+
+<ESTADO_CADENA>.|\n 	{yymore();}
+
+
+                     
 
 
 
@@ -242,4 +265,12 @@ IDENTIFIER  {LETTER}({LETTER}|{DIGIT})*
    								BEGIN(INITIAL);
 							}
 %%
+
+
+
+void changeStringToLower(char* identifier){
+	for(int i=0; identifier[i]!='\0';i++){
+		identifier[i] = tolower(identifier[i]);
+	}
+}
 
