@@ -10,9 +10,11 @@
 #include <iostream>
 
 // Delete the comment if you want to use atof in the operator overload >>
-// #include <stdlib.h>
+ #include <stdlib.h>
 
 #include "stringVariable.hpp"
+
+
 
 
 /*
@@ -38,7 +40,7 @@ void lp::StringVariable::read()
 
    // Own attribute
    std::cout << "Value of the StringVariable: ";
-   std::getline (stdin, this->_value);
+   std::getline (std::cin, this->_value);
    // The \n character is read 
    std::cin.ignore(); 
 }

@@ -156,7 +156,7 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 <ESTADO_CADENA>"'" 		{	BEGIN 0;
 						 	yytext[yyleng-1]='\0';
 
-						 	yylval.str =  new std::string(strdup(yytext));
+						 	yylval.str =  new std::string(yytext);
 						 	return STRING;
 						}
 

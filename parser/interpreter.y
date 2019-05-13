@@ -51,6 +51,9 @@
 #include "../table/logicalVariable.hpp"
 
 /*******************************************/
+#include "../table/stringVariable.hpp"
+
+/*******************************************/
 /* NEW in example 11 */
 #include "../table/numericConstant.hpp"
 /*******************************************/
@@ -357,11 +360,16 @@ asgn:   VARIABLE ASSIGNMENT exp
 		}
 ;
 
+print_string: PRINT_STRING LPAREN STRING RPAREN
+		{
+			// Create a new print_string node
+			 $$ = new lp::PrintStrStmt($3);
+		}
 
-print:  PRINT exp 
+print:  PRINT LPAREN exp RPAREN 
 		{
 			// Create a new print node
-			 $$ = new lp::PrintStmt($2);
+			 $$ = new lp::PrintStmt($3);
 		}
 ;	
 
