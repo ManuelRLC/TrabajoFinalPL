@@ -167,7 +167,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 /*******************************************/
 
 // NEW in example 17: IF, ELSE, WHILE 
-%token PRINT PRINT_STRING READ READ_STRING IF THEN ELSE ENDIF WHILE DO ENDWHILE REPEAT UNTIL FOR FROM STEP ENDFOR ERASE PLACE
+%token PRINT READ IF THEN ELSE ENDIF WHILE DO ENDWHILE REPEAT UNTIL FOR FROM STEP ENDFOR ERASE PLACE
 
 /* NEW in example 7 */
 %right ASSIGNMENT
@@ -197,7 +197,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 
 %left AND
 
-%nonassoc GREATER_OR_EQUAL LESS_OR_EQUAL GREATER_THAN LESS_THAN  EQUAL NOT_EQUAL
+%nonassoc CONCATENATE GREATER_OR_EQUAL LESS_OR_EQUAL GREATER_THAN LESS_THAN  EQUAL NOT_EQUAL
 
 %left NOT
 /*******************************************************/
@@ -206,7 +206,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 %left PLUS MINUS 
 
 /* MODIFIED in example 5 */
-%left MULTIPLICATION DIVISION MODULO
+%left MULTIPLICATION DIVISION_INTEGER DIVISION MODULO
 
 %left LPAREN RPAREN
 
@@ -340,6 +340,7 @@ asgn:   VARIABLE ASSIGNMENT exp
 		{ 
 			// Create a new assignment node
 			$$ = new lp::AssignmentStmt($1, $3);
+
 		}
 
 	|  VARIABLE ASSIGNMENT asgn 
@@ -360,11 +361,6 @@ asgn:   VARIABLE ASSIGNMENT exp
 		}
 ;
 
-print_string: PRINT_STRING LPAREN STRING RPAREN
-		{
-			// Create a new print_string node
-			 $$ = new lp::PrintStrStmt($3);
-		}
 
 print:  PRINT LPAREN exp RPAREN 
 		{

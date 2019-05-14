@@ -118,6 +118,29 @@ bool lp::VariableNode::evaluateBool()
 }
 
 
+std::string lp::VariableNode::evaluateString() 
+{ 
+	std::string result ="";
+
+	if (this->getType() == STRING)
+	{
+		// Get the identifier in the table of symbols as StringVariable
+		lp::StringVariable *var = (lp::StringVariable *) table.getSymbol(this->_id);
+
+		// Copy the value of the StringVariable
+		result = var->getValue();
+	}
+	else
+	{
+		warning("Error en tiempo de ejecución en evaluateString(): la variable no es STRING",
+				   this->_id);
+	}
+
+	// Return the value of the LogicalVariable
+	return result;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -214,7 +237,7 @@ int lp::StringNode::getType()
 
 void lp::StringNode::print()
 {
-  std::cout << "StringNode: " << this->_string << std::endl;
+  std::cout << "StringNode: " << *this->_string << std::endl;
 }
 
 std::string lp::StringNode::evaluateString() 
@@ -1121,7 +1144,7 @@ void lp::AssignmentStmt::evaluate()
 					// Assignment the value to the identifier in the table of symbols
 					v->setValue(value);
 				}
-				// The type of variable is not BOOL
+				// The type of variable is not STRING
 				else
 				{
 					// Delete the variable from the table of symbols 
@@ -1133,7 +1156,10 @@ void lp::AssignmentStmt::evaluate()
 											VARIABLE,STRING,value);
 					table.installSymbol(v);
 				}
+
 			}
+
+			
 			break;			
 
 			default:
@@ -1233,7 +1259,7 @@ void lp::AssignmentStmt::evaluate()
 void lp::PrintStmt::print() 
 {
   std::cout << "PrintStmt: "  << std::endl;
-  std::cout << " print ";
+  std::cout << " escribir ";
   this->_exp->print();
   std::cout << std::endl;
 }
@@ -1242,7 +1268,7 @@ void lp::PrintStmt::print()
 void lp::PrintStmt::evaluate() 
 {
 	std::cout << BIYELLOW; 
-	std::cout << "Print: ";
+	std::cout << "Escribir: ";
 	std::cout << RESET; 
 
 	switch(this->_exp->getType())
@@ -1252,53 +1278,21 @@ void lp::PrintStmt::evaluate()
 				break;
 		case BOOL:
 			if (this->_exp->evaluateBool())
-				std::cout << "true" << std::endl;
+				std::cout << "verdadero" << std::endl;
 			else
-				std::cout << "false" << std::endl;
+				std::cout << "falso" << std::endl;
 		
 			break;
 
-		default:
-			warning("Runtime error: incompatible type for ", "print");
-	}
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-void lp::PrintStrStmt::print() 
-{
-  std::cout << "PrintStrStmt: "  << std::endl;
-  std::cout << " escribir_cadena(";
-  this->_exp->print();
-  std::cout << ")";
-  std::cout << std::endl;
-}
-
-
-void lp::PrintStmt::evaluate() 
-{
-	std::cout << BIYELLOW; 
-	std::cout << "Print: ";
-	std::cout << RESET; 
-
-	switch(this->_exp->getType())
-	{
-		case NUMBER:
-				std::cout << this->_exp->evaluateNumber() << std::endl;
-				break;
-		case BOOL:
-			if (this->_exp->evaluateBool())
-				std::cout << "true" << std::endl;
-			else
-				std::cout << "false" << std::endl;
-		
+		case STRING:
+			std::cout<<this->_exp->evaluateString()<<std::endl;
 			break;
 
 		default:
-			warning("Runtime error: incompatible type for ", "print");
+			warning("Error en tiempo de ejecución: tipo incompatible para ", "escribir");
 	}
 }
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
