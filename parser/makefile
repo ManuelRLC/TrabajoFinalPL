@@ -11,7 +11,7 @@ CPP = g++
 # -Wall: all warnings
 # -ansi: standard language
 # -02: optimization level
-CFLAGS = -c -g  -Wall -ansi -O2
+CFLAGS = -c -g  -Wall -ansi -O2 -std=c++11
 
 # The fast lexical analyser generator
 LEX = flex

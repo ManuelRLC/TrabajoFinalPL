@@ -85,10 +85,10 @@ NÚMERO:					[ ]								CHECK
 -----------------------------------------------------------------
 CADENA:					[ ]								CHECK
 -----------------------------------------------------------------
-	CARACTERES DELIMITADOS POR COMILLAS SIMPLES 		[ ]
-	INCLUYE COMILLA SIMPLE CON \ \'						[ ]
+	CARACTERES DELIMITADOS POR COMILLAS SIMPLES 		[X]
+	INCLUYE COMILLA SIMPLE CON \ \'						[X]
 
-	COMILLAS EXTERIORES NO SON PARTE DE LA CADENA 		[ ]
+	COMILLAS EXTERIORES NO SON PARTE DE LA CADENA 		[X]
 
 -----------------------------------------------------------------
 OPERADORES:				[ ]								CHECK
@@ -143,7 +143,7 @@ SENTENCIAS DE CONTROL:	[ ]								CHECK
 		Leer_cadena(identificador)						[ ]
 
 	ESCRITURA											[ ]
-		Escribir										[ ]
+		Escribir										[X]
 		Escribir_cadena									[ ]
 
 	SENTENCIAS DE CONTROL								[ ]
