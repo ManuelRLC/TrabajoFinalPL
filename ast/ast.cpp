@@ -27,6 +27,7 @@
 // 
 #include "../table/numericVariable.hpp"
 #include "../table/logicalVariable.hpp"
+#include "../table/stringVariable.hpp"
 
 #include "../table/numericConstant.hpp"
 #include "../table/logicalConstant.hpp"
@@ -199,6 +200,26 @@ void lp::NumberNode::print()
 double lp::NumberNode::evaluateNumber() 
 { 
     return this->_number; 
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+ 
+
+int lp::StringNode::getType()
+{
+	return STRING;
+}
+
+
+void lp::StringNode::print()
+{
+  std::cout << "StringNode: " << this->_string << std::endl;
+}
+
+std::string lp::StringNode::evaluateString() 
+{ 
+    return *(this->_string); 
 }
 
 
@@ -988,7 +1009,9 @@ void lp::StatementList::evaluate(){
 }
 
 void lp::StatementList::addStatement(lp::Statement* stmt){
+
 	_stmts->push_back(stmt);
+
 }
 
 
@@ -1004,6 +1027,7 @@ void lp::AssignmentStmt::print()
   this->_exp->print();
   std::cout << std::endl;
 }
+
 
 void lp::AssignmentStmt::evaluate() 
 {
@@ -1081,6 +1105,36 @@ void lp::AssignmentStmt::evaluate()
 				}
 			}
 			break;
+
+			case STRING:
+			{
+				std::string value;
+				// evaluate the expression as string
+			 	value = this->_exp->evaluateString();
+
+				if (firstVar->getType() == STRING)
+				{
+
+				  	// Get the identifier in the table of symbols as StringVariable
+					lp::StringVariable *v = (lp::StringVariable *) table.getSymbol(this->_id);
+
+					// Assignment the value to the identifier in the table of symbols
+					v->setValue(value);
+				}
+				// The type of variable is not BOOL
+				else
+				{
+					// Delete the variable from the table of symbols 
+					table.eraseSymbol(this->_id);
+
+					// Insert the variable in the table of symbols as StringVariable 
+					// with the type String and the value 
+					lp::StringVariable *v = new lp::StringVariable(this->_id,
+											VARIABLE,STRING,value);
+					table.installSymbol(v);
+				}
+			}
+			break;			
 
 			default:
 				warning("Runtime error: incompatible type of expression for ", "Assigment");
@@ -1181,6 +1235,43 @@ void lp::PrintStmt::print()
   std::cout << "PrintStmt: "  << std::endl;
   std::cout << " print ";
   this->_exp->print();
+  std::cout << std::endl;
+}
+
+
+void lp::PrintStmt::evaluate() 
+{
+	std::cout << BIYELLOW; 
+	std::cout << "Print: ";
+	std::cout << RESET; 
+
+	switch(this->_exp->getType())
+	{
+		case NUMBER:
+				std::cout << this->_exp->evaluateNumber() << std::endl;
+				break;
+		case BOOL:
+			if (this->_exp->evaluateBool())
+				std::cout << "true" << std::endl;
+			else
+				std::cout << "false" << std::endl;
+		
+			break;
+
+		default:
+			warning("Runtime error: incompatible type for ", "print");
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+void lp::PrintStrStmt::print() 
+{
+  std::cout << "PrintStrStmt: "  << std::endl;
+  std::cout << " escribir_cadena(";
+  this->_exp->print();
+  std::cout << ")";
   std::cout << std::endl;
 }
 

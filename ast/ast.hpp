@@ -75,6 +75,12 @@ namespace lp
 		return false;
 	}
 
+	virtual std::string evaluateString(){
+
+		std::string cadena="";
+		return cadena;
+	}
+
 };
 
 
@@ -241,6 +247,55 @@ class NumberNode : public ExpNode
 };
 
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!	
+  \class StringNode
+  \brief Definition of atributes and methods of StringNode class
+  \note  StringNode Class publicly inherits from ExpNode class
+*/
+
+class StringNode : public ExpNode 
+{
+ private: 	
+   std::string *_string; //!< \brief number of the StringNode
+ 
+ public:
+
+/*!		
+	\brief Constructor of StringNode
+	\param value: string
+	\post  A new StringNode is created with the value of the parameter
+	\note  Inline function
+*/
+  StringNode(std::string * value)
+	{
+	    this->_string = value;
+	}
+
+	/*!	
+	\brief   Get the type of the expression: NUMBER
+	\return  int
+	\sa		 print
+	*/
+	int getType();
+
+	/*!
+		\brief   Print the expression
+		\return  void
+		\sa		 evaluate()
+	*/
+	void print();
+
+	/*!	
+		\brief   Evaluate the expression
+		\return  string
+		\sa		 print
+	*/
+	std::string evaluateString();
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1399,6 +1454,10 @@ class StatementList {
 
  public:
 
+ 	StatementList(){
+ 		_stmts=new std::list<Statement *>();
+
+ 	}
 
 /*!
 	\brief   Print the list of Statemets
@@ -1525,6 +1584,47 @@ class PrintStmt: public Statement
   void evaluate();
 };
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!	
+  \class   PrintStrStmt
+  \brief   Definition of atributes and methods of PrintStrStmt class
+  \note    PrintStrStmt Class publicly inherits from Statement class 
+		   and adds its own print and evaluate functions
+  \warning  In this class, print and evaluate functions have the same meaning.
+*/
+class PrintStrStmt: public Statement 
+{
+ private:
+  StringNode *_str; //!< Expresssion the print statement
+
+ public:
+/*!		
+	\brief Constructor of PrintStmt 
+	\param expression: pointer to ExpNode
+	\post  A new PrintStmt is created with the parameter
+*/
+  PrintStrStmt(StringNode *str)
+	{
+		this->_str = str;
+	}
+
+/*!
+	\brief   Print the PrintStrStmt
+	\return  void
+	\sa		 evaluate()
+*/
+  void print();
+
+/*!	
+	\brief   Evaluate the PrintStrStmt
+	\return  double
+	\sa		 print
+*/
+  void evaluate();
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
