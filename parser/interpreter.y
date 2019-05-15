@@ -463,6 +463,11 @@ exp:	NUMBER
 
 		}
 
+	 | exp CONCATENATE exp
+	 	{
+	 		$$ = new lp::ConcatenateNode($1,$3);
+	 	}
+
 	| BUILTIN LPAREN listOfExp RPAREN
 		{
 			// Get the identifier in the table of symbols as Builtin
