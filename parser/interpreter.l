@@ -174,7 +174,7 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 
 "*"	    { return MULTIPLICATION; }
 "/" 	{ return DIVISION; }/* NEW in example 3 */
-(?i:_div)     { return DIVISION_INTEGER; } 		/* NEW in example 3 */
+(?i:_div)     { return INTEGER_DIVISION; } 		/* NEW in example 3 */
 
 "("     { return LPAREN; } 			/* NEW in example 3 */
 ")"	    { return RPAREN; } 			/* NEW in example 3 */
