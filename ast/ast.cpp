@@ -299,6 +299,23 @@ int lp::NumericOperatorNode::getType()
 	return	result;
 }
 
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+int lp::StringOperatorNode::getType()
+{
+	int result = 0;
+		
+	if ( (this->_left->getType() == STRING) and (this->_right->getType() == STRING))
+		result = STRING;
+	else
+		warning("Error en tiempo de ejecución: incompatibles tipos para", "String operator");
+
+	return	result;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -416,6 +433,35 @@ double lp::PlusNode::evaluateNumber()
 	else
 	{
 		warning("Runtime error: the expressions are not numeric for ", "Plus");
+	}
+
+  return result;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+void lp::ConcatenateNode::print() 
+{
+  std::cout << "ConcatenateNode: "  << std::endl;
+  this->_left->print();
+  std::cout << " || ";
+  this->_right->print();
+}
+
+std::string lp::ConcatenateNode::evaluateString()
+{
+	std::string result = "";
+
+	// Ckeck the types of the expressions
+	if (this->getType() == STRING)
+	{
+		result = this->_left->evaluateString() + this->_right->evaluateString();
+	}
+	else
+	{
+		warning("Error en tiempo de ejecución: las expresiones no son numericas para ", "Concatenar");
 	}
 
   return result;

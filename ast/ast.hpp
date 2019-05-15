@@ -557,6 +557,38 @@ class NumericOperatorNode : public OperatorNode
 	int getType();
 };
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!	
+  \class   StringOperatorNode
+  \brief   Definition of atributes and methods of StringOperatorNode class
+  \note    StringOperatorNode Class publicly inherits from OperatorNode class
+  \warning Abstract class, because it does not redefine the print method of ExpNode
+*/
+class StringOperatorNode : public OperatorNode 
+{
+	public:
+
+	/*!		
+		\brief Constructor of StringOperatorNode uses OperatorNode's constructor as members initializer
+		\param L: pointer to ExpNode
+		\param R: pointer to ExpNode
+		\post  A new StringOperatorNode is created with the parameters
+	*/
+    StringOperatorNode(ExpNode *L, ExpNode *R): OperatorNode(L,R) 
+	{
+		//	Empty
+	}
+
+	/*!	
+	\brief   Get the type of the children expressions
+	\return  int
+	\sa		 print()
+	*/
+	int getType();
+};
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -662,6 +694,47 @@ class PlusNode : public NumericOperatorNode
 	\sa		 print
 */
   double evaluateNumber();
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*!	
+  \class   ConcatenateNode
+  \brief   Definition of atributes and methods of ConcatenateNode class
+  \note    ConcatenateNode Class publicly inherits from NumericOperatorNode class 
+		   and adds its own print and evaluate functions
+*/
+class ConcatenateNode : public StringOperatorNode 
+{
+  public:
+/*!		
+	\brief Constructor of PlusNode uses ConcatenateOperatorNode's constructor as members initializer
+	\param L: pointer to ExpNode
+	\param R: pointer to ExpNode
+	\post  A new ConcatenateNode is created with the parameter
+*/
+  ConcatenateNode(ExpNode *L, ExpNode *R) : StringOperatorNode(L,R) 
+  {
+		// Empty
+  }
+
+/*!
+	\brief   Print the ConcatenateNode
+	\return  void
+	\sa		 evaluate()
+*/
+  void print();
+
+/*!	
+	\brief   Evaluate the ConcatenateNode
+	\return  double
+	\sa		 print
+*/
+  std::string evaluateString();
 };
 
 
