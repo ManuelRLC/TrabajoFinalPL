@@ -138,6 +138,13 @@ class VariableNode : public ExpNode
 	*/
 	  bool evaluateBool();
 
+	  /*!	
+		\brief   Evaluate the Variable as STRING
+		\return  string
+		\sa		 print
+	*/
+	  std::string evaluateString();
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1585,46 +1592,6 @@ class PrintStmt: public Statement
 };
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-/*!	
-  \class   PrintStrStmt
-  \brief   Definition of atributes and methods of PrintStrStmt class
-  \note    PrintStrStmt Class publicly inherits from Statement class 
-		   and adds its own print and evaluate functions
-  \warning  In this class, print and evaluate functions have the same meaning.
-*/
-class PrintStrStmt: public Statement 
-{
- private:
-  StringNode *_str; //!< Expresssion the print statement
-
- public:
-/*!		
-	\brief Constructor of PrintStmt 
-	\param expression: pointer to ExpNode
-	\post  A new PrintStmt is created with the parameter
-*/
-  PrintStrStmt(StringNode *str)
-	{
-		this->_str = str;
-	}
-
-/*!
-	\brief   Print the PrintStrStmt
-	\return  void
-	\sa		 evaluate()
-*/
-  void print();
-
-/*!	
-	\brief   Evaluate the PrintStrStmt
-	\return  double
-	\sa		 print
-*/
-  void evaluate();
-};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////

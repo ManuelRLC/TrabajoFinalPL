@@ -74,10 +74,8 @@ static struct {
 	      int token;
 	      } keyword[] = {
 	                    "escribir", PRINT,
-	                    "escribir_cadena",PRINT_STRING,
 	                    "leer",  READ,
-	                    "leer_cadena",	READ_STRING,
-
+	                    
 						"si",	 IF,   		// NEW in example 17
 						"entonces", THEN,
 						"si_no",	 ELSE, 		// NEW in example 17

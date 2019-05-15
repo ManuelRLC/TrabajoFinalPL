@@ -55,9 +55,9 @@ DIGIT  [0-9]
 
 LETTER [a-zA-Z]
 
-NUMBER1 {DIGIT}+\.?
+NUMBER1 {DIGIT}+\.?(E[+\-]?{DIGIT}+)?
 
-NUMBER2 {DIGIT}*\.{DIGIT}+
+NUMBER2 {DIGIT}*\.{DIGIT}+(E[+\-]?{DIGIT}+)?
 
 IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 
@@ -172,8 +172,9 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 "-"		{ return MINUS;  } 			/* NEW in example 3 */
 "+"		{ return PLUS;   } 			/* NEW in example 3 */
 
-"*"	    { return MULTIPLICATION; } 	/* NEW in example 3 */
-(?i:_div)     { return DIVISION; } 		/* NEW in example 3 */
+"*"	    { return MULTIPLICATION; }
+"/" 	{ return DIVISION; }/* NEW in example 3 */
+(?i:_div)     { return DIVISION_INTEGER; } 		/* NEW in example 3 */
 
 "("     { return LPAREN; } 			/* NEW in example 3 */
 ")"	    { return RPAREN; } 			/* NEW in example 3 */
@@ -182,14 +183,14 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 
 (?i:_mod)    { return MODULO; }			/* NEW in example 5 */
 
-"^"	    { return POWER; }			/* NEW in example 5 */
+"**"	    { return POWER; }			/* NEW in example 5 */
 
-"=" 	{ return ASSIGNMENT; }		/* NEW in example 7 */
+":=" 	{ return ASSIGNMENT; }		/* NEW in example 7 */
 
 
-"=="	{ return EQUAL; }			/* NEW in example 15 */
+"="	{ return EQUAL; }			/* NEW in example 15 */
 
-"!="	{ return NOT_EQUAL; }		/* NEW in example 15 */
+"<>"	{ return NOT_EQUAL; }		/* NEW in example 15 */
 
 ">="	{ return GREATER_OR_EQUAL; }/* NEW in example 15 */
 
@@ -198,6 +199,8 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 ">"		{ return GREATER_THAN; }	/* NEW in example 15 */
 
 "<"		{ return LESS_THAN; }		/* NEW in example 15 */
+
+"||"    {return CONCATENATE; }
 
 (?i:_no)		{ return NOT; }				/* NEW in example 15 */
 
