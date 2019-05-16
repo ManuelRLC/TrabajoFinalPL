@@ -153,7 +153,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 %type <stmts> stmtlist
 
 // New in example 17: if, while
-%type <st> stmt asgn print read if while
+%type <st> stmt asgn print read if while repeat
 
 %type <prog> program
 
@@ -300,6 +300,11 @@ stmt: SEMICOLON  /* Empty statement: ";" */
 		// Default action
 		// $$ = $1;
 	 }
+	| repeat
+	{
+		// Default action
+		// $$ = $1;	
+	}
 ;
 
 
@@ -327,6 +332,14 @@ while:  WHILE cond DO stmtlist ENDWHILE
 			$$ = new lp::WhileStmt($2, $4);
         }
 ;
+
+repeat:  REPEAT stmtlist UNTIL cond
+		{
+			// Create a new while statement node
+			$$ = new lp::RepeatStmt($2, $4);
+        } 
+;
+
 
 	/*  NEW in example 17 */
 cond: 	LPAREN exp RPAREN

@@ -46,6 +46,8 @@ extern int lineNumber; //!< External line counter
 
 void changeStringToLower(char* identifier);
 
+std::string parseSlash(char * str, int leng);
+
 %}
 
 
@@ -156,13 +158,17 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 <ESTADO_CADENA>"'" 		{	BEGIN 0;
 						 	yytext[yyleng-1]='\0';
 
-						 	yylval.str =  new std::string(yytext);
+						 	yylval.str =  new std::string(parseSlash(yytext,yyleng));
 						 	return STRING;
 						}
 
 <ESTADO_CADENA>"\\\'"	{yymore();}
 
-<ESTADO_CADENA>.|\n 	{yymore();}
+
+
+
+<ESTADO_CADENA>.|\n 	{yymore();
+						}
 
 
                      
@@ -279,3 +285,40 @@ void changeStringToLower(char* identifier){
 	}
 }
 
+std::string parseSlash(char * str,int leng){
+
+	std::string aux;
+	bool check=false;
+
+	for(int i =0; i<leng;i++){
+
+		if(!check){
+			if(str[i]!='\\'){
+				aux.push_back(str[i]);
+			}
+			else{
+				check=true;
+			}
+			
+		}
+		else{
+			check=false;
+			if(str[i]=='n'){
+				aux.push_back('\n');
+			}
+			else if(str[i]=='t'){
+				aux.push_back('\t');
+			}
+			else{
+				aux.push_back(str[i]);
+			}
+
+
+		}
+		
+		
+	}
+
+	return aux;
+
+}

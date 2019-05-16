@@ -119,7 +119,7 @@ OPERADORES:				[ ]								CHECK
 		IGUAL =											[X]
 
 	LOGICOS												[ ]
-		DISYUNCIÓN _o									[ ]
+		DISYUNCIÓN _o									[X]
 		CONJUNCIÓN _y									[ ]
 		NEGACIÓN   _no									[ ]
 
