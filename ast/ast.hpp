@@ -1902,6 +1902,52 @@ class WhileStmt : public Statement
 };
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+// NEW in example 17
+
+/*!	
+  \class   RepeatStmt
+  \brief   Definition of atributes and methods of RepeatStmt class
+  \note    RepeatStmt Class publicly inherits from Statement class 
+		   and adds its own print and evaluate functions
+*/
+class RepeatStmt : public Statement 
+{
+ private:
+ 	StatementList* _stmts; //!< Statements of the body of the repeat loop
+  ExpNode *_cond; //!< Condicion of the repeat statement
+  
+
+  public:
+/*!		
+	\brief Constructor of  RepeatStmt
+	\param condition: ExpNode of the condition
+	\param statement: Statements of the body of the loop 
+	\post  A new RepeatStmt is created with the parameters
+*/
+  RepeatStmt(StatementList* statements,ExpNode *condition )
+	{
+		this->_stmts = statements;
+		this->_cond = condition;
+		
+	}
+
+
+/*!
+	\brief   Print the RepeatStmt
+	\return  void
+	\sa		 evaluate
+*/
+  void print();
+
+/*!	
+	\brief   Evaluate the RepeatStmt
+	\return  void
+	\sa		 print
+*/
+  void evaluate();
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////

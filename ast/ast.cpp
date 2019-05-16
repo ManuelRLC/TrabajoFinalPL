@@ -1447,10 +1447,40 @@ void lp::AssignmentStmt::evaluate()
 				/* Get the identifier of the previous asgn in the table of symbols as LogicalVariable */
 				lp::LogicalVariable *secondVar = (lp::LogicalVariable *) table.getSymbol(this->_asgn->_id);
 				// Check the type of the first variable
-				if (firstVar->getType() == NUMBER)
+				if (firstVar->getType() == BOOL)
 				{
 				/* Get the identifier of the first variable in the table of symbols as LogicalVariable */
 				lp::LogicalVariable *firstVar = (lp::LogicalVariable *) table.getSymbol(this->_id);
+				  	// Get the identifier o f the in the table of symbols as NumericVariable
+//					lp::NumericVariable *n = (lp::NumericVariable *) table.getSymbol(this->_id);
+
+					// Assignment the value of the second variable to the first variable
+					firstVar->setValue(secondVar->getValue());
+
+				}
+				// The type of variable is not BOOL
+				else
+				{
+					// Delete the first variable from the table of symbols 
+					table.eraseSymbol(this->_id);
+
+					// Insert the first variable in the table of symbols as LogicalVariable 
+					// with the type BOOL and the value of the previous variable 
+					lp::LogicalVariable *firstVar = new lp::LogicalVariable(this->_id,
+											VARIABLE,BOOL,secondVar->getValue());
+					table.installSymbol(firstVar);
+				}
+			}
+			break;
+			case STRING:
+			{
+				/* Get the identifier of the previous asgn in the table of symbols as StringVariable */
+				lp::StringVariable *secondVar = (lp::StringVariable *) table.getSymbol(this->_asgn->_id);
+				// Check the type of the first variable
+				if (firstVar->getType() == STRING)
+				{
+				/* Get the identifier of the first variable in the table of symbols as StringVariable */
+				lp::StringVariable *firstVar = (lp::StringVariable *) table.getSymbol(this->_id);
 				  	// Get the identifier o f the in the table of symbols as NumericVariable
 //					lp::NumericVariable *n = (lp::NumericVariable *) table.getSymbol(this->_id);
 
@@ -1464,14 +1494,19 @@ void lp::AssignmentStmt::evaluate()
 					// Delete the first variable from the table of symbols 
 					table.eraseSymbol(this->_id);
 
-					// Insert the first variable in the table of symbols as NumericVariable 
-					// with the type BOOL and the value of the previous variable 
-					lp::LogicalVariable *firstVar = new lp::LogicalVariable(this->_id,
+					// Insert the first variable in the table of symbols as StringVariable 
+					// with the type STRING and the value of the previous variable 
+					lp::StringVariable *firstVar = new lp::StringVariable(this->_id,
 											VARIABLE,BOOL,secondVar->getValue());
 					table.installSymbol(firstVar);
 				}
+
 			}
+
+			
 			break;
+
+
 
 			default:
 				warning("Runtime error: incompatible type of expression for ", "Assigment");
@@ -1494,25 +1529,25 @@ void lp::PrintStmt::print()
 
 void lp::PrintStmt::evaluate() 
 {
-	std::cout << BIYELLOW; 
+	/*std::cout << BIYELLOW; 
 	std::cout << "Escribir: ";
-	std::cout << RESET; 
+	std::cout << RESET; */
 
 	switch(this->_exp->getType())
 	{
 		case NUMBER:
-				std::cout << this->_exp->evaluateNumber() << std::endl;
+				std::cout << this->_exp->evaluateNumber();
 				break;
 		case BOOL:
 			if (this->_exp->evaluateBool())
-				std::cout << "verdadero" << std::endl;
+				std::cout << "verdadero";
 			else
-				std::cout << "falso" << std::endl;
+				std::cout << "falso";
 		
 			break;
 
 		case STRING:
-			std::cout<<this->_exp->evaluateString()<<std::endl;
+			std::cout<<this->_exp->evaluateString();
 			break;
 
 		default:
@@ -1608,14 +1643,21 @@ void lp::IfStmt::print()
 
 void lp::IfStmt::evaluate() 
 {
-   // If the condition is true,
-	if (this->_cond->evaluateBool() == true )
-     // the consequent is run 
-	  this->_consequent->evaluate();
+	if(this->_cond->getType()==BOOL){
+	   // If the condition is true,
+		if (this->_cond->evaluateBool() == true )
+	     // the consequent is run 
+		  this->_consequent->evaluate();
 
-    // Otherwise, the alternative is run if exists
-	else if (this->_alternative != NULL)
-		  this->_alternative->evaluate();
+	    // Otherwise, the alternative is run if exists
+		else if (this->_alternative != NULL)
+			  this->_alternative->evaluate();		
+	}
+	else{
+
+		warning("Error en tiempo de ejecución: tipo incompatible para ", "Si Condicion");
+	}
+
 }
 
 
@@ -1640,16 +1682,56 @@ void lp::WhileStmt::print()
 
 void lp::WhileStmt::evaluate() 
 {
-  // While the condition is true. the body is run 
-  while (this->_cond->evaluateBool() == true)
-  {	
-	  this->_stmts->evaluate();
-  }
+
+	if(this->_cond->getType()==BOOL){
+	  // While the condition is true. the body is run 
+	  while (this->_cond->evaluateBool() == true)
+	  {	
+		  this->_stmts->evaluate();
+	  }		
+	}
+	else{
+
+		warning("Error en tiempo de ejecución: tipo incompatible para ", "Mientras Condicion");
+	}
 
 }
 
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+void lp::RepeatStmt::print() 
+{
+  std::cout << "RepeatStmts: "  << std::endl;
+  // Condition
+  this->_cond->print();
+
+  // Body of the while loop
+  this->_stmts->print("Stmts body of the loop");
+
+  std::cout << std::endl;
+}
+
+
+void lp::RepeatStmt::evaluate() 
+{
+
+	if(this->_cond->getType()==BOOL){
+	  // While the condition is true. the body is run 
+		do {
+			this->_stmts->evaluate();
+
+		}while (this->_cond->evaluateBool() == true);
+	
+	}
+	else{
+
+		warning("Error en tiempo de ejecución: tipo incompatible para ", "Repetir Condicion");
+	}
+
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,10 +1,10 @@
 
-si ('hola'>='holo' _o  1<3)
-entonces
-	escribir('si');
-si_no
-	escribir('no');
-fin_si
+i:=0;
 
+repetir
+	escribir(i);
+	escribir('hola');
+	i:=i+1;
+hasta (i<5)
 
 
