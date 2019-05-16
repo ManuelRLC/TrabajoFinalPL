@@ -39,6 +39,8 @@
 
 #include "../table/numericVariable.hpp"
 
+#include "../parser/funcionesAuxiliares.hpp"
+
 extern lp::Table table; //!< External Table of Symbols
 /*********************************************/
 
@@ -46,7 +48,6 @@ extern int lineNumber; //!< External line counter
 
 void changeStringToLower(char* identifier);
 
-std::string parseSlash(char * str, int leng);
 
 %}
 
@@ -270,7 +271,7 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 								yyless(yyleng-1); 
 
 								/* Display the error message */
-								warning("Lexical error", yytext);
+								warning("Error léxico", yytext);
 
 								/* Restore the initial state */
    								BEGIN(INITIAL);
@@ -283,42 +284,4 @@ void changeStringToLower(char* identifier){
 	for(int i=0; identifier[i]!='\0';i++){
 		identifier[i] = tolower(identifier[i]);
 	}
-}
-
-std::string parseSlash(char * str,int leng){
-
-	std::string aux;
-	bool check=false;
-
-	for(int i =0; i<leng;i++){
-
-		if(!check){
-			if(str[i]!='\\'){
-				aux.push_back(str[i]);
-			}
-			else{
-				check=true;
-			}
-			
-		}
-		else{
-			check=false;
-			if(str[i]=='n'){
-				aux.push_back('\n');
-			}
-			else if(str[i]=='t'){
-				aux.push_back('\t');
-			}
-			else{
-				aux.push_back(str[i]);
-			}
-
-
-		}
-		
-		
-	}
-
-	return aux;
-
 }

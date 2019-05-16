@@ -1,10 +1,4 @@
 
-i:=0;
+leer(a);
 
-repetir
-	escribir(i);
-	escribir('hola');
-	i:=i+1;
-hasta (i<5)
-
-
+escribir(a);

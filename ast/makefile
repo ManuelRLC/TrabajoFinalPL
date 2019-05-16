@@ -20,7 +20,8 @@ INCLUDES = $(NAME).hpp \
 			../parser/interpreter.tab.h \
 			../includes/macros.hpp ../error/error.hpp \
 			../table/table.hpp  ../table/numericConstant.hpp \
-			../table/builtinParameter0.hpp ../table/builtinParameter1.hpp ../table/builtinParameter2.hpp
+			../table/builtinParameter0.hpp ../table/builtinParameter1.hpp ../table/builtinParameter2.hpp \
+			../parser/funcionesAuxiliares.hpp
 
 # Predefined macros 
 #

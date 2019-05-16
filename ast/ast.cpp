@@ -1570,22 +1570,22 @@ void lp::ReadStmt::print()
 
 void lp::ReadStmt::evaluate() 
 {   
-	double value;
+	/*double value;
 	std::cout << BIYELLOW; 
 	std::cout << "Insert a numeric value --> " ;
 	std::cout << RESET; 
 	std::cin >> value;
 
-	/* Get the identifier in the table of symbols as Variable */
+	// Get the identifier in the table of symbols as Variable 
 	lp::Variable *var = (lp::Variable *) table.getSymbol(this->_id);
 
 	// Check if the type of the variable is NUMBER
 	if (var->getType() == NUMBER)
 	{
-		/* Get the identifier in the table of symbols as NumericVariable */
+		// Get the identifier in the table of symbols as NumericVariable 
 		lp::NumericVariable *n = (lp::NumericVariable *) table.getSymbol(this->_id);
 						
-		/* Assignment the read value to the identifier */
+		//Assignment the read value to the identifier 
 		n->setValue(value);
 	}
 	// The type of variable is not NUMBER
@@ -1600,7 +1600,93 @@ void lp::ReadStmt::evaluate()
 									  VARIABLE,NUMBER,value);
 
 		table.installSymbol(n);
+	}*/
+	int type;
+	std::string value;
+	std::getline(std::cin,value);
+
+	if(value[0]=='\'' || value[value.size()-1]=='\''){
+		type=STRING;
 	}
+	else{
+		type=NUMBER;
+		for(unsigned i =0; i<value.size(); i++){
+			if(value[i]<'0' || value[i]>'9'){
+				type=UNDEFINED;
+				break;
+			}
+		}		
+	}
+
+	// Get the identifier in the table of symbols as Variable 
+	lp::Variable *var = (lp::Variable *) table.getSymbol(this->_id);
+
+	switch(type){
+		case NUMBER:{
+
+
+			double aux = atof(value.c_str());
+			// Check if the type of the variable is NUMBER
+			if (var->getType() == NUMBER)
+			{
+				// Get the identifier in the table of symbols as NumericVariable 
+				lp::NumericVariable *n = (lp::NumericVariable *) table.getSymbol(this->_id);
+								
+				//Assignment the read value to the identifier 
+				n->setValue(aux);
+			}
+			// The type of variable is not NUMBER
+			else
+			{
+				// Delete $1 from the table of symbols as Variable
+				table.eraseSymbol(this->_id);
+
+					// Insert $1 in the table of symbols as NumericVariable 
+				// with the type NUMBER and the read value 
+				lp::NumericVariable *n = new lp::NumericVariable(this->_id, 
+											  VARIABLE,NUMBER,aux);
+
+				table.installSymbol(n);
+			}
+		}
+		break;
+
+		case STRING:{
+			value=value.substr(1,value.size()-2);
+			// Check if the type of the variable is STRING
+			if (var->getType() == STRING)
+			{
+				// Get the identifier in the table of symbols as NumericVariable 
+				lp::StringVariable *n = (lp::StringVariable *) table.getSymbol(this->_id);
+								
+				//Assignment the read value to the identifier 
+				n->setValue(value);
+			}
+			// The type of variable is not STRING
+			else
+			{
+				// Delete $1 from the table of symbols as Variable
+				table.eraseSymbol(this->_id);
+
+					// Insert $1 in the table of symbols as StringVariable 
+				// with the type STRING and the read value 
+				lp::StringVariable *n = new lp::StringVariable(this->_id, 
+											  VARIABLE,STRING,value);
+
+				table.installSymbol(n);
+			}
+		}
+		break;
+
+		default:
+			warning("Error en tiempo de ejecución: tipo incompatible para ", "leer");
+		break;
+
+	}
+
+
+
+
 }
 
 

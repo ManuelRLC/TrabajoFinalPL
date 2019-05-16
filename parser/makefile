@@ -47,7 +47,8 @@ INCLUDES = ../error/error.hpp ../includes/macros.hpp \
 			../table/init.hpp \
 			../table/numericConstant.hpp \
 			../table/builtinParameter1.hpp \
-			../table/builtinParameter0.hpp	../table/builtinParameter2.hpp 
+			../table/builtinParameter0.hpp	../table/builtinParameter2.hpp \
+			funcionesAuxiliares.hpp
 
 
 #######################################################
@@ -80,6 +81,12 @@ $(NAME).tab.c $(NAME).tab.h: $(NAME).y $(INCLUDES)
 	@$(YACC) $(YFLAGS) $< 
 	@echo
 
+
+# FuncionesAuxiliares
+funcionesAuxiliares.o: funcionesAuxiliares.hpp 
+	@echo "Compiling: " $<
+	@$(CPP) $(CFLAGS) $<
+	@echo
 
 
 #######################################################
