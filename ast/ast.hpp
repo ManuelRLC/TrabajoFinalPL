@@ -1903,7 +1903,6 @@ class WhileStmt : public Statement
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// NEW in example 17
 
 /*!	
   \class   RepeatStmt
@@ -1947,6 +1946,69 @@ class RepeatStmt : public Statement
 */
   void evaluate();
 };
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+/*!	
+  \class   ForStmt
+  \brief   Definition of atributes and methods of ForStmt class
+  \note    ForStmt Class publicly inherits from Statement class 
+		   and adds its own print and evaluate functions
+*/
+class ForStmt : public Statement 
+{
+ private:
+  
+  std::string _varID;
+  ExpNode *_from;
+  ExpNode *_until;
+  ExpNode *_step;
+
+  StatementList *_stmts; //!< Statements of the body of the repeat loop
+
+  public:
+/*!		
+	\brief Constructor of  ForStmt
+	\param condition: ExpNode of the condition
+	\param statement: Statements of the body of the loop 
+	\post  A new ForStmt is created with the parameters
+*/
+  ForStmt(std::string id,ExpNode *from,ExpNode *until,ExpNode *step,StatementList* statements)
+	{
+		this->_varID = id;
+		this->_from = from;
+		this->_until = until;
+		this->_step = step;
+		this->_stmts = statements;		
+	}
+
+	ForStmt(std::string id,ExpNode *from,ExpNode *until,StatementList* statements)
+	{
+		this->_varID = id;
+		this->_from = from;
+		this->_until = until;
+		this->_step = NULL;
+		this->_stmts = statements;		
+	}
+
+
+
+/*!
+	\brief   Print the ForStmt
+	\return  void
+	\sa		 evaluate
+*/
+  void print();
+
+/*!	
+	\brief   Evaluate the ForStmt
+	\return  void
+	\sa		 print
+*/
+  void evaluate();
+};
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////

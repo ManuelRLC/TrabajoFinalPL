@@ -38,6 +38,8 @@
 
 #include "../parser/interpreter.tab.h"
 
+#include "../parser/funcionesAuxiliares.hpp"
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1605,7 +1607,9 @@ void lp::ReadStmt::evaluate()
 	std::string value;
 	std::getline(std::cin,value);
 
-	if(value[0]=='\'' || value[value.size()-1]=='\''){
+	value = parseSlash((char*)value.c_str(),value.size());
+
+	if(value[0]=='\'' && value[value.size()-1]=='\''){
 		type=STRING;
 	}
 	else{
@@ -1816,6 +1820,249 @@ void lp::RepeatStmt::evaluate()
 
 		warning("Error en tiempo de ejecución: tipo incompatible para ", "Repetir Condicion");
 	}
+
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+void lp::ForStmt::print() 
+{
+  std::cout << "ForStmts: "  << std::endl;
+
+  this->_from->print();
+
+  this->_until->print();
+
+  this->_step->print();
+
+  // Body of the while loop
+  this->_stmts->print("Stmts body of the loop");
+
+  std::cout << std::endl;
+}
+
+
+void lp::ForStmt::evaluate() 
+{
+
+	//COMPROBAR QUE EL TIPO DE LAS EXPRESIONES FROM Y UNTIL SEAN NUMERICAS
+
+	if(this->_from->getType() != NUMBER || this->_until->getType() != NUMBER){
+		warning("Error en tiempo de ejecución: tipo incompatible para las expresiones DESDE o HASTA ", "For");
+		return;
+	}
+
+	//COMPROBAR SI HAY COHERENCIA ENTRE LAS EXPRESIONES FROM Y UNTIL
+
+	if(this->_step != NULL){
+
+		if(this->_step->getType() != NUMBER){
+			warning("Error en tiempo de ejecución: tipo incompatible para la expresion PASO ", "For");
+			return;
+		}
+
+
+		//Si el paso es positivo
+		if(this->_step->evaluateNumber() > 0){
+
+			if(this->_from->evaluateNumber() > this->_until->evaluateNumber()){
+				warning("Error en tiempo de ejecución: expresiones invalidas ", "For");
+				return;
+			}
+
+
+		//Si el paso es negativo
+		}else if (this->_step->evaluateNumber() < 0){
+
+			if(this->_from->evaluateNumber() < this->_until->evaluateNumber()){
+				warning("Error en tiempo de ejecución: expresiones invalidas ", "For");
+				return;
+			}
+
+		//Si el paso es igual a cero hay que comprobar que no se entre en bucle infinito
+		}else{
+
+			//Si las expresiones son distintas y el paso es 0. BUCLE INFINITO
+			if(!(std::abs( (this->_from->evaluateNumber() - this->_until->evaluateNumber())) < ERROR_BOUND)){
+				warning("Error en tiempo de ejecución: bucle infinito ", "For");
+				return;
+			}
+
+		}
+
+	//Paso igual a 1
+	}else{
+
+		if(this->_from->evaluateNumber() > this->_until->evaluateNumber()){
+				warning("Error en tiempo de ejecución: expresiones invalidas ", "For");
+				return;
+			}
+
+	}
+
+
+	//INICIALIZACION DE LA VARIABLE CON EL VALOR DE LA EXPRESION DESDE 
+
+	lp::Variable *var = (lp::Variable *) table.getSymbol(this->_varID);
+
+	// evaluate the expression as NUMBER
+ 	double value = this->_from->evaluateNumber();
+
+	// Check the type of the first varible
+	if (var->getType() == NUMBER)
+	{
+	  	// Get the identifier in the table of symbols as NumericVariable
+		lp::NumericVariable *v = (lp::NumericVariable *) table.getSymbol(this->_varID);
+
+		// Assignment the value to the identifier in the table of symbols
+		v->setValue(value);
+	}
+	// The type of variable is not NUMBER
+	else
+	{
+		// Delete the variable from the table of symbols 
+		table.eraseSymbol(this->_varID);
+
+		// Insert the variable in the table of symbols as NumericVariable 
+		// with the type NUMBER and the value 
+		lp::NumericVariable *v = new lp::NumericVariable(this->_varID,
+								VARIABLE,NUMBER,value);
+		table.installSymbol(v);
+	}
+
+
+	//PARA INICIALIZAR EL BUCLE
+	lp::NumericVariable *v = (lp::NumericVariable *) table.getSymbol(this->_varID);
+
+
+	//COMPROBAR SI HAY ALGUNA EXPRESION PARA PASO
+	if(this->_step==NULL){
+
+
+		for(double i = v->getValue(); i < this->_until->evaluateNumber() 
+			|| std::abs( (this->_until->evaluateNumber() - i) ) < ERROR_BOUND; i++){
+
+
+			this->_stmts->evaluate();
+
+
+
+			var = (lp::Variable *) table.getSymbol(this->_varID);
+
+
+			// Check the type of the first varible
+			if (var->getType() == NUMBER)
+			{
+			  	// Get the identifier in the table of symbols as NumericVariable
+				lp::NumericVariable *v = (lp::NumericVariable *) table.getSymbol(this->_varID);
+
+				// Assignment the value to the identifier in the table of symbols
+				v->setValue(i+1);
+			}
+			// The type of variable is not NUMBER
+			else
+			{
+				// Delete the variable from the table of symbols 
+				table.eraseSymbol(this->_varID);
+
+				// Insert the variable in the table of symbols as NumericVariable 
+				// with the type NUMBER and the value 
+				lp::NumericVariable *v = new lp::NumericVariable(this->_varID,
+										VARIABLE,NUMBER,i+1);
+				table.installSymbol(v);
+			}
+
+		}
+
+
+	}else{
+
+		if((this->_until->evaluateNumber() > this->_from->evaluateNumber() || std::abs( (this->_until->evaluateNumber() - this->_from->evaluateNumber()) ) < ERROR_BOUND )
+		    && this->_step->evaluateNumber()>0){
+
+
+			for(double i = v->getValue(); i < this->_until->evaluateNumber() ||
+				std::abs( (this->_until->evaluateNumber() - i ) ) < ERROR_BOUND; i = i + this->_step->evaluateNumber()){
+
+			
+				this->_stmts->evaluate();
+
+
+				var = (lp::Variable *) table.getSymbol(this->_varID);
+
+
+				// Check the type of the first varible
+				if (var->getType() == NUMBER)
+				{
+				  	// Get the identifier in the table of symbols as NumericVariable
+					lp::NumericVariable *v = (lp::NumericVariable *) table.getSymbol(this->_varID);
+
+					// Assignment the value to the identifier in the table of symbols
+					v->setValue(i+this->_step->evaluateNumber());
+				}
+				// The type of variable is not NUMBER
+				else
+				{
+					// Delete the variable from the table of symbols 
+					table.eraseSymbol(this->_varID);
+
+					// Insert the variable in the table of symbols as NumericVariable 
+					// with the type NUMBER and the value 
+					lp::NumericVariable *v = new lp::NumericVariable(this->_varID,
+											VARIABLE,NUMBER,i+this->_step->evaluateNumber());
+					table.installSymbol(v);
+				}
+
+			}
+		
+		}else if((this->_until->evaluateNumber() < this->_from->evaluateNumber() || std::abs( (this->_until->evaluateNumber() - this->_from->evaluateNumber() ) ) < ERROR_BOUND )
+						&& this->_step->evaluateNumber()<0){
+
+
+			for(double i = v->getValue(); i > this->_until->evaluateNumber() || std::abs( (this->_until->evaluateNumber() - i ) ) < ERROR_BOUND; i = i + this->_step->evaluateNumber()){
+
+
+				this->_stmts->evaluate();
+
+
+				var = (lp::Variable *) table.getSymbol(this->_varID);
+
+
+				// Check the type of the first varible
+				if (var->getType() == NUMBER)
+				{
+				  	// Get the identifier in the table of symbols as NumericVariable
+					lp::NumericVariable *v = (lp::NumericVariable *) table.getSymbol(this->_varID);
+
+					// Assignment the value to the identifier in the table of symbols
+					v->setValue(i+this->_step->evaluateNumber());
+				}
+				// The type of variable is not NUMBER
+				else
+				{
+					// Delete the variable from the table of symbols 
+					table.eraseSymbol(this->_varID);
+
+					// Insert the variable in the table of symbols as NumericVariable 
+					// with the type NUMBER and the value 
+					lp::NumericVariable *v = new lp::NumericVariable(this->_varID,
+											VARIABLE,NUMBER,i+this->_step->evaluateNumber());
+					table.installSymbol(v);
+				}
+
+			}
+
+			//DESDE Y HASTA SON IGUALES Y EL PASO ES CERO. SOLO SE EJECUTAN LAS SENTENCIAS
+		}else{
+			
+			this->_stmts->evaluate();
+
+		}		
+
+	}
+
 
 }
 

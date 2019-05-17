@@ -33,7 +33,7 @@ YACC= bison
 YFLAGS = -d -t -g
 
 # Objects
-OBJECTS= $(NAME).tab.o lex.yy.o 
+OBJECTS= $(NAME).tab.o lex.yy.o funcionesAuxiliares.o
 
 # Includes
 # MODIFIED in example 7: ../table/table.hpp  ../table/numericVariable.hpp
@@ -83,7 +83,7 @@ $(NAME).tab.c $(NAME).tab.h: $(NAME).y $(INCLUDES)
 
 
 # FuncionesAuxiliares
-funcionesAuxiliares.o: funcionesAuxiliares.hpp 
+funcionesAuxiliares.o: funcionesAuxiliares.cpp
 	@echo "Compiling: " $<
 	@$(CPP) $(CFLAGS) $<
 	@echo

@@ -2,6 +2,8 @@
 
 #include "funcionesAuxiliares.hpp"
 
+#include <string>
+
 
 
 

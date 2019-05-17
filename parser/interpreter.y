@@ -153,7 +153,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 %type <stmts> stmtlist
 
 // New in example 17: if, while
-%type <st> stmt asgn print read if while repeat
+%type <st> stmt asgn print read if while repeat for
 
 %type <prog> program
 
@@ -305,6 +305,13 @@ stmt: SEMICOLON  /* Empty statement: ";" */
 		// Default action
 		// $$ = $1;	
 	}
+	| for
+	{
+		// Default action
+		// $$ = $1;	
+	}
+
+
 ;
 
 
@@ -340,6 +347,19 @@ repeat:  REPEAT stmtlist UNTIL cond
         } 
 ;
 
+for:  FOR VARIABLE FROM exp UNTIL exp STEP exp DO stmtlist ENDFOR
+		{
+			// Create a new for statement node
+			$$ = new lp::ForStmt($2, $4, $6, $8, $10);
+        } 
+;
+
+for:  FOR VARIABLE FROM exp UNTIL exp DO stmtlist ENDFOR
+		{
+			// Create a new for statement node
+			$$ = new lp::ForStmt($2, $4, $6, $8);
+        } 
+;
 
 	/*  NEW in example 17 */
 cond: 	LPAREN exp RPAREN
