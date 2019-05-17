@@ -2067,6 +2067,26 @@ void lp::ForStmt::evaluate()
 }
 
 
+
+void lp::EraseStmt::evaluate() 
+{
+
+	std::cout<<CLEAR_SCREEN;	
+
+}
+
+void lp::PlaceStmt::evaluate() 
+{
+
+	if(this->_x->getType() == NUMBER && this->_y->getType() == NUMBER){
+		PLACE((int)this->_x->evaluateNumber(),(int)this->_y->evaluateNumber());
+	}else{
+		warning("Error en tiempo de ejecución: expresiones invalidas ", "Place");
+	}
+
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // NEW in example 17

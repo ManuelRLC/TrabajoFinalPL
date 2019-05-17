@@ -5,6 +5,17 @@ escribir(i);
 
 escribir('\n');
 
-
-
 fin_para
+
+
+escribir('Indica tu nombre -> ');
+
+leer(a);
+
+_borrar;
+
+_lugar(10,10);
+
+escribir('Tu nombre es ' || a);
+
+escribir('\n');

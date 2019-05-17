@@ -153,7 +153,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 %type <stmts> stmtlist
 
 // New in example 17: if, while
-%type <st> stmt asgn print read if while repeat for
+%type <st> stmt asgn print read if while repeat for erase place
 
 %type <prog> program
 
@@ -310,6 +310,16 @@ stmt: SEMICOLON  /* Empty statement: ";" */
 		// Default action
 		// $$ = $1;	
 	}
+	| erase SEMICOLON
+	{
+		// Default action
+		// $$ = $1;	
+	}
+	| place SEMICOLON
+	{
+		// Default action
+		// $$ = $1;	
+	}
 
 
 ;
@@ -365,6 +375,18 @@ for:  FOR VARIABLE FROM exp UNTIL exp DO stmtlist ENDFOR
 cond: 	LPAREN exp RPAREN
 		{ 
 			$$ = $2;
+		}
+;
+
+erase: 	ERASE
+		{ 
+			$$ = new lp::EraseStmt();
+		}
+;
+
+place: 	PLACE LPAREN exp COMMA exp RPAREN
+		{ 
+			$$ = new lp::PlaceStmt($3,$5);
 		}
 ;
 
