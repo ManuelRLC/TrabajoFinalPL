@@ -16,6 +16,6 @@ _borrar;
 
 _lugar(10,10);
 
-escribir('Tu nombre es ' || a);
+escribir('Tu nombre es ' || a || '\n');
 
 escribir('\n');

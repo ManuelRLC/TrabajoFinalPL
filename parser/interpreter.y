@@ -197,7 +197,9 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 
 %left AND
 
-%nonassoc CONCATENATE GREATER_OR_EQUAL LESS_OR_EQUAL GREATER_THAN LESS_THAN  EQUAL NOT_EQUAL
+%left CONCATENATE 
+
+%nonassoc GREATER_OR_EQUAL LESS_OR_EQUAL GREATER_THAN LESS_THAN  EQUAL NOT_EQUAL
 
 %left NOT
 /*******************************************************/

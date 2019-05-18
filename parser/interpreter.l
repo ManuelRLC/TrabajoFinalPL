@@ -67,6 +67,8 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 
 %x ESTADO_CADENA
 
+%x ESTADO_COMENTARIO
+
 /* NEW in example 3 */
 /* STATE  */
 %x ERROR
@@ -170,6 +172,21 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 
 <ESTADO_CADENA>.|\n 	{yymore();
 						}
+
+
+"#"					{BEGIN ESTADO_COMENTARIO;}
+
+<ESTADO_COMENTARIO>"#" {BEGIN 0;}
+
+
+<ESTADO_COMENTARIO>. {;}
+
+<ESTADO_COMENTARIO>\n {lineNumber++;}
+
+
+@.+$ 					{;}
+
+
 
 
                      

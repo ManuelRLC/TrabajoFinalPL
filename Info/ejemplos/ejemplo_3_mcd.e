@@ -18,17 +18,17 @@
 @ Máximo común divisor mediante el algoritmo de Euclides
 
 _lugar(10,10);
-escribir_cadena(' Máximo común divisor de dos números ');
+escribir(' Máximo común divisor de dos números ');
 
 _lugar(11,10);
-escribir_cadena(' Algoritmo de Euclides ');
+escribir(' Algoritmo de Euclides ');
 
 _lugar(12,10);
-escribir_cadena(' Escribe el primer número ');
+escribir(' Escribe el primer número ');
 leer(a);
 
 _lugar(13,10);
-escribir_cadena(' Escribe el segundo número ');
+escribir(' Escribe el segundo número ');
 leer(b);
 
 @ Se ordenan los números
@@ -56,11 +56,11 @@ fin_mientras;
 
 _lugar(15,10);
 
-escribir_cadena(' Máximo común divisor de ');
+escribir(' Máximo común divisor de ');
 escribir(A1);
 
-escribir_cadena(' y ');
+escribir(' y ');
 escribir(B1);
 
-escribir_cadena(' es ---> ');
+escribir(' es ---> ');
 escribir(b);
