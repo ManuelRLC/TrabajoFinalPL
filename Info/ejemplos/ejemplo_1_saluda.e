@@ -21,22 +21,22 @@ _borrar;
 
 _lugar(10,10);
 
-escribir('Introduce tu nombre --> ');
-leer(nombre);
+escribir_cadena('Introduce tu nombre --> ');
+leer_cadena(nombre);
 
 _borrar;
 _lugar(10,10);
 
-escribir(' Bienvenido/a << ');
+escribir_cadena(' Bienvenido/a << ');
 
-escribir(nombre);
+escribir_cadena(nombre);
 
-escribir(' >> al intérprete de pseudocódigo en español:\'ipe.exe\'.');
+escribir_cadena(' >> al intérprete de pseudocódigo en español:\'ipe.exe\'.');
 
 _lugar(40,10);
-escribir('Pulsa una tecla para continuar \t --> ');
-leer(pausa);
+escribir_cadena('Pulsa una tecla para continuar \t --> ');
+leer_cadena(pausa);
 
 _borrar;
 _lugar(10,10);
-escribir('El programa ha concluido \n');
+escribir_cadena('El programa ha concluido \n');

@@ -21,22 +21,22 @@ _borrar;
 
 _lugar(10,10);
 
-escribir('Introduce tu nombre --> ');
+escribir_cadena('Introduce tu nombre --> ');
 
-leer(nombre);
+leer_cadena(nombre);
 
 _borrar;
 _lugar(10,10);
 
-escribir(' Bienvenido/a << ');
+escribir_cadena(' Bienvenido/a << ');
 
-escribir(nombre);
+escribir_cadena(nombre);
 
-escribir(' >> al intérprete de pseudocódigo en español:\'ipe.exe\'.');
+escribir_cadena(' >> al intérprete de pseudocódigo en español:\'ipe.exe\'.');
 
 _lugar(40,10);
-escribir('Pulsa una tecla para continuar');
-leer( pausa);
+escribir_cadena('Pulsa una tecla para continuar');
+leer_cadena( pausa);
 
 
 repetir 
@@ -46,16 +46,16 @@ repetir
  _borrar;
 
  _lugar(10,10);
- escribir(' Factorial de un número --> 1 ');
+ escribir_cadena(' Factorial de un número --> 1 ');
 
  _lugar(11,10);
- escribir(' Máximo común divisor ----> 2 ');
+ escribir_cadena(' Máximo común divisor ----> 2 ');
 
  _lugar(12,10);
- escribir(' Finalizar ---------------> 0 ');
+ escribir_cadena(' Finalizar ---------------> 0 ');
 
  _lugar(15,10);
- escribir(' Elige una opcion ');
+ escribir_cadena(' Elige una opcion ');
 
  leer(opcion);
 
@@ -64,18 +64,18 @@ repetir
  si (opcion  = 0)        @ Fin del programa
     entonces  
         _lugar(10,10);
-        escribir(nombre);
-        escribir(': gracias por usar el intérprete ipe.exe ');
+        escribir_cadena(nombre);
+        escribir_cadena(': gracias por usar el intérprete ipe.exe ');
 
    si_no
        @ Factorial de un número
 	si (opcion = 1)
    	    entonces
                 _lugar(10,10);
-		escribir(' Factorial de un numero  ');
+		escribir_cadena(' Factorial de un numero  ');
 
                 _lugar(11,10);
-		escribir(' Introduce un numero entero ');
+		escribir_cadena(' Introduce un numero entero ');
 		leer(N);
 
         	factorial := 1;
@@ -86,9 +86,9 @@ repetir
 
         	@ Resultado
 	        _lugar(15,10);
-		escribir(' El factorial de ');
+		escribir_cadena(' El factorial de ');
 		escribir(N);
-		escribir(' es ');
+		escribir_cadena(' es ');
 		escribir(factorial);
     
    	@ Máximo común divisor
@@ -96,17 +96,17 @@ repetir
 		si (opcion = 2)
 			entonces
 				_lugar(10,10);
-				escribir(' Máximo común divisor de dos números ');
+				escribir_cadena(' Máximo común divisor de dos números ');
 
 				_lugar(11,10);
-                		escribir(' Algoritmo de Euclides ');
+                		escribir_cadena(' Algoritmo de Euclides ');
 
                 		_lugar(12,10);
-                		escribir(' Escribe el primer número ');
+                		escribir_cadena(' Escribe el primer número ');
                 		leer(a);
 
                   		_lugar(13,10);
-                  		escribir(' Escribe el segundo número ');
+                  		escribir_cadena(' Escribe el segundo número ');
                   		leer(b);
 
                   		@ Se ordenan los números
@@ -132,17 +132,17 @@ repetir
          
 					@ Se muestra el resultado
 					_lugar(15,10);
-					escribir(' Máximo común divisor de ');
+					escribir_cadena(' Máximo común divisor de ');
 					escribir(A1);
-					escribir(' y ');
+					escribir_cadena(' y ');
 					escribir(B1);
-					escribir(' es ---> ');
+					escribir_cadena(' es ---> ');
 					escribir(b);
 
 			@ Resto de opciones
  			si_no  
 				_lugar(15,10);
-			    	escribir(' Opcion incorrecta ');
+			    	escribir_cadena(' Opcion incorrecta ');
 
  			fin_si;   
   	fin_si;                 
@@ -150,8 +150,8 @@ repetir
   fin_si;                          
 
  _lugar(40,10); 
- escribir('\n Pulse una tecla para continuar --> ');
- leer(pausa);
+ escribir_cadena('\n Pulse una tecla para continuar --> ');
+ leer_cadena(pausa);
  
 hasta (opcion = 0);             
 
@@ -159,5 +159,5 @@ hasta (opcion = 0);
 
 _borrar;
 _lugar(10,10);
-escribir('El programa ha concluido');
+escribir_cadena('El programa ha concluido');
 

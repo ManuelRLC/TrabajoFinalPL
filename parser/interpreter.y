@@ -167,7 +167,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 /*******************************************/
 
 // NEW in example 17: IF, ELSE, WHILE 
-%token PRINT READ IF THEN ELSE ENDIF WHILE DO ENDWHILE REPEAT UNTIL FOR FROM STEP ENDFOR ERASE PLACE
+%token PRINT READ READ_STRING IF THEN ELSE ENDIF WHILE DO ENDWHILE REPEAT UNTIL FOR FROM STEP ENDFOR ERASE PLACE
 
 /* NEW in example 7 */
 %right ASSIGNMENT
@@ -251,6 +251,7 @@ stmtlist:  /* empty: epsilon rule */
 			$$ = $1;
 
 			$$->addStatement($2);
+
 			// Control the interative mode of execution of the interpreter
 			if (interactiveMode == true)
  			   $2->evaluate();
@@ -261,6 +262,7 @@ stmtlist:  /* empty: epsilon rule */
 
         | stmtlist error 
            { 
+           	
 			// just copy up the stmtlist when an error occurs
 			$$ = $1;
 
@@ -364,13 +366,27 @@ for:  FOR VARIABLE FROM exp UNTIL exp STEP exp DO stmtlist ENDFOR
 			// Create a new for statement node
 			$$ = new lp::ForStmt($2, $4, $6, $8, $10);
         } 
-;
-
-for:  FOR VARIABLE FROM exp UNTIL exp DO stmtlist ENDFOR
+    |  FOR VARIABLE FROM exp UNTIL exp DO stmtlist ENDFOR
 		{
 			// Create a new for statement node
 			$$ = new lp::ForStmt($2, $4, $6, $8);
-        } 
+        }
+    |	FOR STRING FROM exp UNTIL exp DO stmtlist ENDFOR
+    	{
+    		execerror("Error sintactico: en \"el bucle para\": se esperaba una variable ","");
+    	}
+    |	FOR STRING FROM exp UNTIL exp STEP exp DO stmtlist ENDFOR
+    	{
+    		execerror("Error sintactico: en \"el bucle para\": se esperaba una variable ","");
+    	}
+    |	FOR NUMBER FROM exp UNTIL exp DO stmtlist ENDFOR
+    	{
+    		execerror("Error sintactico: en \"el bucle para\": se esperaba una variable ","");	
+    	} 
+    | 	FOR NUMBER FROM exp UNTIL exp STEP exp DO stmtlist ENDFOR
+    	{
+    		execerror("Error sintactico: en \"el bucle para\": se esperaba una variable ","");
+    	}
 ;
 
 	/*  NEW in example 17 */
@@ -431,11 +447,20 @@ read:  READ LPAREN VARIABLE RPAREN
 			// Create a new read node
 			 $$ = new lp::ReadStmt($3);
 		}
+	| READ_STRING LPAREN VARIABLE RPAREN
+		{
+			$$ = new lp::ReadStringStmt($3);
+		}
 
   	  /* NEW rule in example 11 */
 	| READ LPAREN CONSTANT RPAREN  
 		{   
- 			execerror("Semantic error in \"read statement\": it is not allowed to modify a constant ",$3);
+ 			execerror("Error semantico en \"la lectura de la setencia\": no se puede modificar una constante ",$3);
+		}
+
+	| READ_STRING LPAREN CONSTANT RPAREN  
+		{   
+ 			execerror("Error semantico en \"la lectura de la setencia\": no se puede modificar una constante ",$3);
 		}
 ;
 

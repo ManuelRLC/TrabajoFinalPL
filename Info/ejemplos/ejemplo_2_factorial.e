@@ -19,10 +19,10 @@
 
 _borrar;
 _lugar(10,10);
-escribir(' Factorial de un numero ');
+escribir_cadena(' Factorial de un numero ');
 
 _lugar(11,10);
-escribir(' Introduce un numero entero ');
+escribir_cadena(' Introduce un numero entero ');
 leer(N);
 
 factorial := 1;
@@ -34,7 +34,7 @@ fin_para;
 @ Se muestra el resultado
 
 _lugar(15,10);
-escribir(' El factorial de ');
+escribir_cadena(' El factorial de ');
 escribir(N);
-escribir(' es ');
+escribir_cadena(' es ');
 escribir(factorial);

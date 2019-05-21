@@ -1251,11 +1251,12 @@ void lp::StatementList::print(std::string msg){
 }
 
 void lp::StatementList::evaluate(){
-
   std::list<Statement *>::iterator stmtIter;
+
 
   for (stmtIter = this->_stmts->begin(); stmtIter != this->_stmts->end(); stmtIter++)
   {
+  	
     (*stmtIter)->evaluate();
   }
 
@@ -1604,8 +1605,12 @@ void lp::ReadStmt::evaluate()
 
 		table.installSymbol(n);
 	}*/
+
+
+	/*
+
 	int type;
-	std::string value;
+	double value;
 	std::getline(std::cin,value);
 
 	value = parseSlash((char*)value.c_str(),value.size());
@@ -1688,9 +1693,91 @@ void lp::ReadStmt::evaluate()
 		break;
 
 	}
+	*/
+
+	double value;
+	std::cin>>value;
+
+	std::cin.ignore();
+
+
+	// Get the identifier in the table of symbols as Variable
+	lp::Variable *var = (lp::Variable *) table.getSymbol(this->_id);
+
+
+	if (var->getType() == NUMBER)
+	{
+		// Get the identifier in the table of symbols as NumericVariable
+		lp::NumericVariable *n = (lp::NumericVariable *) table.getSymbol(this->_id);
+
+		//Assignment the read value to the identifier
+		n->setValue(value);
+	}
+	// The type of variable is not NUMBER
+	else
+	{
+		// Delete $1 from the table of symbols as Variable
+		table.eraseSymbol(this->_id);
+
+			// Insert $1 in the table of symbols as NumericVariable
+		// with the type NUMBER and the read value
+		lp::NumericVariable *n = new lp::NumericVariable(this->_id,
+									  VARIABLE,NUMBER,value);
+
+		table.installSymbol(n);
+	}
+		
 
 
 
+
+
+
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+void lp::ReadStringStmt::print()
+{
+  std::cout << "ReadStringStmt: "  << std::endl;
+  std::cout << " read (" << this->_id << ")";
+  std::cout << std::endl;
+}
+
+
+void lp::ReadStringStmt::evaluate(){
+
+	std::string value;
+	std::getline(std::cin,value);
+
+
+	// Get the identifier in the table of symbols as Variable
+	lp::Variable *var = (lp::Variable *) table.getSymbol(this->_id);
+
+
+	if (var->getType() == STRING)
+	{
+		// Get the identifier in the table of symbols as NumericVariable
+		lp::StringVariable *n = (lp::StringVariable *) table.getSymbol(this->_id);
+
+		//Assignment the read value to the identifier
+		n->setValue(value);
+	}
+	// The type of variable is not STRING
+	else
+	{
+		// Delete $1 from the table of symbols as Variable
+		table.eraseSymbol(this->_id);
+
+			// Insert $1 in the table of symbols as StringVariable
+		// with the type STRING and the read value
+		lp::StringVariable *n = new lp::StringVariable(this->_id,
+									  VARIABLE,STRING,value);
+
+		table.installSymbol(n);
+	}
 
 }
 
@@ -2083,7 +2170,7 @@ void lp::PlaceStmt::evaluate()
 	if(this->_x->getType() == NUMBER && this->_y->getType() == NUMBER){
 		PLACE((int)this->_x->evaluateNumber(),(int)this->_y->evaluateNumber());
 	}else{
-		warning("Error en tiempo de ejecución: expresiones invalidas ", "Place");
+		warning("Error en tiempo de ejecución: tipos incompatibles ", "Place");
 	}
 
 }
@@ -2135,5 +2222,7 @@ void lp::AST::print()
 
 void lp::AST::evaluate()
 {
+
   stmts->evaluate();
+
 }

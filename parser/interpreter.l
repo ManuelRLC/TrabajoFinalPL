@@ -64,6 +64,8 @@ NUMBER2 {DIGIT}*\.{DIGIT}+(E[+\-]?{DIGIT}+)?
 
 IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 
+IDENTIFIER_INVALID ({letra}|{numero}|_)+
+
 
 %x ESTADO_CADENA
 
@@ -233,17 +235,19 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 
 (?i:_lugar)		{ return PLACE; }
 
-^# { /* The interpreter finishes when the symbol # is written at the beginning of the line */
-	// std::cout << CLEAR_SCREEN; 
-	//  PLACE(24,10);
-  	  std::cout <<  BIYELLOW;
-   	  std::cout <<  ">>>>>>> End of program <<<<<<<";
- 	  std::cout << std::endl;
-   	  std::cout << RESET;
-	 // PLACE(25,1);
 
-  	  return 0;
-	}
+				/*^# { The interpreter finishes when the symbol # is written at the beginning of the line 
+					// std::cout << CLEAR_SCREEN; 
+					//  PLACE(24,10);
+				  	  std::cout <<  BIYELLOW;
+				   	  std::cout <<  ">>>>>>> End of program <<<<<<<";
+				 	  std::cout << std::endl;
+				   	  std::cout << RESET;
+					 // PLACE(25,1);
+
+				  	  return 0;
+					}
+				*/
 
 <<EOF>> { /* The interpreter finishes when finds the end of file character */
 		/*  PLACE(24,10);
@@ -255,6 +259,9 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 		*/
 	  	  return 0;
 	}
+
+
+
 
 
 .								{ 	

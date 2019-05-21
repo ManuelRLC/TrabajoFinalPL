@@ -18,20 +18,20 @@
 _borrar;
 
 _lugar(3,10);
-escribir('Ejemplo de cambio del tipo de valo \n');
+escribir_cadena('Ejemplo de cambio del tipo de valo \n');
 
-escribir('Introduce un número --> ');
+escribir_cadena('Introduce un número --> ');
 leer(dato);
 
-escribir('El número introducido es -> ');
+escribir_cadena('El número introducido es -> ');
 escribir(dato);
 
-escribir('Introduce una cadena de caracteres --> ');
-leer(dato);
+escribir_cadena('Introduce una cadena de caracteres --> ');
+leer_cadena(dato);
 
-escribir('La cadena introducida es -> ');
-escribir(dato);
+escribir_cadena('La cadena introducida es -> ');
+escribir_cadena(dato);
 
 _lugar(20,10);
-escribir(' Fin del ejemplo de cambio del tipo de valor \n');
+escribir_cadena(' Fin del ejemplo de cambio del tipo de valor \n');
 

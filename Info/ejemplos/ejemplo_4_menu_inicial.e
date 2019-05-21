@@ -21,22 +21,22 @@ _borrar;
 
 _lugar(10,10);
 
-escribir('Introduce tu nombre --> ');
+escribir_cadena('Introduce tu nombre --> ');
 
-leer(nombre);
+leer_cadena(nombre);
 
 _borrar;
 _lugar(10,10);
 
-escribir(' Bienvenido/a << ');
+escribir_cadena(' Bienvenido/a << ');
 
-escribir(nombre);
+escribir_cadena(nombre);
 
-escribir(' >> al intérprete de pseudocódigo en español:\'ipe.exe\'.');
+escribir_cadena(' >> al intérprete de pseudocódigo en español:\'ipe.exe\'.');
 
 _lugar(40,10);
-escribir('Pulsa una tecla para continuar');
-leer(pausa);
+escribir_cadena('Pulsa una tecla para continuar');
+leer_cadena(pausa);
 
 repetir 
 
@@ -44,16 +44,16 @@ repetir
  _borrar;
 
  _lugar(10,10);
- escribir(' Factorial de un número --> 1 ');
+ escribir_cadena(' Factorial de un número --> 1 ');
 
  _lugar(11,10);
- escribir(' Máximo común divisor ----> 2 ');
+ escribir_cadena(' Máximo común divisor ----> 2 ');
 
  _lugar(12,10);
- escribir(' Finalizar ---------------> 0 ');
+ escribir_cadena(' Finalizar ---------------> 0 ');
 
  _lugar(15,10);
- escribir(' Elige una opcion ');
+ escribir_cadena(' Elige una opcion ');
 
  leer(opcion);
 
@@ -63,34 +63,34 @@ repetir
     entonces  
 	@ Fin del programa
         _lugar(10,10);
-        escribir(nombre);
-        escribir(': gracias por usar el intérprete ipe.exe ');
+        escribir_cadena(nombre);
+        escribir_cadena(': gracias por usar el intérprete ipe.exe ');
 
    si_no
         @ Factorial de un número
 	si (opcion = 1)
    	    entonces
                 _lugar(10,10);
-		escribir('Ha elegido la opción de Factorial de un número  ');
+		escribir_cadena('Ha elegido la opción de Factorial de un número  ');
 
 	si_no  
  		@ Máximo común divisor
 		si (opcion = 2)
 		   entonces
 			_lugar(10,10);
-			escribir(' Ha elegido la opción de Máximo común divisor');
+			escribir_cadena(' Ha elegido la opción de Máximo común divisor');
 
 		@ Resto de opciones
 		si_no  
 			_lugar(15,10);
-			escribir(' Ha elegido una opción incorrecta ');
+			escribir_cadena(' Ha elegido una opción incorrecta ');
 		fin_si;  			
 	fin_si;  
  fin_si;  
 
  _lugar(40,10); 
- escribir('\n Pulse una tecla para continuar --> ');
- leer(pausa);
+ escribir_cadena('\n Pulse una tecla para continuar --> ');
+ leer_cadena(pausa);
  
  hasta (opcion = 0); 
 
@@ -99,4 +99,4 @@ repetir
 
 _borrar;
 _lugar(10,10);
-escribir('El programa ha concluido');
+escribir_cadena('El programa ha concluido');
