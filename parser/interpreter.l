@@ -62,9 +62,11 @@ NUMBER1 {DIGIT}+\.?(E[+\-]?{DIGIT}+)?
 
 NUMBER2 {DIGIT}*\.{DIGIT}+(E[+\-]?{DIGIT}+)?
 
-IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
+IDENTIFIER  {LETTER}({LETTER}|{DIGIT}|_({LETTER}|{DIGIT}))*
 
-IDENTIFIER_INVALID ({letra}|{numero}|_)+
+IDENTIFIER_INVALID ({LETTER}|{DIGIT}|_)+
+
+NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 
 
 %x ESTADO_CADENA
@@ -190,7 +192,6 @@ IDENTIFIER_INVALID ({letra}|{numero}|_)+
 
 
 
-
                      
 "-"		{ return MINUS;  } 			/* NEW in example 3 */
 "+"		{ return PLUS;   } 			/* NEW in example 3 */
@@ -261,10 +262,11 @@ IDENTIFIER_INVALID ({letra}|{numero}|_)+
 	}
 
 
+{IDENTIFIER_INVALID} {warning("Identificador invalido",yytext);}
 
+{NUMBER_INVALID} {warning("Número invalido",yytext);}
 
-
-.								{ 	
+.							{ 	
 									/* Any other character */
 									/* MODIFIIED in example 3 */
 									/* Change to error state */

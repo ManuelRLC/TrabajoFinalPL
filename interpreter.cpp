@@ -107,7 +107,37 @@ int main(int argc, char *argv[])
  */
  if (argc == 2) 
  {
+  bool comprobar = false;
+
+
+    for(int i=0; argv[1][i]!='\0';i++){
+
+      if(argv[1][i]=='.'){
+        
+        if(argv[1][i+1]!='\0'){
+
+          if(argv[1][i+1]=='e' && argv[1][i+2]=='\0'){
+            comprobar =true;
+          }
+        }
+      }
+    }
+
+    if(!comprobar){
+
+      std::cout<<"La extensión del fichero no es correcta. Se necesita extesión .e"<<std::endl;
+
+      exit(-1);
+    }
+
      yyin = fopen(argv[1],"r");
+
+     if(yyin ==NULL){
+      std::cout<<"El fichero introducido no existe"<<std::endl;
+      exit(-1);
+     }
+
+
 
 	 interactiveMode = false;
  }

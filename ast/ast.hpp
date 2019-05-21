@@ -2179,8 +2179,9 @@ class AST {
 	\param stmtList: pointer to a StatementList of pointers to Statement
 	\post  A new PrintStmt is created with the parameter
 */
-  AST(StatementList *stmtList){
-  	stmts = stmtList;
+  AST(StatementList *stmtList): stmts(stmtList)
+	{
+		// Empty
 	}
 
 /*!

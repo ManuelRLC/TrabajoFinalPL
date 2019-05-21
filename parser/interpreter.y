@@ -239,6 +239,7 @@ program : stmtlist
 
 stmtlist:  /* empty: epsilon rule */
 		  { 
+
 			// create a empty list of statements
 			//$$ = new std::list<lp::Statement *>(); 
 		  	$$ = new lp::StatementList();
@@ -262,7 +263,7 @@ stmtlist:  /* empty: epsilon rule */
 
         | stmtlist error 
            { 
-           	
+
 			// just copy up the stmtlist when an error occurs
 			$$ = $1;
 
@@ -344,6 +345,17 @@ if:	/* Simple conditional statement */
 		// Create a new if statement node
 		$$ = new lp::IfStmt($2, $4, $6);
 	 }
+
+	| IF cond stmtlist ENDIF
+	 {
+	 	warning("Error sintactico: en \"sentencia SI\": falta 'Entonces' ","");
+	 	$$ = new lp::IfStmt($2, $3);
+	 }
+	|  IF cond stmtlist ELSE stmtlist ENDIF
+	 {
+	 	warning("Error sintactico: en \"sentencia SI\": falta 'Entonces' ","");
+	 	$$ = new lp::IfStmt($2, $3, $5);
+	 }
 ;
 
 	/*  NEW in example 17 */
@@ -351,6 +363,12 @@ while:  WHILE cond DO stmtlist ENDWHILE
 		{
 			// Create a new while statement node
 			$$ = new lp::WhileStmt($2, $4);
+        }
+
+       | WHILE cond stmtlist ENDWHILE
+        {
+        	warning("Error sintactico: en \"sentencia MIENTRAS\": falta 'Hacer' ","");
+			$$ = new lp::WhileStmt($2, $3);
         }
 ;
 
@@ -425,12 +443,12 @@ asgn:   VARIABLE ASSIGNMENT exp
 	   /* NEW in example 11 */ 
 	| CONSTANT ASSIGNMENT exp 
 		{   
- 			execerror("Semantic error in assignment: it is not allowed to modify a constant ", $1);
+ 			execerror("Error semántico en asignación: no está permitido modificar una constante ", $1);
 		}
 	   /* NEW in example 11 */ 
 	| CONSTANT ASSIGNMENT asgn 
 		{   
- 			execerror("Semantic error in multiple assignment: it is not allowed to modify a constant ",$1);
+ 			execerror("Error semántico en asignación multiple: no está permitido modificar una constante ",$1);
 		}
 ;
 
