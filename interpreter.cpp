@@ -171,7 +171,8 @@ else
  {
   /* NEW in example 15 */
   /*  root->print(); */
-   root->evaluate();
+  if (root!=NULL)
+        root->evaluate();
  }
 
  /* End of program */
