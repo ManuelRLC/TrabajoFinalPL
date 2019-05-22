@@ -36,6 +36,7 @@ int lineNumber = 1; //!< Line counter
 /* NEW in example 15 */
 bool interactiveMode; //!< Control the interactive mode of execution of the interpreter
 
+bool sentenciaDeControl; 
 
 // New in example 2
 extern FILE * yyin; //!< Standard input device for yylex() 
@@ -105,6 +106,7 @@ int main(int argc, char *argv[])
       otherwise
             the input device is the keyboard (stdin)
  */
+
  if (argc == 2) 
  {
   bool comprobar = false;
@@ -145,6 +147,7 @@ else
  {
 	interactiveMode = true;
  }
+ sentenciaDeControl=false;
 
  // Copy the name of the interpreter 
 	progname = argv[0];

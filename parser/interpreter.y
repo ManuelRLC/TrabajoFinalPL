@@ -94,6 +94,8 @@ extern int lineNumber; //!< External line counter
 extern bool interactiveMode; //!< Control the interactive mode of execution of the interpreter
 
 
+
+extern bool sentenciaDeControl;
 /***********************************************************/
 /* NEW in example 2 */
 extern std::string progname; //!<  Program name
@@ -254,7 +256,7 @@ stmtlist:  /* empty: epsilon rule */
 			$$->addStatement($2);
 
 			// Control the interative mode of execution of the interpreter
-			if (interactiveMode == true)
+			if (interactiveMode == true && sentenciaDeControl==false)
  			   $2->evaluate();
 
            }

@@ -48,6 +48,13 @@ extern int lineNumber; //!< External line counter
 
 void changeStringToLower(char* identifier);
 
+bool isSentenciaControl(int token);
+
+bool isFinSentenciaControl(int token);
+
+extern bool sentenciaDeControl;
+extern bool interactiveMode;
+
 
 %}
 
@@ -153,7 +160,20 @@ NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 								std::cout << "lex: "<< s->getName() 
 										  << "token " << s->getToken()
   										  << std::endl; 
-*/
+								
+*/								
+  								if(interactiveMode){
+								  	if(!sentenciaDeControl){
+
+	  									sentenciaDeControl=isSentenciaControl(s->getToken());
+
+	  								}
+	  								else{
+	  									sentenciaDeControl=!isFinSentenciaControl(s->getToken());
+	  								}  									
+  								}
+
+
 
 								/*  If the identifier is in the table then its token is returned  */
 								return s->getToken();
@@ -307,4 +327,45 @@ void changeStringToLower(char* identifier){
 	for(int i=0; identifier[i]!='\0';i++){
 		identifier[i] = tolower(identifier[i]);
 	}
+}
+
+
+bool isSentenciaControl(int token){
+
+	switch (token){
+		case IF:
+			return true;
+		break;
+		case WHILE:
+			return true;
+		break;
+		case FOR:
+			return true;
+		break;
+		case REPEAT:
+			return true;
+		break;
+	}
+	return false;
+}
+
+bool isFinSentenciaControl(int token){
+
+	switch (token){
+		case ENDIF:
+			return true;
+		break;
+		case ENDWHILE:
+			return true;
+		break;
+		case ENDFOR:
+			return true;
+		break;
+		case UNTIL:
+			return true;
+		break;
+	}
+	return false;	
+
+
 }
