@@ -1,10 +1,17 @@
 
-i:=0;
+#repetir 
 
-repetir
-	escribir(i);
-	escribir('hola');
-	i:=i+1;
-hasta (i<5)
+	escribir('Segito\n');
 
+hasta (6>3)
+#
 
+a := 0;
+
+Mientras a < 2) hacer
+
+	escribir('Segito\n');
+
+	a := a + 1;
+
+fin_mientras

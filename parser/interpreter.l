@@ -39,6 +39,8 @@
 
 #include "../table/numericVariable.hpp"
 
+#include "../parser/funcionesAuxiliares.hpp"
+
 extern lp::Table table; //!< External Table of Symbols
 /*********************************************/
 
@@ -46,7 +48,6 @@ extern int lineNumber; //!< External line counter
 
 void changeStringToLower(char* identifier);
 
-std::string parseSlash(char * str, int leng);
 
 %}
 
@@ -61,10 +62,16 @@ NUMBER1 {DIGIT}+\.?(E[+\-]?{DIGIT}+)?
 
 NUMBER2 {DIGIT}*\.{DIGIT}+(E[+\-]?{DIGIT}+)?
 
-IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
+IDENTIFIER  {LETTER}({LETTER}|{DIGIT}|_({LETTER}|{DIGIT}))*
+
+IDENTIFIER_INVALID ({LETTER}|{DIGIT}|_)+
+
+NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 
 
 %x ESTADO_CADENA
+
+%x ESTADO_COMENTARIO
 
 /* NEW in example 3 */
 /* STATE  */
@@ -171,10 +178,21 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 						}
 
 
+"#"					{BEGIN ESTADO_COMENTARIO;}
+
+<ESTADO_COMENTARIO>"#" {BEGIN 0;}
+
+
+<ESTADO_COMENTARIO>. {;}
+
+<ESTADO_COMENTARIO>\n {lineNumber++;}
+
+
+@.+$ 					{;}
+
+
+
                      
-
-
-
 "-"		{ return MINUS;  } 			/* NEW in example 3 */
 "+"		{ return PLUS;   } 			/* NEW in example 3 */
 
@@ -218,17 +236,19 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 
 (?i:_lugar)		{ return PLACE; }
 
-^# { /* The interpreter finishes when the symbol # is written at the beginning of the line */
-	// std::cout << CLEAR_SCREEN; 
-	//  PLACE(24,10);
-  	  std::cout <<  BIYELLOW;
-   	  std::cout <<  ">>>>>>> End of program <<<<<<<";
- 	  std::cout << std::endl;
-   	  std::cout << RESET;
-	 // PLACE(25,1);
 
-  	  return 0;
-	}
+				/*^# { The interpreter finishes when the symbol # is written at the beginning of the line 
+					// std::cout << CLEAR_SCREEN; 
+					//  PLACE(24,10);
+				  	  std::cout <<  BIYELLOW;
+				   	  std::cout <<  ">>>>>>> End of program <<<<<<<";
+				 	  std::cout << std::endl;
+				   	  std::cout << RESET;
+					 // PLACE(25,1);
+
+				  	  return 0;
+					}
+				*/
 
 <<EOF>> { /* The interpreter finishes when finds the end of file character */
 		/*  PLACE(24,10);
@@ -242,7 +262,11 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 	}
 
 
-.								{ 	
+{IDENTIFIER_INVALID} {warning("Identificador invalido",yytext);}
+
+{NUMBER_INVALID} {warning("Número invalido",yytext);}
+
+.							{ 	
 									/* Any other character */
 									/* MODIFIIED in example 3 */
 									/* Change to error state */
@@ -270,7 +294,7 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 								yyless(yyleng-1); 
 
 								/* Display the error message */
-								warning("Lexical error", yytext);
+								warning("Error léxico", yytext);
 
 								/* Restore the initial state */
    								BEGIN(INITIAL);
@@ -283,42 +307,4 @@ void changeStringToLower(char* identifier){
 	for(int i=0; identifier[i]!='\0';i++){
 		identifier[i] = tolower(identifier[i]);
 	}
-}
-
-std::string parseSlash(char * str,int leng){
-
-	std::string aux;
-	bool check=false;
-
-	for(int i =0; i<leng;i++){
-
-		if(!check){
-			if(str[i]!='\\'){
-				aux.push_back(str[i]);
-			}
-			else{
-				check=true;
-			}
-			
-		}
-		else{
-			check=false;
-			if(str[i]=='n'){
-				aux.push_back('\n');
-			}
-			else if(str[i]=='t'){
-				aux.push_back('\t');
-			}
-			else{
-				aux.push_back(str[i]);
-			}
-
-
-		}
-		
-		
-	}
-
-	return aux;
-
 }
