@@ -59,8 +59,8 @@ static struct {
           std::string name ;
 	      bool value;
 	      } logicalConstant[] = { 
-	                    "true", true,
-	                    "false", false,
+	                    "verdadero", true,
+	                    "falso", false,
 	                    "",      0
 	                   };
 
@@ -74,7 +74,9 @@ static struct {
 	      int token;
 	      } keyword[] = {
 	                    "escribir", PRINT,
+	                    "escribir_cadena",PRINT,
 	                    "leer",  READ,
+	                    "leer_cadena", READ_STRING,
 	                    
 						"si",	 IF,   		// NEW in example 17
 						"entonces", THEN,

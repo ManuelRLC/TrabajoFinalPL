@@ -39,12 +39,15 @@
 
 #include "../table/numericVariable.hpp"
 
+#include "../parser/funcionesAuxiliares.hpp"
+
 extern lp::Table table; //!< External Table of Symbols
 /*********************************************/
 
 extern int lineNumber; //!< External line counter
 
 void changeStringToLower(char* identifier);
+
 
 %}
 
@@ -59,10 +62,16 @@ NUMBER1 {DIGIT}+\.?(E[+\-]?{DIGIT}+)?
 
 NUMBER2 {DIGIT}*\.{DIGIT}+(E[+\-]?{DIGIT}+)?
 
-IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
+IDENTIFIER  {LETTER}({LETTER}|{DIGIT}|_({LETTER}|{DIGIT}))*
+
+IDENTIFIER_INVALID ({LETTER}|{DIGIT}|_)+
+
+NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 
 
 %x ESTADO_CADENA
+
+%x ESTADO_COMENTARIO
 
 /* NEW in example 3 */
 /* STATE  */
@@ -156,19 +165,34 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 <ESTADO_CADENA>"'" 		{	BEGIN 0;
 						 	yytext[yyleng-1]='\0';
 
-						 	yylval.str =  new std::string(yytext);
+						 	yylval.str =  new std::string(parseSlash(yytext,yyleng));
 						 	return STRING;
 						}
 
 <ESTADO_CADENA>"\\\'"	{yymore();}
 
-<ESTADO_CADENA>.|\n 	{yymore();}
+
+
+
+<ESTADO_CADENA>.|\n 	{yymore();
+						}
+
+
+"#"					{BEGIN ESTADO_COMENTARIO;}
+
+<ESTADO_COMENTARIO>"#" {BEGIN 0;}
+
+
+<ESTADO_COMENTARIO>. {;}
+
+<ESTADO_COMENTARIO>\n {lineNumber++;}
+
+
+@.+$ 					{;}
+
 
 
                      
-
-
-
 "-"		{ return MINUS;  } 			/* NEW in example 3 */
 "+"		{ return PLUS;   } 			/* NEW in example 3 */
 
@@ -212,17 +236,19 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 
 (?i:_lugar)		{ return PLACE; }
 
-^# { /* The interpreter finishes when the symbol # is written at the beginning of the line */
-	// std::cout << CLEAR_SCREEN; 
-	//  PLACE(24,10);
-  	  std::cout <<  BIYELLOW;
-   	  std::cout <<  ">>>>>>> End of program <<<<<<<";
- 	  std::cout << std::endl;
-   	  std::cout << RESET;
-	 // PLACE(25,1);
 
-  	  return 0;
-	}
+				/*^# { The interpreter finishes when the symbol # is written at the beginning of the line 
+					// std::cout << CLEAR_SCREEN; 
+					//  PLACE(24,10);
+				  	  std::cout <<  BIYELLOW;
+				   	  std::cout <<  ">>>>>>> End of program <<<<<<<";
+				 	  std::cout << std::endl;
+				   	  std::cout << RESET;
+					 // PLACE(25,1);
+
+				  	  return 0;
+					}
+				*/
 
 <<EOF>> { /* The interpreter finishes when finds the end of file character */
 		/*  PLACE(24,10);
@@ -236,7 +262,11 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 	}
 
 
-.								{ 	
+{IDENTIFIER_INVALID} {warning("Identificador invalido",yytext);}
+
+{NUMBER_INVALID} {warning("Número invalido",yytext);}
+
+.							{ 	
 									/* Any other character */
 									/* MODIFIIED in example 3 */
 									/* Change to error state */
@@ -264,7 +294,7 @@ IDENTIFIER  {LETTER}(_|{LETTER}|{DIGIT})*
 								yyless(yyleng-1); 
 
 								/* Display the error message */
-								warning("Lexical error", yytext);
+								warning("Error léxico", yytext);
 
 								/* Restore the initial state */
    								BEGIN(INITIAL);
@@ -278,4 +308,3 @@ void changeStringToLower(char* identifier){
 		identifier[i] = tolower(identifier[i]);
 	}
 }
-

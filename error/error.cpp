@@ -33,9 +33,9 @@ extern int errno; //!<  ReferenceReference to the global variable that controls 
 void warning(std::string errorMessage1,std::string errorMessage2)
 {
   std::cerr << IGREEN; 
-  std::cerr << " Program: " << progname << std::endl;
+  std::cerr << " Programa: " << progname << std::endl;
   std::cerr << BIRED; 
-  std::cerr << " Error line " << lineNumber 
+  std::cerr << " Linea de error " << lineNumber 
             << " --> " << errorMessage1 << std::endl;
   std::cerr << RESET; 
 

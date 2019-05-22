@@ -153,7 +153,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 %type <stmts> stmtlist
 
 // New in example 17: if, while
-%type <st> stmt asgn print read if while
+%type <st> stmt asgn print read if while repeat for erase place
 
 %type <prog> program
 
@@ -167,7 +167,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 /*******************************************/
 
 // NEW in example 17: IF, ELSE, WHILE 
-%token PRINT READ IF THEN ELSE ENDIF WHILE DO ENDWHILE REPEAT UNTIL FOR FROM STEP ENDFOR ERASE PLACE
+%token PRINT READ READ_STRING IF THEN ELSE ENDIF WHILE DO ENDWHILE REPEAT UNTIL FOR FROM STEP ENDFOR ERASE PLACE
 
 /* NEW in example 7 */
 %right ASSIGNMENT
@@ -197,7 +197,9 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 
 %left AND
 
-%nonassoc CONCATENATE GREATER_OR_EQUAL LESS_OR_EQUAL GREATER_THAN LESS_THAN  EQUAL NOT_EQUAL
+%left CONCATENATE 
+
+%nonassoc GREATER_OR_EQUAL LESS_OR_EQUAL GREATER_THAN LESS_THAN  EQUAL NOT_EQUAL
 
 %left NOT
 /*******************************************************/
@@ -237,6 +239,7 @@ program : stmtlist
 
 stmtlist:  /* empty: epsilon rule */
 		  { 
+
 			// create a empty list of statements
 			//$$ = new std::list<lp::Statement *>(); 
 		  	$$ = new lp::StatementList();
@@ -249,6 +252,7 @@ stmtlist:  /* empty: epsilon rule */
 			$$ = $1;
 
 			$$->addStatement($2);
+
 			// Control the interative mode of execution of the interpreter
 			if (interactiveMode == true)
  			   $2->evaluate();
@@ -259,6 +263,7 @@ stmtlist:  /* empty: epsilon rule */
 
         | stmtlist error 
            { 
+
 			// just copy up the stmtlist when an error occurs
 			$$ = $1;
 
@@ -300,6 +305,28 @@ stmt: SEMICOLON  /* Empty statement: ";" */
 		// Default action
 		// $$ = $1;
 	 }
+	| repeat
+	{
+		// Default action
+		// $$ = $1;	
+	}
+	| for
+	{
+		// Default action
+		// $$ = $1;	
+	}
+	| erase SEMICOLON
+	{
+		// Default action
+		// $$ = $1;	
+	}
+	| place SEMICOLON
+	{
+		// Default action
+		// $$ = $1;	
+	}
+
+
 ;
 
 
@@ -318,6 +345,17 @@ if:	/* Simple conditional statement */
 		// Create a new if statement node
 		$$ = new lp::IfStmt($2, $4, $6);
 	 }
+
+	| IF cond stmtlist ENDIF
+	 {
+	 	warning("Error sintactico: en \"sentencia SI\": falta 'Entonces' ","");
+	 	$$ = new lp::IfStmt($2, $3);
+	 }
+	|  IF cond stmtlist ELSE stmtlist ENDIF
+	 {
+	 	warning("Error sintactico: en \"sentencia SI\": falta 'Entonces' ","");
+	 	$$ = new lp::IfStmt($2, $3, $5);
+	 }
 ;
 
 	/*  NEW in example 17 */
@@ -326,12 +364,65 @@ while:  WHILE cond DO stmtlist ENDWHILE
 			// Create a new while statement node
 			$$ = new lp::WhileStmt($2, $4);
         }
+
+       | WHILE cond stmtlist ENDWHILE
+        {
+        	warning("Error sintactico: en \"sentencia MIENTRAS\": falta 'Hacer' ","");
+			$$ = new lp::WhileStmt($2, $3);
+        }
+;
+
+repeat:  REPEAT stmtlist UNTIL cond
+		{
+			// Create a new while statement node
+			$$ = new lp::RepeatStmt($2, $4);
+        } 
+;
+
+for:  FOR VARIABLE FROM exp UNTIL exp STEP exp DO stmtlist ENDFOR
+		{
+			// Create a new for statement node
+			$$ = new lp::ForStmt($2, $4, $6, $8, $10);
+        } 
+    |  FOR VARIABLE FROM exp UNTIL exp DO stmtlist ENDFOR
+		{
+			// Create a new for statement node
+			$$ = new lp::ForStmt($2, $4, $6, $8);
+        }
+    |	FOR STRING FROM exp UNTIL exp DO stmtlist ENDFOR
+    	{
+    		execerror("Error sintactico: en \"el bucle para\": se esperaba una variable ","");
+    	}
+    |	FOR STRING FROM exp UNTIL exp STEP exp DO stmtlist ENDFOR
+    	{
+    		execerror("Error sintactico: en \"el bucle para\": se esperaba una variable ","");
+    	}
+    |	FOR NUMBER FROM exp UNTIL exp DO stmtlist ENDFOR
+    	{
+    		execerror("Error sintactico: en \"el bucle para\": se esperaba una variable ","");	
+    	} 
+    | 	FOR NUMBER FROM exp UNTIL exp STEP exp DO stmtlist ENDFOR
+    	{
+    		execerror("Error sintactico: en \"el bucle para\": se esperaba una variable ","");
+    	}
 ;
 
 	/*  NEW in example 17 */
 cond: 	LPAREN exp RPAREN
 		{ 
 			$$ = $2;
+		}
+;
+
+erase: 	ERASE
+		{ 
+			$$ = new lp::EraseStmt();
+		}
+;
+
+place: 	PLACE LPAREN exp COMMA exp RPAREN
+		{ 
+			$$ = new lp::PlaceStmt($3,$5);
 		}
 ;
 
@@ -352,12 +443,12 @@ asgn:   VARIABLE ASSIGNMENT exp
 	   /* NEW in example 11 */ 
 	| CONSTANT ASSIGNMENT exp 
 		{   
- 			execerror("Semantic error in assignment: it is not allowed to modify a constant ", $1);
+ 			execerror("Error semántico en asignación: no está permitido modificar una constante ", $1);
 		}
 	   /* NEW in example 11 */ 
 	| CONSTANT ASSIGNMENT asgn 
 		{   
- 			execerror("Semantic error in multiple assignment: it is not allowed to modify a constant ",$1);
+ 			execerror("Error semántico en asignación multiple: no está permitido modificar una constante ",$1);
 		}
 ;
 
@@ -374,11 +465,20 @@ read:  READ LPAREN VARIABLE RPAREN
 			// Create a new read node
 			 $$ = new lp::ReadStmt($3);
 		}
+	| READ_STRING LPAREN VARIABLE RPAREN
+		{
+			$$ = new lp::ReadStringStmt($3);
+		}
 
   	  /* NEW rule in example 11 */
 	| READ LPAREN CONSTANT RPAREN  
 		{   
- 			execerror("Semantic error in \"read statement\": it is not allowed to modify a constant ",$3);
+ 			execerror("Error semantico en \"la lectura de la setencia\": no se puede modificar una constante ",$3);
+		}
+
+	| READ_STRING LPAREN CONSTANT RPAREN  
+		{   
+ 			execerror("Error semantico en \"la lectura de la setencia\": no se puede modificar una constante ",$3);
 		}
 ;
 

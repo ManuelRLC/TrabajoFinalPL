@@ -119,57 +119,57 @@ OPERADORES:				[ ]								CHECK
 		IGUAL =											[X]
 
 	LOGICOS												[ ]
-		DISYUNCIÓN _o									[ ]
+		DISYUNCIÓN _o									[X]
 		CONJUNCIÓN _y									[ ]
 		NEGACIÓN   _no									[ ]
 
 -----------------------------------------------------------------
 OTROS:					[ ]								CHECK
 -----------------------------------------------------------------
-	COMENTARIOS											[ ]
-		VARIAS LINEAS: DELIMITADORES #	.... #			[ ]
-		UNA LÍNEA: DELIMITADOR @						[ ]
+	COMENTARIOS											[X]
+		VARIAS LINEAS: DELIMITADORES #	.... #			[X]
+		UNA LÍNEA: DELIMITADOR @						[X]
 
-	FIN DE LINEA ;										[ ]
+	FIN DE LINEA ;										[X]
 
 -----------------------------------------------------------------
 SENTENCIAS DE CONTROL:	[ ]								CHECK
 -----------------------------------------------------------------
 	ASIGNACION											[ ]
-		IDENTIFICADOR := EXPR NUMÉRICA					[ ]
-		IDENTIFICADOR := EXPR ALFANUMÉRICA				[ ]
+		IDENTIFICADOR := EXPR NUMÉRICA					[X]
+		IDENTIFICADOR := EXPR ALFANUMÉRICA				[X]
 
 	LECTURA												[ ]
-		Leer(identificador)								[ ]
-		Leer_cadena(identificador)						[ ]
+		Leer(identificador)								[X]
+		Leer_cadena(identificador)						[X]
 
 	ESCRITURA											[X]
 		Escribir										[X]
 		Escribir_cadena									[X]
 
 	SENTENCIAS DE CONTROL								[ ]
-		CONDICIONAL SIMPLE								[ ]
+		CONDICIONAL SIMPLE								[X]
 			si cond
 				entonces sentencias
 			fin_si
 
-		CONDICIONAL COMPUESTA							[ ]
+		CONDICIONAL COMPUESTA							[X]
 			si cond
 				entonces sentencias
 				si_no sentencias
 			fin_si
 
-		BUCLE "mientras"								[ ]
+		BUCLE "mientras"								[X]
 			mientras cond hacer
 						sentencias
 			fin_mientras
 
-		BUCLE "repetir"									[ ]
+		BUCLE "repetir"									[X]
 			repetir
 				sentencias
 			hasta cond
 
-		BUCLE "para"									[ ]
+		BUCLE "para"									[X]
 			para identificador
 				desde expr numerica 1
 				hasta expr numerica 2
@@ -181,42 +181,42 @@ SENTENCIAS DE CONTROL:	[ ]								CHECK
 -----------------------------------------------------------------
 COMANDOS ESPECIALES:	[ ]								CHECK
 -----------------------------------------------------------------
-	_borrar												[ ]
-	_lugar(expr numérica 1, expr numérica 2)			[ ]
+	_borrar												[X]
+	_lugar(expr numérica 1, expr numérica 2)			[X]
 
 -----------------------------------------------------------------
 OBSERVACIONES:			[ ]								CHECK
 -----------------------------------------------------------------
-	CAMBIO DE TIPO DINÁMICO								[ ]
+	CAMBIO DE TIPO DINÁMICO								[X]
 
 
 -----------------------------------------------------------------
 CONTROL DE ERRORES:		[ ]								CHECK
 -----------------------------------------------------------------
 	LÉXICOS
-		IDENTIFICADOR MAL ESCRITO 						[ ]
-		SIMBOLO NO PERMITIDO							[ ]
+		IDENTIFICADOR MAL ESCRITO 						[X]
+		SIMBOLO NO PERMITIDO							[X]
 		OTROS											[ ]
 
 	SINTÁCTICOS											[ ]
-		SENTENCIA DE CONTROL MAL ESCRITA				[ ]
-		SENTENCIA CON ARGUMENTOS INCOMPATIBLES			[ ]
+		SENTENCIA DE CONTROL MAL ESCRITA				[X?]
+		SENTENCIA CON ARGUMENTOS INCOMPATIBLES			[X]
 		OTROS											[ ]
 
 	SEMÁNTICOS											[ ]
-		ARGUMENTOS U OPERANDOS INCOMPATIBLES			[ ]
+		ARGUMENTOS U OPERANDOS INCOMPATIBLES			[X]
 
 	DE EJECUCIÓN										[ ]
-		SENTENCIA "PARA" CON BUCLE INFINITO				[ ]
-		FICHERO INEXISTENTE								[ ]
-		FICHERO CON EXTENSIÓN INCORRECTA				[ ]
+		SENTENCIA "PARA" CON BUCLE INFINITO				[X]
+		FICHERO INEXISTENTE								[X]
+		FICHERO CON EXTENSIÓN INCORRECTA				[X]
 		OTROS											[ ]
 
 -----------------------------------------------------------------
 MODOS DE EJECUCIÓN:		[ ]								CHECK
 -----------------------------------------------------------------
 	INTERACTIVO											[ ]
-	DESDE FICHERO										[ ]
+	DESDE FICHERO										[X]
 
 -----------------------------------------------------------------
 OPCIONALES:				[ ]								CHECK
