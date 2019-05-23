@@ -1232,6 +1232,29 @@ bool lp::NotNode::evaluateBool()
 	return result;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void lp::Case::print(std::string msg){
+
+	this->_stmts->print(msg);
+
+}
+
+void lp::Case::evaluate(){
+
+	this->_stmts->evaluate();	
+
+}
+
+void lp::Case::evaluateNumber(){
+
+	this->_value->evaluateNumber();	
+
+}
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1268,6 +1291,61 @@ void lp::StatementList::addStatement(lp::Statement* stmt){
 
 }
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void lp::CaseList::print(std::string msg){
+
+  std::list<Case *>::iterator casesIter;
+
+  std::cout << msg  << std::endl;
+
+  for (casesIter = this->_cases->begin(); casesIter != this->_cases->end(); casesIter++)
+  {
+     (*casesIter)->print();
+  }
+
+}
+
+void lp::CaseList::evaluate(ExpNode* exp){
+
+	//El tipo de la expresion debe de ser numerico
+
+	if(exp->getType() != NUMBER){
+		warning("Error en tiempo de ejecución: tipo incompatible para la expresion ", "SEGUN");
+		return;
+	} 
+
+
+  //Solo se va a evaluar aquel case que cumpla la expresion
+
+  std::list<Case *>::iterator casesIter;
+
+
+  for (casesIter = this->_cases->begin(); casesIter != this->_cases->end(); casesIter++)
+  {
+  	
+  	if(exp->evaluateNumber() == (*casesIter)->evaluateNumber()){
+  		(*casesIter)->evaluate();
+
+  	}
+
+  }
+
+}
+
+void lp::CaseList::addCase(lp::Case* case){
+
+
+	
+
+	
+
+	_cases->push_back(case);
+
+}
 
 
 

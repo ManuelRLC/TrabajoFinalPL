@@ -407,6 +407,44 @@ for:  FOR VARIABLE FROM exp UNTIL exp STEP exp DO stmtlist ENDFOR
     	}
 ;
 
+
+switch: SWITCH LPAREN exp RPAREN listOfCase DEFAULT COLON stmtlist ENDSWITCH
+		{
+			//Creacion objeto de la clase switch
+			$$ = new lp::SwitchStmt($3,$5,$8);
+		}
+	|	SWITCH LPAREN exp RPAREN listOfCase ENDSWITCH
+		{
+			//Creacion objeto de la clase switch
+			$$ = new lp::SwitchStmt($3,$5);
+		}
+;
+
+case: VALUE NUMBER COLON stmtlist
+		{
+			//Creacion de un objetio de la clase case
+			$$ = new lp::Case($2,$4);
+
+		}
+;
+
+
+listOfCase: {
+				//Declaracion de una lista de casos
+				$$ = new lp::CaseList();
+
+			}
+			| listOfCase case
+				{
+				//Ir añadidendo este caso a la lista de casos
+
+				$$ = $1;
+
+				$$->addCase($2);
+
+				}
+
+
 	/*  NEW in example 17 */
 cond: 	LPAREN exp RPAREN
 		{ 
