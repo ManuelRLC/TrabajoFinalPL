@@ -96,6 +96,11 @@ NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 			return SEMICOLON;
 		}
 
+":"		{
+			/* NEW in example 5 */
+			return COLON;
+		}
+
 
 ","		{
 			/* NEW in example 14 */

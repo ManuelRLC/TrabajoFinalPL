@@ -1562,57 +1562,6 @@ class Statement {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-/*!
-  \class   Case
-  \brief   Definition of atributes and methods of Statement class
-  \warning Abstract class
-*/
-
-class Case {
- 
- private:
-
- 	StatementList* _stmts;
- 	ExpNode* _value;
-
- public:
-
-
- 	Case(ExpNode* value,StatementList* stmtList){
-
- 		_value = value;
- 		_stmts = stmtList;
-
- 	}
-
-/*!
-	\brief   Print the list of statement of case
-	\note    Virtual function: can be redefined in the heir classes
-	\sa		 print
-*/
-
-  void print() {}
-
-/*!
-	\brief   Evaluate the list of statement of case
-	\warning Pure virtual function: must be redefined in the heir classes
-	\sa		 print
-*/
-  void evaluate();
-
-/*!
-	\brief   Evaluate the exp of the case
-	\warning Pure virtual function: must be redefined in the heir classes
-	\sa		 print
-*/
-  double evaluateNumber();
-
-};
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
 
 /*!
   \class   StatementList
@@ -1653,6 +1602,59 @@ class StatementList {
 };
 
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
+  \class   Case
+  \brief   Definition of atributes and methods of Statement class
+  \warning Abstract class
+*/
+
+class Case {
+ 
+ private:
+
+ 	StatementList* _stmts;
+ 	double _value;
+
+ public:
+
+
+ 	Case(double value,StatementList* stmtList){
+
+ 		_value = value;
+ 		_stmts = stmtList;
+
+ 	}
+
+/*!
+	\brief   Print the list of statement of case
+	\note    Virtual function: can be redefined in the heir classes
+	\sa		 print
+*/
+
+  void print(std::string msg);
+
+/*!
+	\brief   Evaluate the list of statement of case
+	\warning Pure virtual function: must be redefined in the heir classes
+	\sa		 print
+*/
+  void evaluate();
+
+/*!
+	\brief   Evaluate the exp of the case
+	\warning Pure virtual function: must be redefined in the heir classes
+	\sa		 print
+*/
+  double evaluateNumber();
+
+};
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1669,7 +1671,7 @@ class CaseList {
  public:
 
  	CaseList(){
- 		_cases=new std::list<Case *>();
+ 		_cases = new std::list<Case *>();
  	}
 
 /*!
@@ -1685,10 +1687,10 @@ class CaseList {
 	\return  void
 	\sa		 print
 */
-  void evaluate(ExpNode * exp);
+  bool evaluate(ExpNode * exp);
 
 
-  void addCase(Case* case);
+  void addCase(Case* value);
 
 
 };
@@ -2140,6 +2142,62 @@ class ForStmt : public Statement
 
 /*!
 	\brief   Evaluate the ForStmt
+	\return  void
+	\sa		 print
+*/
+  void evaluate();
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+/*!
+  \class   SwitchStmt
+  \brief   Definition of atributes and methods of SwitchStmt class
+  \note    SwitchStmt Class publicly inherits from Statement class
+		   and adds its own print and evaluate functions
+*/
+class SwitchStmt : public Statement
+{
+ private:
+
+  ExpNode *_exp;
+  CaseList *_cases;
+
+  StatementList *_default;
+
+
+  public:
+/*!
+	\brief Constructor of  ForStmt
+	\param condition: ExpNode of the condition
+	\param statement: Statements of the body of the loop
+	\post  A new ForStmt is created with the parameters
+*/
+  SwitchStmt(ExpNode *exp,CaseList *cases,StatementList* defecto)
+	{
+		this->_exp = exp;
+		this->_cases = cases;
+		this->_default = defecto;
+	}
+
+  SwitchStmt(ExpNode *exp,CaseList *cases)
+	{
+		this->_exp = exp;
+		this->_cases = cases;
+		this->_default = NULL;
+	}
+
+
+/*!
+	\brief   Print the SwitchStmt
+	\return  void
+	\sa		 evaluate
+*/
+  void print();
+
+/*!
+	\brief   Evaluate the SwitchStmt
 	\return  void
 	\sa		 print
 */

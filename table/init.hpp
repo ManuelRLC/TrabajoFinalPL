@@ -95,7 +95,12 @@ static struct {
 						"paso",		STEP,
 						"fin_para",	ENDFOR,
 
+						"segun",	SWITCH,
+						"defecto",	DEFAULT,
+						"fin_segun",ENDSWITCH,
+						"valor", 	VALUE,
 
+						
 	                    "",      0
 	                   };
 
