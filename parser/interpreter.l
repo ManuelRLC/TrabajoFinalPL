@@ -52,7 +52,7 @@ bool isSentenciaControl(int token);
 
 bool isFinSentenciaControl(int token);
 
-extern bool sentenciaDeControl;
+extern int sentenciaDeControl;
 extern bool interactiveMode;
 
 
@@ -163,14 +163,12 @@ NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 								
 */								
   								if(interactiveMode){
-								  	if(!sentenciaDeControl){
-
-	  									sentenciaDeControl=isSentenciaControl(s->getToken());
-
-	  								}
-	  								else{
-	  									sentenciaDeControl=!isFinSentenciaControl(s->getToken());
-	  								}  									
+							  		if(isSentenciaControl(s->getToken())){
+							  			sentenciaDeControl++;
+							  		}
+							  		if(isFinSentenciaControl(s->getToken())){
+							  			sentenciaDeControl--;
+							  		}  									
   								}
 
 
@@ -208,10 +206,11 @@ NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 <ESTADO_COMENTARIO>\n {lineNumber++;}
 
 
-@.+$ 					{;}
+@.+$					{;}
 
 
-
+"--"		{ return MINUS2;  } 			/* NEW in example 3 */
+"++"		{ return PLUS2;   } 			/* NEW in example 3 */
                      
 "-"		{ return MINUS;  } 			/* NEW in example 3 */
 "+"		{ return PLUS;   } 			/* NEW in example 3 */

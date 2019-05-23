@@ -95,7 +95,7 @@ extern bool interactiveMode; //!< Control the interactive mode of execution of t
 
 
 
-extern bool sentenciaDeControl;
+extern int sentenciaDeControl;
 /***********************************************************/
 /* NEW in example 2 */
 extern std::string progname; //!<  Program name
@@ -207,7 +207,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 /*******************************************************/
 
 /* MODIFIED in example 3 */
-%left PLUS MINUS 
+%left PLUS MINUS PLUS2 MINUS2
 
 /* MODIFIED in example 5 */
 %left MULTIPLICATION INTEGER_DIVISION DIVISION MODULO
@@ -256,7 +256,7 @@ stmtlist:  /* empty: epsilon rule */
 			$$->addStatement($2);
 
 			// Control the interative mode of execution of the interpreter
-			if (interactiveMode == true && sentenciaDeControl==false)
+			if (interactiveMode == true && sentenciaDeControl==0)
  			   $2->evaluate();
 
            }
@@ -265,7 +265,6 @@ stmtlist:  /* empty: epsilon rule */
 
         | stmtlist error 
            { 
-           	sentenciaDeControl=false;
 			// just copy up the stmtlist when an error occurs
 			$$ = $1;
 
@@ -441,6 +440,31 @@ asgn:   VARIABLE ASSIGNMENT exp
 			// Create a new assignment node
 			$$ = new lp::AssignmentStmt($1, (lp::AssignmentStmt *) $3);
 		}
+
+	 | VARIABLE MINUS2
+		{
+		  // Create a new variable node	
+		  $$ = new lp::VariableUnaryRightMinusMinusNode($1);
+		}
+
+	 | MINUS2 VARIABLE 
+		{
+		  // Create a new variable node	
+		  $$ = new lp::VariableUnaryLeftMinusMinusNode($2);
+		}
+
+	 |  VARIABLE PLUS2
+		{
+		  // Create a new variable node	
+		  $$ = new lp::VariableUnaryRightPlusPlusNode($1);
+		}	
+
+	 | PLUS2 VARIABLE 
+		{
+		  // Create a new variable node	
+		  $$ = new lp::VariableUnaryLeftPlusPlusNode($2);
+		}
+
 
 	   /* NEW in example 11 */ 
 	| CONSTANT ASSIGNMENT exp 

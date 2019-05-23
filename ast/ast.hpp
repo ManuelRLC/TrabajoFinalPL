@@ -107,7 +107,7 @@ class VariableNode : public ExpNode
 	/*!
 		\brief Constructor of VariableNode
 		\param value: double
-		\post  A new NumericVariableNode is created with the name of the parameter
+		\post  A new VariableNode is created with the name of the parameter
 		\note  Inline function
 	*/
 	  VariableNode(std::string const & value)
@@ -151,6 +151,7 @@ class VariableNode : public ExpNode
 	  std::string evaluateString();
 
 };
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -499,41 +500,6 @@ class UnaryPlusNode : public NumericUnaryOperatorNode
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-/*!
-  \class   UnaryMinusMinusNode
-  \brief   Definition of atributes and methods of UnaryMinusMinusNode class
-  \note    UnaryMinusMinusNode Class publicly inherits from NumericUnaryOperatorNode class
-*/
-class UnaryMinusMinusNode : public NumericUnaryOperatorNode
-{
-
- public:
-
-/*!
-	\brief Constructor of UnaryMinusMinusNode uses NumericUnaryOperatorNode's constructor as member initializer.
-	\param expression: pointer to ExpNode
-	\post  A new UnaryMinusMinusNode is created with the parameter
-	\note  Inline function: the NumericUnaryOperatorNode's constructor is used ad member initializer
-*/
-  UnaryMinusMinusNode(ExpNode *expression): NumericUnaryOperatorNode(expression)
-	{
-		// empty
-	}
-
-/*!
-	\brief   Print the expression
-	\return  void
-	\sa		 evaluate()
-*/
-  void print();
-
-/*!
-	\brief   Evaluate the expression
-	\return  double
-	\sa		 print
-*/
-  double evaluateNumber();
-};
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
