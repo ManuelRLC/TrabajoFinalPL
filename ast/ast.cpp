@@ -416,6 +416,35 @@ double lp::UnaryPlusNode::evaluateNumber()
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+
+void lp::UnaryMinusMinusNode::print()
+{
+  std::cout << "UnaryMinusMinusNode: "  << std::endl;
+  std::cout << "-";
+  this->_exp->print();
+}
+
+double lp::UnaryMinusNode::evaluateNumber()
+{
+	double result = 0.0;
+
+	// Ckeck the type of the expression
+	if (this->getType() == NUMBER)
+	{
+		// Minus
+		result = - this->_exp->evaluateNumber();
+	}
+	else
+	{
+		warning("Runtime error: the expressions are not numeric for ", "UnaryMinus");
+	}
+
+  return result;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 void lp::PlusNode::print()
 {
   std::cout << "PlusNode: "  << std::endl;
