@@ -265,7 +265,7 @@ stmtlist:  /* empty: epsilon rule */
 
         | stmtlist error 
            { 
-
+           	sentenciaDeControl=false;
 			// just copy up the stmtlist when an error occurs
 			$$ = $1;
 
