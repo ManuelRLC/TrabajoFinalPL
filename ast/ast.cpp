@@ -1311,16 +1311,8 @@ void lp::CaseList::print(std::string msg){
 
 bool lp::CaseList::evaluate(ExpNode* exp){
 
-	//El tipo de la expresion debe de ser numerico
-
-	if(exp->getType() != NUMBER){
-		execerror("Error en tiempo de ejecución: tipo incompatible para la expresion ", "SEGUN");
-	} 
-
 
   bool evaluado = false;
-
-
 
   //Solo se va a evaluar aquel case que cumpla la expresion
 
@@ -2284,6 +2276,12 @@ void lp::SwitchStmt::print()
 
 void lp::SwitchStmt::evaluate()
 {
+
+	//El tipo de la expresion debe de ser numerico
+	if(this->_exp->getType() != NUMBER){
+		warning("Error en tiempo de ejecución: tipo incompatible para la expresion ", "SEGUN");
+		return;
+	} 
 
 	bool CasoEvaluado = this->_cases->evaluate(this->_exp);
 
