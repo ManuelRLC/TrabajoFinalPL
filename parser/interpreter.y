@@ -147,7 +147,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 
 /* Type of the non-terminal symbols */
 // New in example 17: cond
-%type <expNode> exp cond 
+%type <expNode> exp cond unary
 
 /* New in example 14 */
 %type <parameters> listOfExp  restOfListOfExp
@@ -155,7 +155,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 %type <stmts> stmtlist
 
 // New in example 17: if, while
-%type <st> stmt asgn print read if while repeat for erase place
+%type <st> stmt asgn print read if while repeat for erase place 
 
 %type <prog> program
 
@@ -172,7 +172,7 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 %token PRINT READ READ_STRING IF THEN ELSE ENDIF WHILE DO ENDWHILE REPEAT UNTIL FOR FROM STEP ENDFOR ERASE PLACE
 
 /* NEW in example 7 */
-%right ASSIGNMENT
+%right ASSIGNMENT PLUS_ASSIGNMENT MINUS_ASSIGNMENT MULTIPLICATION_ASSIGNMENT DIVISION_ASSIGNMENT
 
 /* NEW in example 14 */
 %token COMMA
@@ -441,30 +441,35 @@ asgn:   VARIABLE ASSIGNMENT exp
 			$$ = new lp::AssignmentStmt($1, (lp::AssignmentStmt *) $3);
 		}
 
-	 | VARIABLE MINUS2
+	 | VARIABLE ASSIGNMENT unary
+		 {
+		 	$$ = new lp::AssignmentStmt($1, (lp::UnaryVariableNode *)$3);
+		 }
+
+	| unary
 		{
-		  // Create a new variable node	
-		  $$ = new lp::VariableUnaryRightMinusMinusNode($1);
+			$$ = new lp::AssignmentStmt((lp::UnaryVariableNode *)$1);
 		}
 
-	 | MINUS2 VARIABLE 
+	| VARIABLE PLUS_ASSIGNMENT exp
 		{
-		  // Create a new variable node	
-		  $$ = new lp::VariableUnaryLeftMinusMinusNode($2);
+			$$ = (lp::AssignmentStmt *)(new lp::PlusAssignmentStmt($1, $3));
 		}
 
-	 |  VARIABLE PLUS2
+	| VARIABLE MINUS_ASSIGNMENT exp
 		{
-		  // Create a new variable node	
-		  $$ = new lp::VariableUnaryRightPlusPlusNode($1);
-		}	
-
-	 | PLUS2 VARIABLE 
-		{
-		  // Create a new variable node	
-		  $$ = new lp::VariableUnaryLeftPlusPlusNode($2);
+			$$ = (lp::AssignmentStmt *)(new lp::MinusAssignmentStmt($1, $3));
 		}
 
+	| VARIABLE MULTIPLICATION_ASSIGNMENT exp
+		{
+			$$ = (lp::AssignmentStmt *)(new lp::MultiplicationAssignmentStmt($1, $3));
+		}
+
+	| VARIABLE DIVISION_ASSIGNMENT exp
+		{
+			$$ = (lp::AssignmentStmt *)(new lp::DivisionAssignmentStmt($1, $3));
+		}
 
 	   /* NEW in example 11 */ 
 	| CONSTANT ASSIGNMENT exp 
@@ -478,6 +483,28 @@ asgn:   VARIABLE ASSIGNMENT exp
 		}
 ;
 
+unary: VARIABLE MINUS2
+
+		{
+			$$ = new lp::UnaryPostDecrementNode($1);
+		}
+
+	 | MINUS2 VARIABLE 
+		{
+	
+		  $$ = new lp::UnaryPreDecrementNode($2);
+		}
+
+	 | VARIABLE PLUS2
+		{
+
+		  $$ = new lp::UnaryPostIncrementNode($1);
+		}	
+
+	 | PLUS2 VARIABLE 
+		{
+		  $$ = new lp::UnaryPreIncrementNode($2);
+		}
 
 print:  PRINT LPAREN exp RPAREN 
 		{

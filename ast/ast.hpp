@@ -116,6 +116,15 @@ class VariableNode : public ExpNode
 		}
 
 	/*!
+		\brief   Id of the Variable
+		\return  string
+		\sa		 print
+	*/
+	std::string getId(){
+		return _id;
+	}
+
+	/*!
 		\brief   Type of the Variable
 		\return  int
 		\sa		 print
@@ -155,6 +164,223 @@ class VariableNode : public ExpNode
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
+  \class UnaryVariableNode
+  \brief Definition of atributes and methods of UnaryVariableNode class
+  \note  UnaryVariableNode Class publicly inherits from VariableNode class
+  \warning Abstract Class
+*/
+class UnaryVariableNode : public VariableNode
+{
+	private:
+
+	public:
+
+	/*!
+		\brief Constructor of UnaryVariableNode
+		\param value: string
+		\post  A new UnaryVariableNode is created with the name of the parameter
+		\note  Inline function
+	*/
+	  UnaryVariableNode(std::string const & value): VariableNode(value)
+		{
+
+		}
+
+	/*!
+		\brief   Print the Variable
+		\return  void
+		\sa		 evaluate()
+	*/
+	  virtual void print()=0;
+
+	/*!
+		\brief   Evaluate the Variable as NUMBER
+		\return  double
+		\sa		 print
+	*/
+	 virtual double evaluateNumber()=0;
+
+
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
+  \class UnaryPostDecrementNode
+  \brief Definition of atributes and methods of UnaryPostDecrementNode class
+  \note  UnaryPostDecrementNode Class publicly inherits from UnaryVariableNode class
+*/
+class UnaryPostDecrementNode : public UnaryVariableNode
+{
+	private:
+
+	public:
+
+	/*!
+		\brief Constructor of UnaryPostDecrementNode
+		\param value: double
+		\post  A new UnaryPostDecrementNode is created with the name of the parameter
+		\note  Inline function
+	*/
+	  UnaryPostDecrementNode(std::string const & value):UnaryVariableNode(value)
+		{
+
+		}
+
+	/*!
+		\brief   Print the Variable
+		\return  void
+		\sa		 evaluate()
+	*/
+	  void print();
+
+	/*!
+		\brief   Evaluate the Variable as NUMBER
+		\return  double
+		\sa		 print
+	*/
+	  double evaluateNumber();
+
+
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
+  \class UnaryPreDecrementNode
+  \brief Definition of atributes and methods of UnaryPostDecrementNode class
+  \note  UnaryPostDecrementNode Class publicly inherits from UnaryVariableNode class
+*/
+class UnaryPreDecrementNode : public UnaryVariableNode
+{
+	private:
+
+	public:
+
+	/*!
+		\brief Constructor of UnaryPreDecrementNode
+		\param value: double
+		\post  A new UnaryPreDecrementNode is created with the name of the parameter
+		\note  Inline function
+	*/
+	  UnaryPreDecrementNode(std::string const & value):UnaryVariableNode(value)
+		{
+
+		}
+
+	/*!
+		\brief   Print the Variable
+		\return  void
+		\sa		 evaluate()
+	*/
+	  void print();
+
+	/*!
+		\brief   Evaluate the Variable as NUMBER
+		\return  double
+		\sa		 print
+	*/
+	  double evaluateNumber();
+
+
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
+  \class UnaryPostIncrementNode
+  \brief Definition of atributes and methods of UnaryPostIncrementNode class
+  \note  UnaryPostIncrementNode Class publicly inherits from UnaryVariableNode class
+*/
+class UnaryPostIncrementNode : public UnaryVariableNode
+{
+	private:
+
+	public:
+
+	/*!
+		\brief Constructor of UnaryPostIncrementNode
+		\param value: double
+		\post  A new UnaryPostIncrementNode is created with the name of the parameter
+		\note  Inline function
+	*/
+	  UnaryPostIncrementNode(std::string const & value):UnaryVariableNode(value)
+		{
+
+		}
+
+	/*!
+		\brief   Print the Variable
+		\return  void
+		\sa		 evaluate()
+	*/
+	  void print();
+
+	/*!
+		\brief   Evaluate the Variable as NUMBER
+		\return  double
+		\sa		 print
+	*/
+	  double evaluateNumber();
+
+
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
+  \class UnaryPreIncrementNode
+  \brief Definition of atributes and methods of UnaryPreIncrementNode class
+  \note  UnaryPreIncrementNode Class publicly inherits from UnaryVariableNode class
+*/
+class UnaryPreIncrementNode : public UnaryVariableNode
+{
+	private:
+
+	public:
+
+	/*!
+		\brief Constructor of UnaryPreIncrementNode
+		\param value: double
+		\post  A new UnaryPreIncrementNode is created with the name of the parameter
+		\note  Inline function
+	*/
+	  UnaryPreIncrementNode(std::string const & value):UnaryVariableNode(value)
+		{
+
+		}
+
+	/*!
+		\brief   Print the Variable
+		\return  void
+		\sa		 evaluate()
+	*/
+	  void print();
+
+	/*!
+		\brief   Evaluate the Variable as NUMBER
+		\return  double
+		\sa		 print
+	*/
+	  double evaluateNumber();
+
+
+};
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
 
 /*!
   \class ConstantNode
@@ -1625,6 +1851,8 @@ class AssignmentStmt : public Statement
 
   AssignmentStmt *_asgn;  //!< Allow multiple assigment -> a = b = 2
 
+  UnaryVariableNode *_unary; //!< Allow last assignment to be an increment or a decrement-> a++
+
  public:
 
 /*!
@@ -1636,6 +1864,7 @@ class AssignmentStmt : public Statement
   AssignmentStmt(std::string id, ExpNode *expression): _id(id), _exp(expression)
 	{
 		this->_asgn = NULL;
+		this->_unary = NULL;
 	}
 
 /*!
@@ -1649,6 +1878,41 @@ class AssignmentStmt : public Statement
   AssignmentStmt(std::string id, AssignmentStmt *asgn): _id(id), _asgn(asgn)
 	{
 		this->_exp = NULL;
+		this->_unary = NULL;
+	}
+
+/*!
+	\brief Constructor of AssignmentStmt
+	\param id: string, variable of the AssignmentStmt
+	\param unary: pointer to UnaryVariableNode
+	\post  A new AssignmentStmt is created with the parameters
+*/
+
+  AssignmentStmt(std::string id, UnaryVariableNode *unary): _id(id),  _unary(unary)
+	{
+		this->_exp = NULL;
+		this->_asgn = NULL;
+	}
+
+/*!
+	\brief Constructor of AssignmentStmt
+	\param unary: pointer to UnaryVariableNode
+	\post  A new AssignmentStmt is created with the parameters
+	\note  Allow multiple assigment -> a = b = 2
+*/
+
+  AssignmentStmt(UnaryVariableNode *unary):  _unary(unary)
+	{
+		this->_id = "";
+		this->_exp = NULL;
+		this->_asgn = NULL;
+	}
+
+	std::string getId(){
+		return _id;
+	}
+	ExpNode * getExpression(){
+		return _exp;
 	}
 
 
@@ -1657,7 +1921,7 @@ class AssignmentStmt : public Statement
 	\return  void
 	\sa		 evaluate()
 */
-  void print();
+   void print();
 
 /*!
 	\brief   Evaluate the AssignmentStmt
@@ -1670,6 +1934,195 @@ class AssignmentStmt : public Statement
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*!
+  \class   PlusAssignmentStmt
+  \brief   Definition of atributes and methods of PlusAssignmentStmt class
+  \note    PlusAssignmentStmt Class publicly inherits from AssignmentStmt class
+		   and adds its own print and evaluate functions
+*/
+class PlusAssignmentStmt : public AssignmentStmt
+{
+ private:
+
+
+
+ public:
+
+/*!
+	\brief Constructor of PlusAssignmentStmt
+	\param id: string, variable of the PlusAssignmentStmt
+	\param expression: pointer to ExpNode
+	\post  A new PlusAssignmentStmt is created with the parameters
+*/
+  PlusAssignmentStmt(std::string id, ExpNode *expression): AssignmentStmt( id,expression)
+	{
+	}
+
+
+
+
+/*!
+	\brief   Print the PlusAssignmentStmt
+	\return  void
+	\sa		 evaluate()
+*/
+   void print();
+
+/*!
+	\brief   Evaluate the PlusAssignmentStmt
+	\return  void
+	\sa		 print
+*/
+    void evaluate();
+
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*!
+  \class   MinusAssignmentStmt
+  \brief   Definition of atributes and methods of MinusAssignmentStmt class
+  \note    MinusAssignmentStmt Class publicly inherits from AssignmentStmt class
+		   and adds its own print and evaluate functions
+*/
+class MinusAssignmentStmt : public AssignmentStmt
+{
+ private:
+
+
+
+ public:
+
+/*!
+	\brief Constructor of MinusAssignmentStmt
+	\param id: string, variable of the MinusAssignmentStmt
+	\param expression: pointer to ExpNode
+	\post  A new MinusAssignmentStmt is created with the parameters
+*/
+  MinusAssignmentStmt(std::string id, ExpNode *expression): AssignmentStmt( id,expression)
+	{
+	}
+
+
+
+
+/*!
+	\brief   Print the MinusAssignmentStmt
+	\return  void
+	\sa		 evaluate()
+*/
+   void print();
+
+/*!
+	\brief   Evaluate the MinusAssignmentStmt
+	\return  void
+	\sa		 print
+*/
+    void evaluate();
+
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*!
+  \class   MultiplicationAssignmentStmt
+  \brief   Definition of atributes and methods of MultiplicationAssignmentStmt class
+  \note    MultiplicationAssignmentStmt Class publicly inherits from AssignmentStmt class
+		   and adds its own print and evaluate functions
+*/
+class MultiplicationAssignmentStmt : public AssignmentStmt
+{
+ private:
+
+
+
+ public:
+
+/*!
+	\brief Constructor of MultiplicationAssignmentStmt
+	\param id: string, variable of the MultiplicationAssignmentStmt
+	\param expression: pointer to ExpNode
+	\post  A new MultiplicationAssignmentStmt is created with the parameters
+*/
+  MultiplicationAssignmentStmt(std::string id, ExpNode *expression): AssignmentStmt( id,expression)
+	{
+	}
+
+
+
+
+/*!
+	\brief   Print the MultiplicationAssignmentStmt
+	\return  void
+	\sa		 evaluate()
+*/
+   void print();
+
+/*!
+	\brief   Evaluate the MultiplicationAssignmentStmt
+	\return  void
+	\sa		 print
+*/
+    void evaluate();
+
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*!
+  \class   DivisionAssignmentStmt
+  \brief   Definition of atributes and methods of DivisionAssignmentStmt class
+  \note    DivisionAssignmentStmt Class publicly inherits from AssignmentStmt class
+		   and adds its own print and evaluate functions
+*/
+class DivisionAssignmentStmt : public AssignmentStmt
+{
+ private:
+
+
+
+ public:
+
+/*!
+	\brief Constructor of DivisionAssignmentStmt
+	\param id: string, variable of the DivisionAssignmentStmt
+	\param expression: pointer to ExpNode
+	\post  A new DivisionAssignmentStmt is created with the parameters
+*/
+  DivisionAssignmentStmt(std::string id, ExpNode *expression): AssignmentStmt( id,expression)
+	{
+	}
+
+
+
+
+/*!
+	\brief   Print the DivisionAssignmentStmt
+	\return  void
+	\sa		 evaluate()
+*/
+   void print();
+
+/*!
+	\brief   Evaluate the DivisionAssignmentStmt
+	\return  void
+	\sa		 print
+*/
+    void evaluate();
+
+};
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 
 /*!
   \class   PrintStmt

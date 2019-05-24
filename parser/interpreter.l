@@ -230,6 +230,15 @@ NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 
 ":=" 	{ return ASSIGNMENT; }		/* NEW in example 7 */
 
+"+:=" 	{ return PLUS_ASSIGNMENT; }	
+
+"-:=" 	{ return MINUS_ASSIGNMENT; }	
+
+"*:=" 	{ return MULTIPLICATION_ASSIGNMENT; }	
+
+"/:=" 	{ return DIVISION_ASSIGNMENT; }	
+
+
 
 "="	{ return EQUAL; }			/* NEW in example 15 */
 
