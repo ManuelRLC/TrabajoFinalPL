@@ -3,19 +3,16 @@
   \brief Grammar file
 */
 
-
 %{
 #include <iostream>
 #include <string>
 
 /*******************************************/
-/* NEW in example 5 */
 /* pow */
 #include <math.h>
 /*******************************************/
 
 /*******************************************/
-/* NEW in example 6 */
 /* Use for recovery of runtime errors */
 #include <setjmp.h>
 #include <signal.h>
@@ -30,7 +27,6 @@
 
 /*******************************************/
 /* 
-  NEW in example 16
   AST class
   IMPORTANT: this file must be before init.hpp
 */
@@ -38,7 +34,6 @@
 
 
 /*******************************************/
-/* NEW in example 7 */
 /* Table of symbol */
 #include "../table/table.hpp"
 /*******************************************/
@@ -47,38 +42,34 @@
 #include "../table/numericVariable.hpp"
 /*******************************************/
 
-/* NEW in example 15 */
 #include "../table/logicalVariable.hpp"
 
 /*******************************************/
 #include "../table/stringVariable.hpp"
 
 /*******************************************/
-/* NEW in example 11 */
 #include "../table/numericConstant.hpp"
 /*******************************************/
 
 /*******************************************/
-/* NEW in example 15 */
 #include "../table/logicalConstant.hpp"
 /*******************************************/
 
 /*******************************************/
-/* NEW in example 13 */
 #include "../table/builtinParameter1.hpp"
 /*******************************************/
 
 /*******************************************/
-/* NEW in example 14 */
 #include "../table/builtinParameter0.hpp"
 #include "../table/builtinParameter2.hpp"
 /*******************************************/
 
 
 /*******************************************/
-/* NEW in example 10 */
 #include "../table/init.hpp"
 /*******************************************/
+
+#include "funcionesAuxiliares.hpp"
 
 /*! 
 	\brief  Lexical or scanner function
@@ -90,19 +81,15 @@ int yylex();
 
 extern int lineNumber; //!< External line counter
 
-/* NEW in example 15 */
 extern bool interactiveMode; //!< Control the interactive mode of execution of the interpreter
 
+extern int sentenciaDeControl; //!< External sentencia de control
 
-
-extern int sentenciaDeControl;
 /***********************************************************/
-/* NEW in example 2 */
 extern std::string progname; //!<  Program name
 /***********************************************************/
 
 /*******************************************/
-/* NEW in example 6 */
 /*
  jhmp_buf
     This is an array type capable of storing the information of a calling environment to be restored later.
@@ -113,16 +100,14 @@ jmp_buf begin; //!<  It enables recovery of runtime errors
 
 
 /*******************************************/
-/* NEW in example 7 */
+
 extern lp::Table table; //!< Extern Table of Symbols
 
 /*******************************************/
-/* NEW in example 16 */
+
 extern lp::AST *root; //!< External root of the abstract syntax tree AST
 
 %}
-
-
 
 /* In case of a syntactic error, more information is shown */
 %error-verbose
@@ -132,27 +117,24 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 
 /*******************************************/
 /* Data type YYSTYPE  */
-/* NEW in example 4 */
 %union {
-  char * identifier; 				 /* NEW in example 7 */
+  char * identifier; 				
   double number;  
-  bool logic;						 /* NEW in example 15 */
+  bool logic;						 
   std::string *str;
-  lp::ExpNode *expNode;  			 /* NEW in example 16 */
-  std::list<lp::ExpNode *>  *parameters;    // New in example 16; NOTE: #include<list> must be in interpreter.l, init.cpp, interpreter.cpp
-  lp::StatementList *stmts; /* NEW in example 16 */
-  lp::Statement *st;				 /* NEW in example 16 */
-  lp::AST *prog;					 /* NEW in example 16 */
+  lp::ExpNode *expNode;  			 
+  std::list<lp::ExpNode *>  *parameters;    
+  lp::StatementList *stmts; 
+  lp::Statement *st;				 
+  lp::AST *prog;					
   lp::CaseList *cases;
   lp::Case *value;
 
 }
 
 /* Type of the non-terminal symbols */
-// New in example 17: cond
 %type <expNode> exp cond unary
 
-/* New in example 14 */
 %type <parameters> listOfExp  restOfListOfExp
 
 %type <stmts> stmtlist
@@ -161,7 +143,6 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 
 %type <value> case
 
-// New in example 17: if, while
 %type <st> stmt asgn print read if while repeat for erase place switch
 
 %type <prog> program
@@ -171,37 +152,28 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 /* Minimum precedence */
 
 /*******************************************/
-/* NEW in example 5 */
 %token SEMICOLON COLON
 /*******************************************/
 
-// NEW in example 17: IF, ELSE, WHILE 
 %token PRINT READ READ_STRING IF THEN ELSE ENDIF WHILE DO ENDWHILE REPEAT UNTIL FOR FROM STEP ENDFOR ERASE PLACE SWITCH DEFAULT ENDSWITCH VALUE
 
-/* NEW in example 7 */
 %right ASSIGNMENT PLUS_ASSIGNMENT MINUS_ASSIGNMENT MULTIPLICATION_ASSIGNMENT DIVISION_ASSIGNMENT
 
-/* NEW in example 14 */
 %token COMMA
 
 /*******************************************/
-/* MODIFIED in example 4 */
 %token <number> NUMBER
 /*******************************************/
 %token <str> STRING
-
 /*******************************************/
-/* NEW in example 15 */
 %token <logic> BOOL
 /*******************************************/
 
-/* MODIFIED in examples 11, 13 */
 %token <identifier> VARIABLE UNDEFINED CONSTANT BUILTIN
 
 /* Left associativity */
 
 /*******************************************************/
-/* NEW in example 15 */
 %left OR
 
 %left AND
@@ -213,10 +185,8 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 %left NOT
 /*******************************************************/
 
-/* MODIFIED in example 3 */
 %left PLUS MINUS PLUS2 MINUS2
 
-/* MODIFIED in example 5 */
 %left MULTIPLICATION INTEGER_DIVISION DIVISION MODULO
 
 %left LPAREN RPAREN
@@ -224,14 +194,11 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 %nonassoc  UNARY
 
 // Maximum precedence 
-/* MODIFIED in example 5 */
 %right POWER
 
 
 %%
 //! \name Grammar rules
-
-/* MODIFIED  Grammar in example 16 */
 
 program : stmtlist
 		  { 
@@ -250,7 +217,6 @@ stmtlist:  /* empty: epsilon rule */
 		  { 
 
 			// create a empty list of statements
-			//$$ = new std::list<lp::Statement *>(); 
 		  	$$ = new lp::StatementList();
 		  }  
 
@@ -267,8 +233,6 @@ stmtlist:  /* empty: epsilon rule */
  			   $2->evaluate();
 
            }
-
-
 
         | stmtlist error 
            { 
@@ -291,6 +255,10 @@ stmt: SEMICOLON  /* Empty statement: ";" */
 		// Default action
 		// $$ = $1;
 	  }
+	| unary SEMICOLON
+	  {
+	  	$$ = new lp::AssignmentStmt((lp::UnaryVariableNode *)$1);
+	  }
 	| print SEMICOLON
 	  {
 		// Default action
@@ -301,49 +269,43 @@ stmt: SEMICOLON  /* Empty statement: ";" */
 		// Default action
 		// $$ = $1;
 	  }
-	/*  NEW in example 17 */
 	| if 
 	 {
 		// Default action
 		// $$ = $1;
 	 }
-	/*  NEW in example 17 */
 	| while 
 	 {
 		// Default action
 		// $$ = $1;
 	 }
 	| repeat
-	{
+	 {
 		// Default action
 		// $$ = $1;	
-	}
+	 }
 	| for
-	{
+	 {
 		// Default action
 		// $$ = $1;	
-	}
+	 }
 	| erase SEMICOLON
-	{
+	 {
 		// Default action
 		// $$ = $1;	
-	}
+	 }
 	| place SEMICOLON
-	{
+	 {
 		// Default action
 		// $$ = $1;	
-	}
+	 }
 	| switch
-	  {
-
-	  }
-
-
+	 {
+	  	// Default action
+		// $$ = $1;	
+	 }
 ;
 
-
- 
-	/*  NEW in example 17 */
 if:	/* Simple conditional statement */
 	IF cond THEN stmtlist ENDIF
     {
@@ -360,12 +322,12 @@ if:	/* Simple conditional statement */
 
 	| IF cond stmtlist ENDIF
 	 {
-	 	warning("Error sintactico: en \"sentencia SI\": falta 'Entonces' ","");
+	 	warning("Error sintactico: en \"sentencia SI\": falta 'ENTONCES' ","");
 	 	$$ = new lp::IfStmt($2, $3);
 	 }
 	|  IF cond stmtlist ELSE stmtlist ENDIF
 	 {
-	 	warning("Error sintactico: en \"sentencia SI\": falta 'Entonces' ","");
+	 	warning("Error sintactico: en \"sentencia SI\": falta 'ENTONCES' ","");
 	 	$$ = new lp::IfStmt($2, $3, $5);
 	 }
 ;
@@ -379,7 +341,7 @@ while:  WHILE cond DO stmtlist ENDWHILE
 
        | WHILE cond stmtlist ENDWHILE
         {
-        	warning("Error sintactico: en \"sentencia MIENTRAS\": falta 'Hacer' ","");
+        	warning("Error sintactico: en \"sentencia MIENTRAS\": falta 'HACER' ","");
 			$$ = new lp::WhileStmt($2, $3);
         }
 ;
@@ -497,11 +459,6 @@ asgn:   VARIABLE ASSIGNMENT exp
 		 	$$ = new lp::AssignmentStmt($1, (lp::UnaryVariableNode *)$3);
 		 }
 
-	| unary
-		{
-			$$ = new lp::AssignmentStmt((lp::UnaryVariableNode *)$1);
-		}
-
 	| VARIABLE PLUS_ASSIGNMENT exp
 		{
 			$$ = (lp::AssignmentStmt *)(new lp::PlusAssignmentStmt($1, $3));
@@ -525,12 +482,12 @@ asgn:   VARIABLE ASSIGNMENT exp
 	   /* NEW in example 11 */ 
 	| CONSTANT ASSIGNMENT exp 
 		{   
- 			execerror("Error semántico en asignación: no está permitido modificar una constante ", $1);
+ 			execerror("Error semantico en asignación: no esta permitido modificar una constante ", $1);
 		}
 	   /* NEW in example 11 */ 
 	| CONSTANT ASSIGNMENT asgn 
 		{   
- 			execerror("Error semántico en asignación multiple: no está permitido modificar una constante ",$1);
+ 			execerror("Error semantico en asignación multiple: no esta permitido modificar una constante ",$1);
 		}
 ;
 
@@ -718,11 +675,11 @@ exp:	NUMBER
 						break;
 
 					default:
-				  			 execerror("Syntax error: too many parameters for function ", $1);
+				  			 execerror("Error sintactico: demasiados parametros para la función", $1);
 				} 
 			}
 			else
-	  			 execerror("Syntax error: incompatible number of parameters for function", $1);
+	  			 execerror("Error sintactico: numero de parametros incompatibles para la funcion", $1);
 		}
 
 	| exp GREATER_THAN exp

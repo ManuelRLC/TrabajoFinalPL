@@ -46,7 +46,7 @@ void warning(std::string errorMessage1,std::string errorMessage2)
 
 void yyerror(std::string errorMessage)
 {
-	warning("Parser error",errorMessage);
+	warning("Error del analizador",errorMessage);
 }
 
 
@@ -59,25 +59,24 @@ void execerror(std::string errorMessage1,std::string errorMessage2)
 
 void fpecatch(int signum)     
 {
- execerror("Run time","floating point error");
+ execerror("Tiempo de ejecución","error de punto flotante");
 }
 
 
 
-// NEW in example 13
 double errcheck(double d, std::string s)
 {
   if (errno==EDOM)
     {
      errno=0;
-     std::string msg("Runtime error --> argument out of domain");
+     std::string msg("Error en tiempo de ejecución -> argumento fuera del dominio");
  
      std::cout << msg << std::endl;
      execerror(s,msg);
     }
    else if (errno==ERANGE)
            {
-		 	std::string msg("Runtime error --> result out of range");
+		 	std::string msg("Error en tiempo de ejecución -> resultado fuera de rango");
             errno=0;
             execerror(s,msg);
            }

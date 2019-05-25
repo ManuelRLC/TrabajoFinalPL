@@ -42,18 +42,9 @@ extern lp::Table table; //!< External Table of Symbols
 
 extern int lineNumber; //!< External line counter
 
-/*!
-	\brief Function that convert a string to lowercase 
-	\param identifier: char*
-*/
-void changeStringToLower(char* identifier);
+extern int sentenciaDeControl; //!< External sentencia de control
 
-bool isSentenciaControl(int token);
-
-bool isFinSentenciaControl(int token);
-
-extern int sentenciaDeControl;
-extern bool interactiveMode;
+extern bool interactiveMode; //!< Control the interactive mode of execution of the interpreter
 
 
 %}
@@ -107,64 +98,59 @@ NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 		}
 
 {NUMBER1}|{NUMBER2}  {
-					  /* Conversion of type and sending of the numerical value to the parser */
-					   yylval.number = atof(yytext); 
+						/* Conversion of type and sending of the numerical value to the parser */
+						yylval.number = atof(yytext); 
 
-                       return NUMBER; 
-                      }
-
+						return NUMBER; 
+                     }
 
 {IDENTIFIER}   		 {
-
 						changeStringToLower(yytext);
 
 						std::string identifier(yytext);
 
 						/* 
-                          strdup() function returns a pointer to a new string 
-                          which  is a duplicate of the string yytext
-                        */
-						  yylval.identifier =  strdup(yytext); 
+						strdup() function returns a pointer to a new string 
+						which  is a duplicate of the string yytext
+						*/
+						yylval.identifier =  strdup(yytext); 
 
 
 						/* If the identifier is not in the table of symbols then it is inserted */	
-						 if (table.lookupSymbol(identifier) == false)
-							{
-								/* 
-								 The identifier is inserted into the symbol table 
-								 as undefined Variable with value 0.0
-								*/
-								lp::NumericVariable *n = new lp::NumericVariable(identifier,VARIABLE,UNDEFINED,0.0);
+						if (table.lookupSymbol(identifier) == false){
+							/* 
+							 The identifier is inserted into the symbol table 
+							 as undefined Variable with value 0.0
+							*/
+							lp::NumericVariable *n = new lp::NumericVariable(identifier,VARIABLE,UNDEFINED,0.0);
 
-								/* A pointer to the new NumericVariable is inserted into the table of symbols */
-								table.installSymbol(n);
+							/* A pointer to the new NumericVariable is inserted into the table of symbols */
+							table.installSymbol(n);
 
-								return VARIABLE;
-							}
+							return VARIABLE;
+						}
 
 						/* 
 							If the identifier is in the table of symbols then its token is returned 
 								The identifier can be a variable or a numeric constant
 						*/
-						else 
-							{
-								lp::Symbol	*s = table.getSymbol(identifier);
+						else{
 
-  								if(interactiveMode){
-							  		if(isSentenciaControl(s->getToken())){
-							  			sentenciaDeControl++;
-							  		}
-							  		if(isFinSentenciaControl(s->getToken())){
-							  			sentenciaDeControl--;
-							  		}  									
-  								}
+							lp::Symbol	*s = table.getSymbol(identifier);
 
-
-
-								/*  If the identifier is in the table then its token is returned  */
-								return s->getToken();
-
+							if(interactiveMode){
+						  		if(isSentenciaControl(s->getToken())){
+						  			sentenciaDeControl++;
+						  		}
+						  		if(isFinSentenciaControl(s->getToken())){
+						  			sentenciaDeControl--;
+						  		}  									
 							}
+
+							/*  If the identifier is in the table then its token is returned  */
+							return s->getToken();
+
+						}
                      }
 
 "'"						{BEGIN ESTADO_CADENA;}
@@ -179,10 +165,7 @@ NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 <ESTADO_CADENA>"\\\'"	{yymore();}
 
 
-
-
-<ESTADO_CADENA>.|\n 	{yymore();
-						}
+<ESTADO_CADENA>.|\n 	{yymore();}
 
 
 "#"					{BEGIN ESTADO_COMENTARIO;}
@@ -198,26 +181,26 @@ NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 @.+$					{;}
 
 
-"--"		{ return MINUS2;  } 			/* NEW in example 3 */
-"++"		{ return PLUS2;   } 			/* NEW in example 3 */
+"--"		{ return MINUS2;  } 			
+"++"		{ return PLUS2;   } 			
                      
-"-"		{ return MINUS;  } 			/* NEW in example 3 */
-"+"		{ return PLUS;   } 			/* NEW in example 3 */
+"-"		{ return MINUS;  } 			
+"+"		{ return PLUS;   } 			
 
 "*"	    { return MULTIPLICATION; }
-"/" 	{ return DIVISION; }/* NEW in example 3 */
-(?i:_div)     { return INTEGER_DIVISION; } 		/* NEW in example 3 */
+"/" 	{ return DIVISION; }
+(?i:_div)     { return INTEGER_DIVISION; } 		
 
-"("     { return LPAREN; } 			/* NEW in example 3 */
-")"	    { return RPAREN; } 			/* NEW in example 3 */
+"("     { return LPAREN; } 		
+")"	    { return RPAREN; } 			
 
 
 
-(?i:_mod)    { return MODULO; }			/* NEW in example 5 */
+(?i:_mod)    { return MODULO; }			
 
-"**"	    { return POWER; }			/* NEW in example 5 */
+"**"	    { return POWER; }			
 
-":=" 	{ return ASSIGNMENT; }		/* NEW in example 7 */
+":=" 	{ return ASSIGNMENT; }		
 
 "+:=" 	{ return PLUS_ASSIGNMENT; }	
 
@@ -228,26 +211,25 @@ NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 "/:=" 	{ return DIVISION_ASSIGNMENT; }	
 
 
+"="	{ return EQUAL; }			
 
-"="	{ return EQUAL; }			/* NEW in example 15 */
+"<>"	{ return NOT_EQUAL; }		
 
-"<>"	{ return NOT_EQUAL; }		/* NEW in example 15 */
+">="	{ return GREATER_OR_EQUAL; }
 
-">="	{ return GREATER_OR_EQUAL; }/* NEW in example 15 */
+"<="	{ return LESS_OR_EQUAL; }	
 
-"<="	{ return LESS_OR_EQUAL; }	/* NEW in example 15 */
+">"		{ return GREATER_THAN; }	
 
-">"		{ return GREATER_THAN; }	/* NEW in example 15 */
-
-"<"		{ return LESS_THAN; }		/* NEW in example 15 */
+"<"		{ return LESS_THAN; }		
 
 "||"    {return CONCATENATE; }
 
-(?i:_no)		{ return NOT; }				/* NEW in example 15 */
+(?i:_no)		{ return NOT; }				
 
-(?i:_o)	{ return OR; }				/* NEW in example 15 */
+(?i:_o)	{ return OR; }				
 
-(?i:_y)	{ return AND; }				/* NEW in example 15 */
+(?i:_y)	{ return AND; }				
 
 (?i:_borrar)	{ return ERASE; }
 
@@ -261,86 +243,37 @@ NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 
 {NUMBER_INVALID} {warning("Número invalido",yytext);}
 
-.							{ 	
-									/* Any other character */
-									/* MODIFIIED in example 3 */
-									/* Change to error state */
-									BEGIN(ERROR); 
+.	{ 	
+		/* Any other character */
+		/* Change to error state */
+		BEGIN(ERROR); 
 
-									/* 
-										The current value of yytext 
-										will be concatenated with the next character
-									*/
-									yymore();  
-								}
+		/* 
+			The current value of yytext 
+			will be concatenated with the next character
+		*/
+		yymore();  
+	}
 
-<ERROR>[^0-9+\-*/()\^% \t\n\;a-zA-Z=<>!&]	{ /* MODIFIED in examples 5, 7, 15 */
-								  /* NEW in example 3 */
-								  /* 
-									The current value of yytext 
-									will be concatenated with the next character
-								  */
-									yymore(); 
-								}
+<ERROR>[^0-9+\-*/()\^% \t\n\;a-zA-Z=<>!&]	{
+											  /* 
+												The current value of yytext 
+												will be concatenated with the next character
+											  */
+												yymore(); 
+											}
 
-<ERROR>(.|\n)                { 
-								/* NEW in example 3 */
-								/* Rewind one position */
-								yyless(yyleng-1); 
+<ERROR>(.|\n)	{ 
+					/* Rewind one position */
+					yyless(yyleng-1); 
 
-								/* Display the error message */
-								warning("Error léxico", yytext);
+					/* Display the error message */
+					warning("Error léxico", yytext);
 
-								/* Restore the initial state */
-   								BEGIN(INITIAL);
-							}
+					/* Restore the initial state */
+						BEGIN(INITIAL);
+				}
 %%
 
 
 
-void changeStringToLower(char* identifier){
-	for(int i=0; identifier[i]!='\0';i++){
-		identifier[i] = tolower(identifier[i]);
-	}
-}
-
-
-bool isSentenciaControl(int token){
-
-	switch (token){
-		case IF:
-			return true;
-		break;
-		case WHILE:
-			return true;
-		break;
-		case FOR:
-			return true;
-		break;
-		case REPEAT:
-			return true;
-		break;
-	}
-	return false;
-}
-
-bool isFinSentenciaControl(int token){
-
-	switch (token){
-		case ENDIF:
-			return true;
-		break;
-		case ENDWHILE:
-			return true;
-		break;
-		case ENDFOR:
-			return true;
-		break;
-		case UNTIL:
-			return true;
-		break;
-	}
-	return false;	
-
-
-}

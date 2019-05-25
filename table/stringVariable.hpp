@@ -1,7 +1,6 @@
 /*!	
 	\file    stringVariable.hpp
 	\brief   Declaration of stringVariable class
-	\author  
 	\date    2017-12-1
 	\version 1.0
 */
@@ -61,7 +60,7 @@ class StringVariable:public lp::Variable
 /*!		
 	\brief Copy constructor
 	\note  Inline function
-	\param n: object of StringVariable class
+	\param s: object of StringVariable class
 	\pre   None
 	\post  A new StringVariable is created with the values of an existent StringVariable
 	\sa    setName, setValue
@@ -148,7 +147,7 @@ class StringVariable:public lp::Variable
 	
 /*!		
 	\brief  Assignment Operator
-	\param  n: objectoof StringVariable class
+	\param  s: objectoof StringVariable class
 	\post   The atributes of this object are equal to the atributes of the parameter
 	\return Reference to this object
 */
@@ -159,7 +158,7 @@ class StringVariable:public lp::Variable
 /*!		
 	\brief  Insertion operator
 	\param  i: input stream
-	\param  n: object of StringVariable class
+	\param  s: object of StringVariable class
 	\pre    nome
 	\post   The atributes of the StringVariable are modified with the inserted values from the input stream
 	\return The input stream
@@ -169,7 +168,7 @@ class StringVariable:public lp::Variable
 /*!		
 	\brief  Extraction operator
 	\param  o: output stream
-	\param  n: object of StringVariable class
+	\param  s: object of StringVariable class
 	\pre    nome
 	\post   The atributes of the StringVariable are written in the output stream
 	\return The output stream

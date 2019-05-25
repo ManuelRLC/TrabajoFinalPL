@@ -1,7 +1,6 @@
 /*!
 	\file    ast.hpp
 	\brief   Declaration of AST class
-	\author
 	\date    2018-12-13
 	\version 1.0
 */
@@ -16,11 +15,6 @@
 
 
 #define ERROR_BOUND 1.0e-6  //!< Error bound for the comparison of real numbers.
-/*
-#define NUMBER 1
-#define BOOL 2
-*/
-
 
 
 namespace lp
@@ -379,9 +373,6 @@ class UnaryPreIncrementNode : public UnaryVariableNode
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
 /*!
   \class ConstantNode
   \brief Definition of atributes and methods of ConstantNode class
@@ -432,9 +423,6 @@ class ConstantNode : public ExpNode
 	*/
 	  bool evaluateBool();
 };
-
-
-
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -515,7 +503,7 @@ class StringNode : public ExpNode
 	}
 
 	/*!
-	\brief   Get the type of the expression: NUMBER
+	\brief   Get the type of the expression: STRING
 	\return  int
 	\sa		 print
 	*/
@@ -727,10 +715,6 @@ class UnaryPlusNode : public NumericUnaryOperatorNode
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
 /*!
   \class   OperatorNode
   \brief   Definition of atributes and methods of OperatorNode class
@@ -940,14 +924,14 @@ class PlusNode : public NumericOperatorNode
 /*!
   \class   ConcatenateNode
   \brief   Definition of atributes and methods of ConcatenateNode class
-  \note    ConcatenateNode Class publicly inherits from NumericOperatorNode class
+  \note    ConcatenateNode Class publicly inherits from StringOperatorNode class
 		   and adds its own print and evaluate functions
 */
 class ConcatenateNode : public StringOperatorNode
 {
   public:
 /*!
-	\brief Constructor of PlusNode uses ConcatenateOperatorNode's constructor as members initializer
+	\brief Constructor of ConcatenateNode uses ConcatenateOperatorNode's constructor as members initializer
 	\param L: pointer to ExpNode
 	\param R: pointer to ExpNode
 	\post  A new ConcatenateNode is created with the parameter
@@ -966,7 +950,7 @@ class ConcatenateNode : public StringOperatorNode
 
 /*!
 	\brief   Evaluate the ConcatenateNode
-	\return  double
+	\return  string
 	\sa		 print
 */
   std::string evaluateString();
@@ -1093,33 +1077,35 @@ class DivisionNode : public NumericOperatorNode
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 /*!
-  \class   DivisionNode
-  \brief   Definition of atributes and methods of DivisionNode class
-  \note    DivisionNode Class publicly inherits from NumericOperatorNode class
+  \class   IntegerDivisionNode
+  \brief   Definition of atributes and methods of IntegerDivisionNode class
+  \note    IntegerDivisionNode Class publicly inherits from NumericOperatorNode class
 		   and adds its own print and evaluate functions
 */
 class IntegerDivisionNode : public NumericOperatorNode
 {
+
   public:
 /*!
-	\brief Constructor of DivisionNode uses NumericOperatorNode's constructor as members initializer
+	\brief Constructor of IntegerDivisionNode uses NumericOperatorNode's constructor as members initializer
 	\param L: pointer to ExpNode
 	\param R: pointer to ExpNode
-	\post  A new DivisionNode is created with the parameter
+	\post  A new IntegerDivisionNode is created with the parameter
 */
   IntegerDivisionNode(ExpNode *L, ExpNode *R): NumericOperatorNode(L,R)
   {
 		// Empty
   }
+
 /*!
-	\brief   Print the DivisionNode
+	\brief   Print the IntegerDivisionNode
 	\return  void
 	\sa		 evaluate()
 */
   void print();
 
 /*!
-	\brief   Evaluate the DivisionNode
+	\brief   Evaluate the IntegerDivisionNode
 	\return  double
 	\sa		 print
 */
@@ -1773,7 +1759,7 @@ class Statement {
 /*!
 	\brief   Print the Statement
 	\note    Virtual function: can be redefined in the heir classes
-	\return  double
+	\return  void
 	\sa		 print
 */
 
@@ -1782,7 +1768,7 @@ class Statement {
 /*!
 	\brief   Evaluate the Statement
 	\warning Pure virtual function: must be redefined in the heir classes
-	\return  double
+	\return  void
 	\sa		 print
 */
   virtual void evaluate() = 0;
@@ -1805,6 +1791,10 @@ class StatementList {
 
  public:
 
+ /*!
+	\brief Constructor of StatementList class
+	\post  A new StatementList is created with the parameter
+*/
  	StatementList(){
  		_stmts=new std::list<Statement *>();
 
@@ -1825,12 +1815,16 @@ class StatementList {
 */
   void evaluate();
 
-
+ /*!
+	\brief   Add new statement to the statement list
+	\param   stmt: pointer to Statement
+	\return  void
+	\sa		 print
+*/
   void addStatement(Statement* stmt);
 
 
 };
-
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1846,12 +1840,18 @@ class Case {
  
  private:
 
- 	StatementList* _stmts;
- 	double _value;
+ 	StatementList* _stmts; //!< List of statements
+ 	double _value; //!< Value of the case
 
  public:
 
 
+ /*!
+	\brief Constructor of Case class
+	\param value: double that represents the value of the case
+	\param stmtList: pointer to StatementList of the case 
+	\post  A new Case is created with the parameters
+*/
  	Case(double value,StatementList* stmtList){
 
  		_value = value;
@@ -1860,24 +1860,22 @@ class Case {
  	}
 
 /*!
-	\brief   Print the list of statement of case
-	\note    Virtual function: can be redefined in the heir classes
+	\brief   Print the list of statement of the case
+	\param 	 msg: Message used to print
 	\sa		 print
 */
-
   void print(std::string msg);
 
 /*!
-	\brief   Evaluate the list of statement of case
-	\warning Pure virtual function: must be redefined in the heir classes
+	\brief   Evaluate the list of statement of the case
 	\sa		 print
 */
   void evaluate();
 
 /*!
-	\brief   Evaluate the exp of the case
-	\warning Pure virtual function: must be redefined in the heir classes
-	\sa		 print
+	\brief   Evaluate the value of the case
+	\return  double
+	\sa		 evaluate
 */
   double evaluateNumber();
 
@@ -1905,21 +1903,26 @@ class CaseList {
  	}
 
 /*!
-	\brief   Print the list of cases
-	\return  void
-	\sa		 evaluate
+	\brief   Print the list of statement of case
+	\param 	 smg: Message used to print
+	\sa		 print
 */
-
   void print(std::string smg);
 
 /*!
 	\brief   Evaluate the list of cases
-	\return  void
+	\param 	 exp: Expresion of switch
+	\return  bool: Return true if some case is evaluated
 	\sa		 print
 */
   bool evaluate(ExpNode * exp);
 
-
+ /*!
+	\brief   Add new value to the cases list
+	\param   value: pointer to Case
+	\return  void
+	\sa		 print
+*/
   void addCase(Case* value);
 
 
@@ -2002,9 +2005,20 @@ class AssignmentStmt : public Statement
 		this->_asgn = NULL;
 	}
 
+/*!
+	\brief   Observer the name of the variable of the assignment statement
+	\return  string
+	\sa		 print
+*/
 	std::string getId(){
 		return _id;
 	}
+
+/*!
+	\brief   Observer the expresion of the assignment statement
+	\return  string
+	\sa		 print
+*/	
 	ExpNode * getExpression(){
 		return _exp;
 	}
@@ -2250,7 +2264,7 @@ class PrintStmt: public Statement
 
 /*!
 	\brief   Evaluate the PrintStmt
-	\return  double
+	\return  void
 	\sa		 print
 */
   void evaluate();
@@ -2306,22 +2320,22 @@ class ReadStmt : public Statement
 
 
 /*!
-  \class   ReadStmt
-  \brief   Definition of atributes and methods of ReadStmt class
-  \note    ReadStmt Class publicly inherits from Statement class
+  \class   ReadStringStmt
+  \brief   Definition of atributes and methods of ReadStringStmt class
+  \note    ReadStringStmt Class publicly inherits from Statement class
 		   and adds its own print and evaluate functions
 */
 class ReadStringStmt : public Statement
 {
   private:
-	std::string _id; //!< Name of the ReadStmt
+	std::string _id; //!< Name of the ReadStringStmt
 
 
   public:
 /*!
-	\brief Constructor of ReadStmt
-	\param id: string, name of the variable of the ReadStmt
-	\post  A new ReadStmt is created with the parameter
+	\brief Constructor of ReadStringStmt
+	\param id: string, name of the variable of the ReadStringStmt
+	\post  A new ReadStringStmt is created with the parameter
 */
   ReadStringStmt(std::string id)
 	{
@@ -2329,14 +2343,14 @@ class ReadStringStmt : public Statement
 	}
 
 /*!
-	\brief   Print the ReadStmt
+	\brief   Print the ReadStringStmt
 	\return  void
 	\sa		 evaluate()
 */
   void print();
 
 /*!
-	\brief   Evaluate the ReadStmt
+	\brief   Evaluate the ReadStringStmt
 	\return  void
 	\sa		 print
 */
@@ -2449,11 +2463,8 @@ class IfStmt : public Statement
 
 
 
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// NEW in example 17
 
 /*!
   \class   WhileStmt
@@ -2471,7 +2482,7 @@ class WhileStmt : public Statement
 /*!
 	\brief Constructor of  WhileStmt
 	\param condition: ExpNode of the condition
-	\param statement: Statements of the body of the loop
+	\param statements: Statements of the body of the loop
 	\post  A new WhileStmt is created with the parameters
 */
   WhileStmt(ExpNode *condition, StatementList* statements)
@@ -2510,14 +2521,14 @@ class RepeatStmt : public Statement
 {
  private:
  	StatementList* _stmts; //!< Statements of the body of the repeat loop
-  ExpNode *_cond; //!< Condicion of the repeat statement
+  	ExpNode *_cond; //!< Condicion of the repeat statement
 
 
   public:
 /*!
 	\brief Constructor of  RepeatStmt
 	\param condition: ExpNode of the condition
-	\param statement: Statements of the body of the loop
+	\param statements: Statements of the body of the loop
 	\post  A new RepeatStmt is created with the parameters
 */
   RepeatStmt(StatementList* statements,ExpNode *condition )
@@ -2556,21 +2567,24 @@ class ForStmt : public Statement
 {
  private:
 
-  std::string _varID;
-  ExpNode *_from;
-  ExpNode *_until;
-  ExpNode *_step;
-
-  StatementList *_stmts; //!< Statements of the body of the repeat loop
+	std::string _varID; //!< Name of the variable of the for statement
+	ExpNode *_from; //!< From of the for statement
+	ExpNode *_until; //!< Until of the for statement
+	ExpNode *_step; //!< Step of the step statement
+	StatementList *_stmts; //!< Statements of the body of the for loop
 
   public:
+
 /*!
-	\brief Constructor of  ForStmt
-	\param condition: ExpNode of the condition
-	\param statement: Statements of the body of the loop
+	\brief Constructor of ForStmt
+	\param id: Name of the variable of the for statement
+	\param from: ExpNode of the from expresion
+	\param until: ExpNode of the until expresion
+	\param step: ExpNode of the step expresion
+	\param statements: Statements of the body of the loop
 	\post  A new ForStmt is created with the parameters
 */
-  ForStmt(std::string id,ExpNode *from,ExpNode *until,ExpNode *step,StatementList* statements)
+	ForStmt(std::string id,ExpNode *from,ExpNode *until,ExpNode *step,StatementList* statements)
 	{
 		this->_varID = id;
 		this->_from = from;
@@ -2579,6 +2593,14 @@ class ForStmt : public Statement
 		this->_stmts = statements;
 	}
 
+/*!
+	\brief Constructor of ForStmt
+	\param id: Name of the variable of the for statement
+	\param from: ExpNode of the from expresion
+	\param until: ExpNode of the until expresion
+	\param statements: Statements of the body of the loop
+	\post  A new ForStmt is created with the parameters
+*/
 	ForStmt(std::string id,ExpNode *from,ExpNode *until,StatementList* statements)
 	{
 		this->_varID = id;
@@ -2618,18 +2640,19 @@ class SwitchStmt : public Statement
 {
  private:
 
-  ExpNode *_exp;
-  CaseList *_cases;
+  ExpNode *_exp; //!< ExpNode of the condition
+  CaseList *_cases; //!< list of cases of the statement switch
 
-  StatementList *_default;
+  StatementList *_default; //!< list of statement of the default case
 
 
   public:
 /*!
-	\brief Constructor of  ForStmt
-	\param condition: ExpNode of the condition
-	\param statement: Statements of the body of the loop
-	\post  A new ForStmt is created with the parameters
+	\brief Constructor of SwitchStmt
+	\param exp: ExpNode of the condition
+	\param cases: list of cases of the statement switch
+	\param defecto: pointer to Statement list of the default case
+	\post  A new SwitchStmt is created with the parameters
 */
   SwitchStmt(ExpNode *exp,CaseList *cases,StatementList* defecto)
 	{
@@ -2637,7 +2660,12 @@ class SwitchStmt : public Statement
 		this->_cases = cases;
 		this->_default = defecto;
 	}
-
+/*!
+	\brief Constructor of SwitchStmt
+	\param exp: ExpNode of the condition
+	\param cases: list of cases of the statement switch
+	\post  A new SwitchStmt is created with the parameters
+*/
   SwitchStmt(ExpNode *exp,CaseList *cases)
 	{
 		this->_exp = exp;
@@ -2665,8 +2693,12 @@ class SwitchStmt : public Statement
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
 /*!
   \class   EraseStmt
+  \brief   Definition of atributes and methods of EraseStmt class
+  \note    EraseStmt Class publicly inherits from Statement class
+		   and adds evaluate function
 */
 class EraseStmt : public Statement
 {
@@ -2685,22 +2717,25 @@ class EraseStmt : public Statement
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /*!
   \class   PlaceStmt
+  \brief   Definition of atributes and methods of PlaceStmt class
+  \note    PlaceStmt Class publicly inherits from Statement class
+		   and adds evaluate function
 */
 class PlaceStmt : public Statement
 {
 
   private:
 
-  	ExpNode *_x;
+  	ExpNode *_x; //!< Coordinate x of the position
 
-  	ExpNode *_y;
+  	ExpNode *_y; //!< Coordinate y of the position
 
   public:
 
   	/*!
 		\brief Constructor of PlaceStmt
-		\param x: Coordenada x de la posicion
-		\param y: Coordenada y de la posicion
+		\param x: Coordinate x of the position
+		\param y: Coordinate y of the position
 		\post  A new PlaceStmt is created with the parameters
 	*/
   	PlaceStmt(ExpNode * x, ExpNode * y){

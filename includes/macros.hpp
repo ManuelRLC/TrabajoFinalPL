@@ -1,8 +1,6 @@
 /*!
   \file   macros.hpp
   \brief  Macros for the screen
-  \author 
-  \date   
   \note  http://isthe.com/chongo/tech/comp/ansi_escapes.html
 */
 

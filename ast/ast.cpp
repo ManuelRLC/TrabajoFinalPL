@@ -1,7 +1,6 @@
 /*!
 	\file    ast.cpp
 	\brief   Code of funcitons of AST clas
-	\author
 	\date    2018-12-13
 	\version 1.0
 */
@@ -70,7 +69,7 @@ int lp::VariableNode::getType()
 void lp::VariableNode::print()
 {
   std::cout << "VariableNode: " << this->_id << std::endl;
-  std::cout << "Type: " << this->getType() << std::endl;
+  std::cout << "Tipo: " << this->getType() << std::endl;
 }
 
 
@@ -88,7 +87,7 @@ double lp::VariableNode::evaluateNumber()
 	}
 	else
 	{
-		warning("Runtime error in evaluateNumber(): the variable is not numeric",
+		warning("Error en tiempo de ejecución en evaluateNumber(): la variable no es numérica",
 				   this->_id);
 	}
 
@@ -111,7 +110,7 @@ bool lp::VariableNode::evaluateBool()
 	}
 	else
 	{
-		warning("Runtime error in evaluateBool(): the variable is not boolean",
+		warning("Error en tiempo de ejecución en evaluateBool(): la variable no es boolean",
 				   this->_id);
 	}
 
@@ -151,7 +150,7 @@ std::string lp::VariableNode::evaluateString()
 void lp::UnaryPostDecrementNode::print()
 {
   std::cout << "UnaryPostDecrementNode: " << this->getId() << std::endl;
-  std::cout << "Type: " << this->getType() << std::endl;
+  std::cout << "Tipo: " << this->getType() << std::endl;
 }
 
 
@@ -186,7 +185,7 @@ double lp::UnaryPostDecrementNode::evaluateNumber()
 void lp::UnaryPreDecrementNode::print()
 {
   std::cout << "UnaryPreDecrementNode: " << this->getId() << std::endl;
-  std::cout << "Type: " << this->getType() << std::endl;
+  std::cout << "Tipo: " << this->getType() << std::endl;
 }
 
 
@@ -222,7 +221,7 @@ double lp::UnaryPreDecrementNode::evaluateNumber()
 void lp::UnaryPostIncrementNode::print()
 {
   std::cout << "UnaryPostIncrementNode: " << this->getId() << std::endl;
-  std::cout << "Type: " << this->getType() << std::endl;
+  std::cout << "Tipo: " << this->getType() << std::endl;
 }
 
 
@@ -317,7 +316,7 @@ double lp::ConstantNode::evaluateNumber()
 	}
 	else
 	{
-		warning("Runtime error in evaluateNumber(): the constant is not numeric",
+		warning("Error en tiempo de ejecución en evaluateNumber(): la constante no es numérica",
 				   this->_id);
 	}
 
@@ -339,7 +338,7 @@ bool lp::ConstantNode::evaluateBool()
 	}
 	else
 	{
-		warning("Runtime error in evaluateBool(): the constant is not boolean",
+		warning("Error en tiempo de ejecución en evaluateBool(): la constante no es boolean",
 				   this->_id);
 	}
 
@@ -401,7 +400,7 @@ int lp::NumericUnaryOperatorNode::getType()
 	}
 	else
 	{
-		warning("Runtime error: incompatible types for", "Numeric Unary Operator");
+		warning("Error en tiempo de ejecución: tipos incompatibles para", "Numeric Unary Operator");
 	}
 
 	return result;
@@ -420,7 +419,7 @@ int lp::LogicalUnaryOperatorNode::getType()
 	}
 	else
 	{
-		warning("Runtime error: incompatible types for", "Logical Unary Operator");
+		warning("Error en tiempo de ejecución: tipos incompatibles para", "Logical Unary Operator");
 	}
 
 	return result;
@@ -437,7 +436,7 @@ int lp::NumericOperatorNode::getType()
 	if ( (this->_left->getType() == NUMBER) and (this->_right->getType() == NUMBER))
 		result = NUMBER;
 	else
-		warning("Runtime error: incompatible types for", "Numeric Operator");
+		warning("Error en tiempo de ejecución: tipos incompatibles para", "Numeric Operator");
 
 	return	result;
 }
@@ -471,7 +470,7 @@ int lp::RelationalOperatorNode::getType()
 			((this->_left->getType() == STRING) and (this->_right->getType() == STRING)))
 		result = BOOL;
 	else
-		warning("Runtime error: incompatible types for", "Relational Operator");
+		warning("Error en tiempo de ejecución: tipos incompatibles para", "Relational Operator");
 
 	return	result;
 }
@@ -490,7 +489,7 @@ int lp::LogicalOperatorNode:: getType()
 		result = BOOL;
 	}
 	else
-		warning("Runtime error: incompatible types for", "Logical Operator");
+		warning("Error en tiempo de ejecución: tipos incompatibles para", "Logical Operator");
 
 	return	result;
 }
@@ -519,7 +518,7 @@ double lp::UnaryMinusNode::evaluateNumber()
 	}
 	else
 	{
-		warning("Runtime error: the expressions are not numeric for ", "UnaryMinus");
+		warning("Error en tiempo de ejecución: las expresiones no son numéricas para ", "UnaryMinus");
 	}
 
   return result;
@@ -547,7 +546,7 @@ double lp::UnaryPlusNode::evaluateNumber()
 	}
 	else
 	{
-		warning("Runtime error: the expressions are not numeric for ","UnaryPlus");
+		warning("Error en tiempo de ejecución: las expresiones no son numéricas para ","UnaryPlus");
 	}
 
   return result;
@@ -577,7 +576,7 @@ double lp::PlusNode::evaluateNumber()
 	}
 	else
 	{
-		warning("Runtime error: the expressions are not numeric for ", "Plus");
+		warning("Error en tiempo de ejecución: las expresiones no son numéricas para ", "Plus");
 	}
 
   return result;
@@ -635,7 +634,7 @@ double lp::MinusNode::evaluateNumber()
 	}
 	else
 	{
-		warning("Runtime error: the expressions are not numeric for ", "Minus");
+		warning("Error en tiempo de ejecución: las expresiones no son numéricas para ", "Minus");
 	}
 
   return result;
@@ -664,7 +663,7 @@ double lp::MultiplicationNode::evaluateNumber()
 	}
 	else
 	{
-		warning("Runtime error: the expressions are not numeric for ","Multiplication");
+		warning("Error en tiempo de ejecución: las expresiones no son numéricas para ","Multiplication");
 	}
 
   return result;
@@ -783,11 +782,11 @@ double lp::ModuloNode::evaluateNumber()
     	if(std::abs(rightNumber) > ERROR_BOUND)
 				result = (int) leftNumber % (int) rightNumber;
 		else
-			warning("Runtime error", "Division by zero");
+			warning("Error en tiempo de ejecución", "Division by zero");
 	}
 	else
 	{
-		warning("Runtime error: the expressions are not numeric for", "Modulo");
+		warning("Error en tiempo de ejecución: las expresiones no son numéricas para", "Modulo");
 	}
 
   return result;
@@ -817,7 +816,7 @@ double lp::PowerNode::evaluateNumber()
 	}
 	else
 	{
-		warning("Runtime error: the expressions are not numeric for", "Power");
+		warning("Error en tiempo de ejecución: las expresiones no son numéricas para", "Power");
 	}
 
   return result;
@@ -1306,7 +1305,7 @@ bool lp::AndNode::evaluateBool()
 	}
 	else
 	{
-		warning("Runtime error: incompatible types of parameters for ", "operator And");
+		warning("Error en tiempo de ejecución: tipos de parámetros incompatibles para ", "operator And");
 	}
 
 	return result;
@@ -1340,7 +1339,7 @@ bool lp::OrNode::evaluateBool()
 	}
 	else
 	{
-		warning("Runtime error: incompatible types of parameters for ", "operator Or");
+		warning("Error en tiempo de ejecución: tipos de parámetros incompatibles para ", "operator Or");
 	}
 
 	return result;
@@ -1368,7 +1367,7 @@ bool lp::NotNode::evaluateBool()
 	}
 	else
 	{
-		warning("Runtime error: incompatible types of parameters for ", "operator Not");
+		warning("Error en tiempo de ejecución: tipos de parámetros incompatibles para ", "operator Not");
 	}
 
 	return result;
@@ -1657,7 +1656,7 @@ void lp::AssignmentStmt::evaluate()
 				break;
 
 				default:
-					warning("Runtime error: incompatible type of expression for ", "Assigment");
+					warning("Error en tiempo de ejecución: tipo de expresión incompatible para ", "Assigment");
 			}
 
 		}
@@ -1776,7 +1775,7 @@ void lp::AssignmentStmt::evaluate()
 
 
 				default:
-					warning("Runtime error: incompatible type of expression for ", "Assigment");
+					warning("Error en tiempo de ejecución: tipo de expresión incompatible para ", "Assigment");
 			}
 		}		
 	}
@@ -2001,134 +2000,13 @@ void lp::PrintStmt::evaluate()
 void lp::ReadStmt::print()
 {
   std::cout << "ReadStmt: "  << std::endl;
-  std::cout << " read (" << this->_id << ")";
+  std::cout << " leer (" << this->_id << ")";
   std::cout << std::endl;
 }
 
 
 void lp::ReadStmt::evaluate()
 {
-	/*double value;
-	std::cout << BIYELLOW;
-	std::cout << "Insert a numeric value --> " ;
-	std::cout << RESET;
-	std::cin >> value;
-
-	// Get the identifier in the table of symbols as Variable
-	lp::Variable *var = (lp::Variable *) table.getSymbol(this->_id);
-
-	// Check if the type of the variable is NUMBER
-	if (var->getType() == NUMBER)
-	{
-		// Get the identifier in the table of symbols as NumericVariable
-		lp::NumericVariable *n = (lp::NumericVariable *) table.getSymbol(this->_id);
-
-		//Assignment the read value to the identifier
-		n->setValue(value);
-	}
-	// The type of variable is not NUMBER
-	else
-	{
-		// Delete $1 from the table of symbols as Variable
-		table.eraseSymbol(this->_id);
-
-			// Insert $1 in the table of symbols as NumericVariable
-		// with the type NUMBER and the read value
-		lp::NumericVariable *n = new lp::NumericVariable(this->_id,
-									  VARIABLE,NUMBER,value);
-
-		table.installSymbol(n);
-	}*/
-
-
-	/*
-
-	int type;
-	double value;
-	std::getline(std::cin,value);
-
-	value = parseSlash((char*)value.c_str(),value.size());
-
-	if(value[0]=='\'' && value[value.size()-1]=='\''){
-		type=STRING;
-	}
-	else{
-		type=NUMBER;
-		for(unsigned i =0; i<value.size(); i++){
-			if(value[i]<'0' || value[i]>'9'){
-				type=UNDEFINED;
-				break;
-			}
-		}
-	}
-
-	// Get the identifier in the table of symbols as Variable
-	lp::Variable *var = (lp::Variable *) table.getSymbol(this->_id);
-
-	switch(type){
-		case NUMBER:{
-
-
-			double aux = atof(value.c_str());
-			// Check if the type of the variable is NUMBER
-			if (var->getType() == NUMBER)
-			{
-				// Get the identifier in the table of symbols as NumericVariable
-				lp::NumericVariable *n = (lp::NumericVariable *) table.getSymbol(this->_id);
-
-				//Assignment the read value to the identifier
-				n->setValue(aux);
-			}
-			// The type of variable is not NUMBER
-			else
-			{
-				// Delete $1 from the table of symbols as Variable
-				table.eraseSymbol(this->_id);
-
-					// Insert $1 in the table of symbols as NumericVariable
-				// with the type NUMBER and the read value
-				lp::NumericVariable *n = new lp::NumericVariable(this->_id,
-											  VARIABLE,NUMBER,aux);
-
-				table.installSymbol(n);
-			}
-		}
-		break;
-
-		case STRING:{
-			value=value.substr(1,value.size()-2);
-			// Check if the type of the variable is STRING
-			if (var->getType() == STRING)
-			{
-				// Get the identifier in the table of symbols as NumericVariable
-				lp::StringVariable *n = (lp::StringVariable *) table.getSymbol(this->_id);
-
-				//Assignment the read value to the identifier
-				n->setValue(value);
-			}
-			// The type of variable is not STRING
-			else
-			{
-				// Delete $1 from the table of symbols as Variable
-				table.eraseSymbol(this->_id);
-
-					// Insert $1 in the table of symbols as StringVariable
-				// with the type STRING and the read value
-				lp::StringVariable *n = new lp::StringVariable(this->_id,
-											  VARIABLE,STRING,value);
-
-				table.installSymbol(n);
-			}
-		}
-		break;
-
-		default:
-			warning("Error en tiempo de ejecución: tipo incompatible para ", "leer");
-		break;
-
-	}
-	*/
-
 	double value;
 	std::cin>>value;
 
@@ -2176,7 +2054,7 @@ void lp::ReadStmt::evaluate()
 void lp::ReadStringStmt::print()
 {
   std::cout << "ReadStringStmt: "  << std::endl;
-  std::cout << " read (" << this->_id << ")";
+  std::cout << " leer_cadena (" << this->_id << ")";
   std::cout << std::endl;
 }
 
@@ -2243,11 +2121,11 @@ void lp::IfStmt::print()
   this->_cond->print();
 
   // Consequents
-	this->_consequent->print("Consequents: ");
+	this->_consequent->print("Consecuentes: ");
 
  // The alternative is printed if exists
   if (this->_alternative != NULL)
-	  this->_alternative->print("Alternatives: ");
+	  this->_alternative->print("Alternativas: ");
 
   std::cout << std::endl;
 }
