@@ -6,7 +6,6 @@
 #include <iostream>
 
 /*********************/
-/* NEW in example 4 */
 /* atof */
 #include <stdlib.h>
 /*********************/
@@ -16,7 +15,6 @@
 
 /*********************/
 /* 
-  NEW in example 16 
   AST class
   IMPORTANT: must be written before interpreter.tab.h
 */
@@ -27,13 +25,11 @@
 #include "interpreter.tab.h"
 
 /********************/
-/* NEW in example 3 */
 #include "../error/error.hpp"
 /********************/
 
 
 /*********************************************/
-/* NEW in example 7 */
 /* Table of symbols */
 #include "../table/table.hpp"
 
@@ -46,8 +42,11 @@ extern lp::Table table; //!< External Table of Symbols
 
 extern int lineNumber; //!< External line counter
 
+/*!
+	\brief Function that convert a string to lowercase 
+	\param identifier: char*
+*/
 void changeStringToLower(char* identifier);
-
 
 %}
 
@@ -68,14 +67,13 @@ IDENTIFIER_INVALID ({LETTER}|{DIGIT}|_)+
 
 NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 
+/* STATES  */
+%x ERROR
 
 %x ESTADO_CADENA
 
 %x ESTADO_COMENTARIO
 
-/* NEW in example 3 */
-/* STATE  */
-%x ERROR
 
 /*! \name REGULAR EXPRESSIONS  */
 %%
@@ -85,30 +83,22 @@ NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 \n      { 
 			/* Line counter */
            	lineNumber++; 
-	
-			/* MODIFIED in example 3 */
-			/* COMMENTED in example 5 */
-        	/* return NEWLINE; */
         }
 
 ";"		{
-			/* NEW in example 5 */
 			return SEMICOLON;
 		}
 
 ":"		{
-			/* NEW in example 5 */
 			return COLON;
 		}
 
 
 ","		{
-			/* NEW in example 14 */
 			return COMMA;
 		}
 
 {NUMBER1}|{NUMBER2}  {
-					  /* MODIFIED in example 4 */
 					  /* Conversion of type and sending of the numerical value to the parser */
 					   yylval.number = atof(yytext); 
 
@@ -120,8 +110,7 @@ NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 
 						changeStringToLower(yytext);
 
-						 /* NEW in example 7 */
-						 std::string identifier(yytext);
+						std::string identifier(yytext);
 
 						/* 
                           strdup() function returns a pointer to a new string 
@@ -145,7 +134,6 @@ NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 								return VARIABLE;
 							}
 
-						/* MODIFIED in example 11 */
 						/* 
 							If the identifier is in the table of symbols then its token is returned 
 								The identifier can be a variable or a numeric constant
@@ -154,14 +142,9 @@ NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 							{
 								lp::Symbol	*s = table.getSymbol(identifier);
 
-/*
-								std::cout << "lex: "<< s->getName() 
-										  << "token " << s->getToken()
-  										  << std::endl; 
-*/
-
 								/*  If the identifier is in the table then its token is returned  */
 								return s->getToken();
+
 							}
                      }
 
@@ -242,29 +225,7 @@ NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 (?i:_lugar)		{ return PLACE; }
 
 
-				/*^# { The interpreter finishes when the symbol # is written at the beginning of the line 
-					// std::cout << CLEAR_SCREEN; 
-					//  PLACE(24,10);
-				  	  std::cout <<  BIYELLOW;
-				   	  std::cout <<  ">>>>>>> End of program <<<<<<<";
-				 	  std::cout << std::endl;
-				   	  std::cout << RESET;
-					 // PLACE(25,1);
-
-				  	  return 0;
-					}
-				*/
-
-<<EOF>> { /* The interpreter finishes when finds the end of file character */
-		/*  PLACE(24,10);
-	  	  std::cout <<  BICYAN;
-	   	  std::cout <<  ">>>>>>> End of file <<<<<<<";
-	 	  std::cout << std::endl;
-	   	  std::cout << RESET;
-		  PLACE(25,1);
-		*/
-	  	  return 0;
-	}
+<<EOF>> { return 0; }
 
 
 {IDENTIFIER_INVALID} {warning("Identificador invalido",yytext);}

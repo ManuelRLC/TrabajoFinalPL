@@ -1,9 +1,9 @@
 
 escribir('Escribe un valor para a: ');
 
-leer_cadena(a);
+leer(a);
 
-segun (g)
+segun ('hola')
 	
 	valor 1:
 		escribir('He entrando en valor 1\n');
@@ -17,10 +17,7 @@ segun (g)
 		escribir('He entrado en defecto\n');
 
 
-
 fin_segun
 
 
 escribir(a);
-
-escribir('\n');

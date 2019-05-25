@@ -77,7 +77,7 @@ namespace lp
 	/*!
 		\brief   Evaluate the expression as STRING
 		\warning Virtual function: could be redefined in the heir classes
-		\return  bool
+		\return  string
 		\sa		 print
 	*/
 	virtual std::string evaluateString(){
