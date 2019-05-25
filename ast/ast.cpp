@@ -1232,6 +1232,29 @@ bool lp::NotNode::evaluateBool()
 	return result;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void lp::Case::print(std::string msg){
+
+	this->_stmts->print(msg);
+
+}
+
+void lp::Case::evaluate(){
+
+	this->_stmts->evaluate();	
+
+}
+
+double lp::Case::evaluateNumber(){
+
+	return this->_value;	
+
+}
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1268,6 +1291,68 @@ void lp::StatementList::addStatement(lp::Statement* stmt){
 
 }
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void lp::CaseList::print(std::string msg){
+
+  std::list<Case *>::iterator casesIter;
+
+  std::cout << msg  << std::endl;
+
+  for (casesIter = this->_cases->begin(); casesIter != this->_cases->end(); casesIter++)
+  {
+     (*casesIter)->print("");
+  }
+
+}
+
+bool lp::CaseList::evaluate(ExpNode* exp){
+
+
+  bool evaluado = false;
+
+  //Solo se va a evaluar aquel case que cumpla la expresion
+
+  std::list<Case *>::iterator casesIter;
+
+
+  for (casesIter = this->_cases->begin(); casesIter != this->_cases->end(); casesIter++)
+  {
+
+  	if(std::abs(exp->evaluateNumber() - (*casesIter)->evaluateNumber()) < ERROR_BOUND){
+  		(*casesIter)->evaluate();
+  		evaluado = true;
+
+  	}
+	
+  }
+
+	return evaluado;
+
+}
+
+void lp::CaseList::addCase(lp::Case* value){
+
+
+	//Comprobar que no hay un caso con la misma expresion que uno de los que ya estuvieran añadidos
+
+	std::list<Case *>::iterator casesIter;
+
+	for (casesIter = this->_cases->begin(); casesIter != this->_cases->end(); casesIter++){
+
+		if(std::abs(value->evaluateNumber() - (*casesIter)->evaluateNumber()) < ERROR_BOUND){
+			//Ya existe un caso con el mismo valor en la expresion
+			execerror("Error en tiempo de ejecución: dos valores iguales para ", "SEGUN");;
+		}
+
+ 	}
+
+	_cases->push_back(value);
+
+}
 
 
 
@@ -2178,36 +2263,33 @@ void lp::PlaceStmt::evaluate()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// NEW in example 17
 
-
-/*
-
-void lp::BlockStmt::print()
+void lp::SwitchStmt::print()
 {
-  std::list<Statement *>::iterator stmtIter;
-
-  std::cout << "BlockStmt: "  << std::endl;
-
-  for (stmtIter = this->_stmts->begin(); stmtIter != this->_stmts->end(); stmtIter++)
-  {
-     (*stmtIter)->print();
-  }
+  std::cout << "SwitchStmt: "  << std::endl;
+  this->_exp->print();
+  this->_cases->print("");
+  this->_default->print("");
+  std::cout << std::endl;
 }
 
 
-void lp::BlockStmt::evaluate()
+void lp::SwitchStmt::evaluate()
 {
-  std::list<Statement *>::iterator stmtIter;
 
-  for (stmtIter = this->_stmts->begin(); stmtIter != this->_stmts->end(); stmtIter++)
-  {
-    (*stmtIter)->evaluate();
-  }
+	//El tipo de la expresion debe de ser numerico
+	if(this->_exp->getType() != NUMBER){
+		warning("Error en tiempo de ejecución: tipo incompatible para la expresion ", "SEGUN");
+		return;
+	} 
+
+	bool CasoEvaluado = this->_cases->evaluate(this->_exp);
+
+	if(this->_default != NULL && !CasoEvaluado){
+		this->_default->evaluate();
+	}
+
 }
-
-
-*/
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

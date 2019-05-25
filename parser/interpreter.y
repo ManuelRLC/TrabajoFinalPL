@@ -141,6 +141,9 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
   lp::StatementList *stmts; /* NEW in example 16 */
   lp::Statement *st;				 /* NEW in example 16 */
   lp::AST *prog;					 /* NEW in example 16 */
+  lp::CaseList *cases;
+  lp::Case *value;
+
 }
 
 /* Type of the non-terminal symbols */
@@ -152,8 +155,12 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 
 %type <stmts> stmtlist
 
+%type <cases> listOfCase
+
+%type <value> case
+
 // New in example 17: if, while
-%type <st> stmt asgn print read if while repeat for erase place
+%type <st> stmt asgn print read if while repeat for erase place switch
 
 %type <prog> program
 
@@ -163,11 +170,11 @@ extern lp::AST *root; //!< External root of the abstract syntax tree AST
 
 /*******************************************/
 /* NEW in example 5 */
-%token SEMICOLON
+%token SEMICOLON COLON
 /*******************************************/
 
 // NEW in example 17: IF, ELSE, WHILE 
-%token PRINT READ READ_STRING IF THEN ELSE ENDIF WHILE DO ENDWHILE REPEAT UNTIL FOR FROM STEP ENDFOR ERASE PLACE
+%token PRINT READ READ_STRING IF THEN ELSE ENDIF WHILE DO ENDWHILE REPEAT UNTIL FOR FROM STEP ENDFOR ERASE PLACE SWITCH DEFAULT ENDSWITCH VALUE
 
 /* NEW in example 7 */
 %right ASSIGNMENT
@@ -325,6 +332,10 @@ stmt: SEMICOLON  /* Empty statement: ";" */
 		// Default action
 		// $$ = $1;	
 	}
+	| switch
+	  {
+
+	  }
 
 
 ;
@@ -406,6 +417,46 @@ for:  FOR VARIABLE FROM exp UNTIL exp STEP exp DO stmtlist ENDFOR
     		execerror("Error sintactico: en \"el bucle para\": se esperaba una variable ","");
     	}
 ;
+
+
+switch: SWITCH LPAREN exp RPAREN listOfCase DEFAULT COLON stmtlist ENDSWITCH
+		{
+			//Creacion objeto de la clase switch
+			$$ = new lp::SwitchStmt($3,$5,$8);
+		}
+	|	SWITCH LPAREN exp RPAREN listOfCase ENDSWITCH
+		{
+			//Creacion objeto de la clase switch
+			$$ = new lp::SwitchStmt($3,$5);
+		}
+;
+
+case: VALUE NUMBER COLON stmtlist
+		{
+			//Creacion de un objeto de la clase case
+			$$ = new lp::Case($2,$4);
+
+		}
+;
+
+
+listOfCase: {
+				//Declaracion de una lista de casos
+				$$ = new lp::CaseList();
+
+			}
+			| case listOfCase
+				{
+
+				//Ir añadidendo este caso a la lista de casos
+
+				$$ = $2;
+
+				$$->addCase($1);
+
+				}
+;
+
 
 	/*  NEW in example 17 */
 cond: 	LPAREN exp RPAREN

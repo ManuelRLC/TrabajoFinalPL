@@ -77,7 +77,7 @@ namespace lp
 	/*!
 		\brief   Evaluate the expression as STRING
 		\warning Virtual function: could be redefined in the heir classes
-		\return  bool
+		\return  string
 		\sa		 print
 	*/
 	virtual std::string evaluateString(){
@@ -1606,6 +1606,100 @@ class StatementList {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+/*!
+  \class   Case
+  \brief   Definition of atributes and methods of Statement class
+  \warning Abstract class
+*/
+
+class Case {
+ 
+ private:
+
+ 	StatementList* _stmts;
+ 	double _value;
+
+ public:
+
+
+ 	Case(double value,StatementList* stmtList){
+
+ 		_value = value;
+ 		_stmts = stmtList;
+
+ 	}
+
+/*!
+	\brief   Print the list of statement of case
+	\note    Virtual function: can be redefined in the heir classes
+	\sa		 print
+*/
+
+  void print(std::string msg);
+
+/*!
+	\brief   Evaluate the list of statement of case
+	\warning Pure virtual function: must be redefined in the heir classes
+	\sa		 print
+*/
+  void evaluate();
+
+/*!
+	\brief   Evaluate the exp of the case
+	\warning Pure virtual function: must be redefined in the heir classes
+	\sa		 print
+*/
+  double evaluateNumber();
+
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*!
+  \class   CaseList
+  \brief   Definition of atributes and methods of CaseList class
+*/
+class CaseList {
+ private:
+
+ 	std::list<Case *> *_cases; //!< List of cases
+
+ public:
+
+ 	CaseList(){
+ 		_cases = new std::list<Case *>();
+ 	}
+
+/*!
+	\brief   Print the list of cases
+	\return  void
+	\sa		 evaluate
+*/
+
+  void print(std::string smg);
+
+/*!
+	\brief   Evaluate the list of cases
+	\return  void
+	\sa		 print
+*/
+  bool evaluate(ExpNode * exp);
+
+
+  void addCase(Case* value);
+
+
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 
 /*!
   \class   AssignmentStmt
@@ -2055,6 +2149,62 @@ class ForStmt : public Statement
 };
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+/*!
+  \class   SwitchStmt
+  \brief   Definition of atributes and methods of SwitchStmt class
+  \note    SwitchStmt Class publicly inherits from Statement class
+		   and adds its own print and evaluate functions
+*/
+class SwitchStmt : public Statement
+{
+ private:
+
+  ExpNode *_exp;
+  CaseList *_cases;
+
+  StatementList *_default;
+
+
+  public:
+/*!
+	\brief Constructor of  ForStmt
+	\param condition: ExpNode of the condition
+	\param statement: Statements of the body of the loop
+	\post  A new ForStmt is created with the parameters
+*/
+  SwitchStmt(ExpNode *exp,CaseList *cases,StatementList* defecto)
+	{
+		this->_exp = exp;
+		this->_cases = cases;
+		this->_default = defecto;
+	}
+
+  SwitchStmt(ExpNode *exp,CaseList *cases)
+	{
+		this->_exp = exp;
+		this->_cases = cases;
+		this->_default = NULL;
+	}
+
+
+/*!
+	\brief   Print the SwitchStmt
+	\return  void
+	\sa		 evaluate
+*/
+  void print();
+
+/*!
+	\brief   Evaluate the SwitchStmt
+	\return  void
+	\sa		 print
+*/
+  void evaluate();
+};
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -2109,55 +2259,6 @@ class PlaceStmt : public Statement
   void evaluate();
 };
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-// NEW in example 17
-
-/*!
-  \class   BlockStmt
-  \brief   Definition of atributes and methods of BlockStmt class
-  \note    BlockStmt Class publicly inherits from Statement class
-		   and adds its own print and evaluate functions
-*/
-
-
-
-/*
-
-class BlockStmt : public Statement
-{
- private:
-   std::list<Statement *> *_stmts;  //!< List of statements
-
-  public:
-
-	\brief Constructor of  WhileStmt
-	\param stmtList: list of Statement
-	\post  A new BlockStmt is created with the parameters
-
-  BlockStmt(std::list<Statement *> *stmtList): _stmts(stmtList)
-	{
-		// Empty
-	}
-
-
-
-	\brief   Print the BlockStmt
-	\return  void
-	\sa		 evaluate
-
-  void print();
-
-
-	\brief   Evaluate the BlockStmt
-	\return  void
-	\sa		 print
-
-  void evaluate();
-};
-
-*/
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
