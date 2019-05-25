@@ -143,6 +143,147 @@ std::string lp::VariableNode::evaluateString()
 }
 
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void lp::UnaryPostDecrementNode::print()
+{
+  std::cout << "UnaryPostDecrementNode: " << this->getId() << std::endl;
+  std::cout << "Type: " << this->getType() << std::endl;
+}
+
+
+double lp::UnaryPostDecrementNode::evaluateNumber()
+{
+	double result = 0.0;
+
+	if (this->getType() == NUMBER)
+	{
+		// Get the identifier in the table of symbols as NumericVariable
+		lp::NumericVariable *var = (lp::NumericVariable *) table.getSymbol(this->getId());
+
+		// Copy the value of the NumericVariable
+		result = var->getValue();
+		var->setValue(var->getValue()-1);
+	}
+	else
+	{
+		warning("Error en tiempo de ejecución para operador PostDecremento: la variable no es numérica",
+				   this->getId());
+	}
+
+	// Return the value of the NumericVariable
+	return result;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void lp::UnaryPreDecrementNode::print()
+{
+  std::cout << "UnaryPreDecrementNode: " << this->getId() << std::endl;
+  std::cout << "Type: " << this->getType() << std::endl;
+}
+
+
+double lp::UnaryPreDecrementNode::evaluateNumber()
+{
+	double result = 0.0;
+
+	if (this->getType() == NUMBER)
+	{
+		// Get the identifier in the table of symbols as NumericVariable
+		lp::NumericVariable *var = (lp::NumericVariable *) table.getSymbol(this->getId());
+
+		var->setValue(var->getValue()-1);
+		// Copy the value of the NumericVariable
+		result = var->getValue();
+		
+	}
+	else
+	{
+		warning("Error en tiempo de ejecución para operador PreDecremento: la variable no es numérica",
+				   this->getId());
+	}
+
+	// Return the value of the NumericVariable
+	return result;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void lp::UnaryPostIncrementNode::print()
+{
+  std::cout << "UnaryPostIncrementNode: " << this->getId() << std::endl;
+  std::cout << "Type: " << this->getType() << std::endl;
+}
+
+
+double lp::UnaryPostIncrementNode::evaluateNumber()
+{
+	double result = 0.0;
+
+	if (this->getType() == NUMBER)
+	{
+		// Get the identifier in the table of symbols as NumericVariable
+		lp::NumericVariable *var = (lp::NumericVariable *) table.getSymbol(this->getId());
+
+		// Copy the value of the NumericVariable
+		result = var->getValue();
+		var->setValue(var->getValue()+1);
+	}
+	else
+	{
+		warning("Error en tiempo de ejecución para operador PosIncremento: la variable no es numérica",
+				   this->getId());
+	}
+
+	// Return the value of the NumericVariable
+	return result;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void lp::UnaryPreIncrementNode::print()
+{
+  std::cout << "UnaryPreIncrementNode: " << this->getId() << std::endl;
+  std::cout << "Type: " << this->getType() << std::endl;
+}
+
+
+double lp::UnaryPreIncrementNode::evaluateNumber()
+{
+	double result = 0.0;
+
+	if (this->getType() == NUMBER)
+	{
+		// Get the identifier in the table of symbols as NumericVariable
+		lp::NumericVariable *var = (lp::NumericVariable *) table.getSymbol(this->getId());
+		var->setValue(var->getValue()+1);
+		// Copy the value of the NumericVariable
+		result = var->getValue();
+		
+	}
+	else
+	{
+		warning("Error en tiempo de ejecución para operador PreIncremento: la variable no es numérica",
+				   this->getId());
+	}
+
+	// Return the value of the NumericVariable
+	return result;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -411,6 +552,7 @@ double lp::UnaryPlusNode::evaluateNumber()
 
   return result;
 }
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1378,231 +1520,438 @@ void lp::AssignmentStmt::evaluate()
 		a: firstVar
 		b: secondVar
 	*/
-	lp::Variable *firstVar = (lp::Variable *) table.getSymbol(this->_id);
 
-	// Check the expression
-	if (this->_exp != NULL)
-	{
-		// Check the type of the expression of the asgn
-		switch(this->_exp->getType())
+	
+	//Check if only there is an unary operation.
+	if(this->_id == ""){
+
+		this->_unary->evaluateNumber();
+	}
+	else{
+		lp::Variable *firstVar = (lp::Variable *) table.getSymbol(this->_id);
+		//Check if the right member of the assignment is an unary operation
+		if(this->_unary !=NULL){
+			//The var must be numeric for this type of operator
+			double value;
+			// evaluate the expression as NUMBER
+			value= this->_unary->evaluateNumber();
+			if(firstVar->getType() == NUMBER){
+
+
+			  	// Get the identifier in the table of symbols as NumericVariable
+				lp::NumericVariable *v = (lp::NumericVariable *) table.getSymbol(this->_id);
+				v->setValue(value);			
+
+			}
+			else{
+				//warning("Error en tiempo de ejecución: las variables han de ser numéricas para ", "Asignación y operador Incremento/Decremento");
+				// Delete the variable from the table of symbols
+				table.eraseSymbol(this->_id);
+
+				// Insert the variable in the table of symbols as NumericVariable
+				// with the type NUMBER and the value
+				lp::NumericVariable *v = new lp::NumericVariable(this->_id,
+										VARIABLE,NUMBER,value);
+				table.installSymbol(v);
+
+			}
+
+
+		}
+		// Check the expression
+		else if (this->_exp != NULL )
 		{
-			case NUMBER:
+			// Check the type of the expression of the asgn
+			switch(this->_exp->getType())
 			{
-				double value;
-				// evaluate the expression as NUMBER
-			 	value = this->_exp->evaluateNumber();
-
-				// Check the type of the first varible
-				if (firstVar->getType() == NUMBER)
+				case NUMBER:
 				{
-				  	// Get the identifier in the table of symbols as NumericVariable
-					lp::NumericVariable *v = (lp::NumericVariable *) table.getSymbol(this->_id);
+					double value;
+					// evaluate the expression as NUMBER
+				 	value = this->_exp->evaluateNumber();
 
-					// Assignment the value to the identifier in the table of symbols
-					v->setValue(value);
+					// Check the type of the first varible
+					if (firstVar->getType() == NUMBER)
+					{
+					  	// Get the identifier in the table of symbols as NumericVariable
+						lp::NumericVariable *v = (lp::NumericVariable *) table.getSymbol(this->_id);
+
+						// Assignment the value to the identifier in the table of symbols
+						v->setValue(value);
+					}
+					// The type of variable is not NUMBER
+					else
+					{
+						// Delete the variable from the table of symbols
+						table.eraseSymbol(this->_id);
+
+						// Insert the variable in the table of symbols as NumericVariable
+						// with the type NUMBER and the value
+						lp::NumericVariable *v = new lp::NumericVariable(this->_id,
+												VARIABLE,NUMBER,value);
+						table.installSymbol(v);
+					}
 				}
-				// The type of variable is not NUMBER
-				else
+				break;
+
+				case BOOL:
 				{
-					// Delete the variable from the table of symbols
-					table.eraseSymbol(this->_id);
+					bool value;
+					// evaluate the expression as BOOL
+				 	value = this->_exp->evaluateBool();
 
-					// Insert the variable in the table of symbols as NumericVariable
-					// with the type NUMBER and the value
-					lp::NumericVariable *v = new lp::NumericVariable(this->_id,
-											VARIABLE,NUMBER,value);
-					table.installSymbol(v);
+					if (firstVar->getType() == BOOL)
+					{
+					  	// Get the identifier in the table of symbols as LogicalVariable
+						lp::LogicalVariable *v = (lp::LogicalVariable *) table.getSymbol(this->_id);
+
+						// Assignment the value to the identifier in the table of symbols
+						v->setValue(value);
+					}
+					// The type of variable is not BOOL
+					else
+					{
+						// Delete the variable from the table of symbols
+						table.eraseSymbol(this->_id);
+
+						// Insert the variable in the table of symbols as NumericVariable
+						// with the type BOOL and the value
+						lp::LogicalVariable *v = new lp::LogicalVariable(this->_id,
+												VARIABLE,BOOL,value);
+						table.installSymbol(v);
+					}
 				}
+				break;
+
+				case STRING:
+				{
+					std::string value;
+					// evaluate the expression as string
+				 	value = this->_exp->evaluateString();
+
+					if (firstVar->getType() == STRING)
+					{
+
+					  	// Get the identifier in the table of symbols as StringVariable
+						lp::StringVariable *v = (lp::StringVariable *) table.getSymbol(this->_id);
+
+						// Assignment the value to the identifier in the table of symbols
+						v->setValue(value);
+					}
+					// The type of variable is not STRING
+					else
+					{
+						// Delete the variable from the table of symbols
+						table.eraseSymbol(this->_id);
+
+						// Insert the variable in the table of symbols as StringVariable
+						// with the type String and the value
+						lp::StringVariable *v = new lp::StringVariable(this->_id,
+												VARIABLE,STRING,value);
+						table.installSymbol(v);
+					}
+
+				}
+
+
+				break;
+
+				default:
+					warning("Runtime error: incompatible type of expression for ", "Assigment");
 			}
-			break;
 
-			case BOOL:
-			{
-				bool value;
-				// evaluate the expression as BOOL
-			 	value = this->_exp->evaluateBool();
-
-				if (firstVar->getType() == BOOL)
-				{
-				  	// Get the identifier in the table of symbols as LogicalVariable
-					lp::LogicalVariable *v = (lp::LogicalVariable *) table.getSymbol(this->_id);
-
-					// Assignment the value to the identifier in the table of symbols
-					v->setValue(value);
-				}
-				// The type of variable is not BOOL
-				else
-				{
-					// Delete the variable from the table of symbols
-					table.eraseSymbol(this->_id);
-
-					// Insert the variable in the table of symbols as NumericVariable
-					// with the type BOOL and the value
-					lp::LogicalVariable *v = new lp::LogicalVariable(this->_id,
-											VARIABLE,BOOL,value);
-					table.installSymbol(v);
-				}
-			}
-			break;
-
-			case STRING:
-			{
-				std::string value;
-				// evaluate the expression as string
-			 	value = this->_exp->evaluateString();
-
-				if (firstVar->getType() == STRING)
-				{
-
-				  	// Get the identifier in the table of symbols as StringVariable
-					lp::StringVariable *v = (lp::StringVariable *) table.getSymbol(this->_id);
-
-					// Assignment the value to the identifier in the table of symbols
-					v->setValue(value);
-				}
-				// The type of variable is not STRING
-				else
-				{
-					// Delete the variable from the table of symbols
-					table.eraseSymbol(this->_id);
-
-					// Insert the variable in the table of symbols as StringVariable
-					// with the type String and the value
-					lp::StringVariable *v = new lp::StringVariable(this->_id,
-											VARIABLE,STRING,value);
-					table.installSymbol(v);
-				}
-
-			}
-
-
-			break;
-
-			default:
-				warning("Runtime error: incompatible type of expression for ", "Assigment");
 		}
 
-	}
+		//////////////////////////////////////////////
+		// Allow multiple assigment -> a = b = c = 2;
 
-	//////////////////////////////////////////////
-	// Allow multiple assigment -> a = b = c = 2;
-
-	else // this->_asgn is not NULL
-	{
-		// IMPORTANT
-		//  evaluate the assigment child
-		this->_asgn->evaluate();
-
-
-		/* Get the identifier of the previous asgn in the table of symbols as Variable */
-		lp::Variable *secondVar = (lp::Variable *) table.getSymbol(this->_asgn->_id);
-
-		// Get the type of the variable of the previous asgn
-		switch(secondVar->getType())
+		else // this->_asgn is not NULL
 		{
-			case NUMBER:
+			// IMPORTANT
+			//  evaluate the assigment child
+			this->_asgn->evaluate();
+
+
+			/* Get the identifier of the previous asgn in the table of symbols as Variable */
+			lp::Variable *secondVar = (lp::Variable *) table.getSymbol(this->_asgn->_id);
+
+			// Get the type of the variable of the previous asgn
+			switch(secondVar->getType())
 			{
-				/* Get the identifier of the previous asgn in the table of symbols as NumericVariable */
-				lp::NumericVariable *secondVar = (lp::NumericVariable *) table.getSymbol(this->_asgn->_id);
-				// Check the type of the first variable
-				if (firstVar->getType() == NUMBER)
+				case NUMBER:
 				{
-				/* Get the identifier of the first variable in the table of symbols as NumericVariable */
-				lp::NumericVariable *firstVar = (lp::NumericVariable *) table.getSymbol(this->_id);
-				  	// Get the identifier o f the in the table of symbols as NumericVariable
-//					lp::NumericVariable *n = (lp::NumericVariable *) table.getSymbol(this->_id);
+					/* Get the identifier of the previous asgn in the table of symbols as NumericVariable */
+					lp::NumericVariable *secondVar = (lp::NumericVariable *) table.getSymbol(this->_asgn->_id);
+					// Check the type of the first variable
+					if (firstVar->getType() == NUMBER)
+					{
+					/* Get the identifier of the first variable in the table of symbols as NumericVariable */
+					lp::NumericVariable *firstVar = (lp::NumericVariable *) table.getSymbol(this->_id);
+					  	// Get the identifier o f the in the table of symbols as NumericVariable
+	//					lp::NumericVariable *n = (lp::NumericVariable *) table.getSymbol(this->_id);
 
-					// Assignment the value of the second variable to the first variable
-					firstVar->setValue(secondVar->getValue());
+						// Assignment the value of the second variable to the first variable
+						firstVar->setValue(secondVar->getValue());
+
+					}
+					// The type of variable is not NUMBER
+					else
+					{
+						// Delete the first variable from the table of symbols
+						table.eraseSymbol(this->_id);
+
+						// Insert the first variable in the table of symbols as NumericVariable
+						// with the type NUMBER and the value of the previous variable
+						lp::NumericVariable *firstVar = new lp::NumericVariable(this->_id,
+												VARIABLE,NUMBER,secondVar->getValue());
+						table.installSymbol(firstVar);
+					}
+				}
+				break;
+
+				case BOOL:
+				{
+					/* Get the identifier of the previous asgn in the table of symbols as LogicalVariable */
+					lp::LogicalVariable *secondVar = (lp::LogicalVariable *) table.getSymbol(this->_asgn->_id);
+					// Check the type of the first variable
+					if (firstVar->getType() == BOOL)
+					{
+					/* Get the identifier of the first variable in the table of symbols as LogicalVariable */
+					lp::LogicalVariable *firstVar = (lp::LogicalVariable *) table.getSymbol(this->_id);
+					  	// Get the identifier o f the in the table of symbols as NumericVariable
+	//					lp::NumericVariable *n = (lp::NumericVariable *) table.getSymbol(this->_id);
+
+						// Assignment the value of the second variable to the first variable
+						firstVar->setValue(secondVar->getValue());
+
+					}
+					// The type of variable is not BOOL
+					else
+					{
+						// Delete the first variable from the table of symbols
+						table.eraseSymbol(this->_id);
+
+						// Insert the first variable in the table of symbols as LogicalVariable
+						// with the type BOOL and the value of the previous variable
+						lp::LogicalVariable *firstVar = new lp::LogicalVariable(this->_id,
+												VARIABLE,BOOL,secondVar->getValue());
+						table.installSymbol(firstVar);
+					}
+				}
+				break;
+				case STRING:
+				{
+					/* Get the identifier of the previous asgn in the table of symbols as StringVariable */
+					lp::StringVariable *secondVar = (lp::StringVariable *) table.getSymbol(this->_asgn->_id);
+					// Check the type of the first variable
+					if (firstVar->getType() == STRING)
+					{
+					/* Get the identifier of the first variable in the table of symbols as StringVariable */
+					lp::StringVariable *firstVar = (lp::StringVariable *) table.getSymbol(this->_id);
+					  	// Get the identifier o f the in the table of symbols as NumericVariable
+	//					lp::NumericVariable *n = (lp::NumericVariable *) table.getSymbol(this->_id);
+
+						// Assignment the value of the second variable to the first variable
+						firstVar->setValue(secondVar->getValue());
+
+					}
+					// The type of variable is not NUMBER
+					else
+					{
+						// Delete the first variable from the table of symbols
+						table.eraseSymbol(this->_id);
+
+						// Insert the first variable in the table of symbols as StringVariable
+						// with the type STRING and the value of the previous variable
+						lp::StringVariable *firstVar = new lp::StringVariable(this->_id,
+												VARIABLE,BOOL,secondVar->getValue());
+						table.installSymbol(firstVar);
+					}
 
 				}
-				// The type of variable is not NUMBER
-				else
-				{
-					// Delete the first variable from the table of symbols
-					table.eraseSymbol(this->_id);
 
-					// Insert the first variable in the table of symbols as NumericVariable
-					// with the type NUMBER and the value of the previous variable
-					lp::NumericVariable *firstVar = new lp::NumericVariable(this->_id,
-											VARIABLE,NUMBER,secondVar->getValue());
-					table.installSymbol(firstVar);
-				}
+
+				break;
+
+
+
+				default:
+					warning("Runtime error: incompatible type of expression for ", "Assigment");
 			}
-			break;
-
-			case BOOL:
-			{
-				/* Get the identifier of the previous asgn in the table of symbols as LogicalVariable */
-				lp::LogicalVariable *secondVar = (lp::LogicalVariable *) table.getSymbol(this->_asgn->_id);
-				// Check the type of the first variable
-				if (firstVar->getType() == BOOL)
-				{
-				/* Get the identifier of the first variable in the table of symbols as LogicalVariable */
-				lp::LogicalVariable *firstVar = (lp::LogicalVariable *) table.getSymbol(this->_id);
-				  	// Get the identifier o f the in the table of symbols as NumericVariable
-//					lp::NumericVariable *n = (lp::NumericVariable *) table.getSymbol(this->_id);
-
-					// Assignment the value of the second variable to the first variable
-					firstVar->setValue(secondVar->getValue());
-
-				}
-				// The type of variable is not BOOL
-				else
-				{
-					// Delete the first variable from the table of symbols
-					table.eraseSymbol(this->_id);
-
-					// Insert the first variable in the table of symbols as LogicalVariable
-					// with the type BOOL and the value of the previous variable
-					lp::LogicalVariable *firstVar = new lp::LogicalVariable(this->_id,
-											VARIABLE,BOOL,secondVar->getValue());
-					table.installSymbol(firstVar);
-				}
-			}
-			break;
-			case STRING:
-			{
-				/* Get the identifier of the previous asgn in the table of symbols as StringVariable */
-				lp::StringVariable *secondVar = (lp::StringVariable *) table.getSymbol(this->_asgn->_id);
-				// Check the type of the first variable
-				if (firstVar->getType() == STRING)
-				{
-				/* Get the identifier of the first variable in the table of symbols as StringVariable */
-				lp::StringVariable *firstVar = (lp::StringVariable *) table.getSymbol(this->_id);
-				  	// Get the identifier o f the in the table of symbols as NumericVariable
-//					lp::NumericVariable *n = (lp::NumericVariable *) table.getSymbol(this->_id);
-
-					// Assignment the value of the second variable to the first variable
-					firstVar->setValue(secondVar->getValue());
-
-				}
-				// The type of variable is not NUMBER
-				else
-				{
-					// Delete the first variable from the table of symbols
-					table.eraseSymbol(this->_id);
-
-					// Insert the first variable in the table of symbols as StringVariable
-					// with the type STRING and the value of the previous variable
-					lp::StringVariable *firstVar = new lp::StringVariable(this->_id,
-											VARIABLE,BOOL,secondVar->getValue());
-					table.installSymbol(firstVar);
-				}
-
-			}
-
-
-			break;
-
-
-
-			default:
-				warning("Runtime error: incompatible type of expression for ", "Assigment");
-		}
+		}		
 	}
+	
+	
 }
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+void lp::PlusAssignmentStmt::print()
+{
+  std::cout << "PlusAssignmentStmt: "  << std::endl;
+  std::cout << this->getId() << " = ";
+  this->getExpression()->print();
+  std::cout << std::endl;
+}
+
+
+void lp::PlusAssignmentStmt::evaluate()
+{
+
+
+	lp::Variable *firstVar = (lp::Variable *) table.getSymbol(this->getId());
+	// Check the type of the expression of the asgn
+	if(this->getExpression()->getType()==NUMBER)
+	{
+
+		if(firstVar->getType()==NUMBER){
+			double value;
+			// evaluate the expression as NUMBER
+		 	value = this->getExpression()->evaluateNumber();
+
+		  	// Get the identifier in the table of symbols as NumericVariable
+			lp::NumericVariable *v = (lp::NumericVariable *) table.getSymbol(this->getId());		 	
+		 	//Plus and assignment +:=
+			v->setValue(value + v->getValue());
+		}
+		else{
+			warning("Error en tiempo de ejecución: se experaba variable numérica en ", "Más Asignación");
+		}
+	}
+	else{
+
+		warning("Error en tiempo de ejecución: se experaba expresión numérica en ", "Más Asignación");
+	}
+		
+}
+	
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+void lp::MinusAssignmentStmt::print()
+{
+  std::cout << "MinusAssignmentStmt: "  << std::endl;
+  std::cout << this->getId() << " = ";
+  this->getExpression()->print();
+  std::cout << std::endl;
+}
+
+
+void lp::MinusAssignmentStmt::evaluate()
+{
+
+
+	lp::Variable *firstVar = (lp::Variable *) table.getSymbol(this->getId());
+	// Check the type of the expression of the asgn
+	if(this->getExpression()->getType()==NUMBER)
+	{
+
+		if(firstVar->getType()==NUMBER){
+			double value;
+			// evaluate the expression as NUMBER
+		 	value = this->getExpression()->evaluateNumber();
+
+		  	// Get the identifier in the table of symbols as NumericVariable
+			lp::NumericVariable *v = (lp::NumericVariable *) table.getSymbol(this->getId());		 	
+		 	//Minus and assignment -:=
+			v->setValue(v->getValue() - value );
+		}
+		else{
+			warning("Error en tiempo de ejecución: se experaba variable numérica en ", "Más Asignación");
+		}
+	}
+	else{
+
+		warning("Error en tiempo de ejecución: se experaba expresión numérica en ", "Más Asignación");
+	}
+		
+}	
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+void lp::MultiplicationAssignmentStmt::print()
+{
+  std::cout << "MultiplicationAssignmentStmt: "  << std::endl;
+  std::cout << this->getId() << " = ";
+  this->getExpression()->print();
+  std::cout << std::endl;
+}
+
+
+void lp::MultiplicationAssignmentStmt::evaluate()
+{
+
+
+	lp::Variable *firstVar = (lp::Variable *) table.getSymbol(this->getId());
+	// Check the type of the expression of the asgn
+	if(this->getExpression()->getType()==NUMBER)
+	{
+
+		if(firstVar->getType()==NUMBER){
+			double value;
+			// evaluate the expression as NUMBER
+		 	value = this->getExpression()->evaluateNumber();
+
+		  	// Get the identifier in the table of symbols as NumericVariable
+			lp::NumericVariable *v = (lp::NumericVariable *) table.getSymbol(this->getId());		 	
+		 	//Multiplication and assignment +:=
+			v->setValue(value * v->getValue());
+		}
+		else{
+			warning("Error en tiempo de ejecución: se experaba variable numérica en ", "Más Asignación");
+		}
+	}
+	else{
+
+		warning("Error en tiempo de ejecución: se experaba expresión numérica en ", "Más Asignación");
+	}
+		
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+void lp::DivisionAssignmentStmt::print()
+{
+  std::cout << "DivisionAssignmentStmt: "  << std::endl;
+  std::cout << this->getId() << " = ";
+  this->getExpression()->print();
+  std::cout << std::endl;
+}
+
+
+void lp::DivisionAssignmentStmt::evaluate()
+{
+
+
+	lp::Variable *firstVar = (lp::Variable *) table.getSymbol(this->getId());
+	// Check the type of the expression of the asgn
+	if(this->getExpression()->getType()==NUMBER)
+	{
+
+		if(firstVar->getType()==NUMBER){
+			double value;
+			// evaluate the expression as NUMBER
+		 	value = this->getExpression()->evaluateNumber();
+
+		  	// Get the identifier in the table of symbols as NumericVariable
+			lp::NumericVariable *v = (lp::NumericVariable *) table.getSymbol(this->getId());		 	
+		 	//Division and assignment +:=
+			v->setValue(v->getValue()/value);
+		}
+		else{
+			warning("Error en tiempo de ejecución: se experaba variable numérica en ", "Más Asignación");
+		}
+	}
+	else{
+
+		warning("Error en tiempo de ejecución: se experaba expresión numérica en ", "Más Asignación");
+	}
+		
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
