@@ -602,41 +602,6 @@ class NumericUnaryOperatorNode : public UnaryOperatorNode
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 /*!
-  \class   LogicalUnaryOperatorNode
-  \brief   Definition of atributes and methods of UnaryOperatorNode class
-  \note    UnaryOperatorNode Class publicly inherits from UnaryOperatorNode class
-  \warning Abstract class, because it does not redefine the print method of ExpNode
-*/
-class LogicalUnaryOperatorNode : public UnaryOperatorNode
-{
- public:
-
-/*!
-	\brief Constructor of LogicalUnaryOperatorNode uses UnaryOperatorNode's constructor as member initializer
-	\param expression: pointer to ExpNode
-	\post  A new NumericUnaryOperatorNode is created with the parameters
-	\note  Inline function
-*/
-  LogicalUnaryOperatorNode(ExpNode *expression): UnaryOperatorNode(expression)
-	{
-		// Empty
-	}
-
-	/*!
-	\brief   Get the type of the child expression
-	\return  int
-	\sa		 print
-	*/
-	int getType();
-
-};
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-/*!
   \class   UnaryMinusNode
   \brief   Definition of atributes and methods of UnaryMinusNode class
   \note    UnaryMinusNode Class publicly inherits from NumericUnaryOperatorNode class
@@ -714,6 +679,79 @@ class UnaryPlusNode : public NumericUnaryOperatorNode
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+/*!
+  \class   LogicalUnaryOperatorNode
+  \brief   Definition of atributes and methods of UnaryOperatorNode class
+  \note    UnaryOperatorNode Class publicly inherits from UnaryOperatorNode class
+  \warning Abstract class, because it does not redefine the print method of ExpNode
+*/
+class LogicalUnaryOperatorNode : public UnaryOperatorNode
+{
+ public:
+
+/*!
+	\brief Constructor of LogicalUnaryOperatorNode uses UnaryOperatorNode's constructor as member initializer
+	\param expression: pointer to ExpNode
+	\post  A new NumericUnaryOperatorNode is created with the parameters
+	\note  Inline function
+*/
+  LogicalUnaryOperatorNode(ExpNode *expression): UnaryOperatorNode(expression)
+	{
+		// Empty
+	}
+
+	/*!
+	\brief   Get the type of the child expression
+	\return  int
+	\sa		 print
+	*/
+	int getType();
+
+};
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+/*!
+  \class   NotNode
+  \brief   Definition of atributes and methods of UnaryPlusNode class
+  \note    NotNode Class publicly inherits from LogicalUnaryOperatorNode class
+*/
+class NotNode : public LogicalUnaryOperatorNode
+{
+
+ public:
+
+/*!
+	\brief Constructor of NotNode uses LogicalUnaryOperatorNode's constructor as member initializer
+	\param expression: pointer to ExpNode
+	\post  A new NotNode is created with the parameter
+*/
+  NotNode(ExpNode *expression): LogicalUnaryOperatorNode(expression)
+	{
+		// empty
+	}
+
+/*!
+	\brief   Print the NotNode
+	\return  void
+	\sa		 evaluate()
+*/
+  void print();
+
+/*!
+	\brief   Evaluate the NotNode
+	\return  bool
+	\sa		 print()
+*/
+  bool evaluateBool();
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 
 /*!
   \class   OperatorNode
@@ -776,105 +814,6 @@ class NumericOperatorNode : public OperatorNode
 	int getType();
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-/*!
-  \class   StringOperatorNode
-  \brief   Definition of atributes and methods of StringOperatorNode class
-  \note    StringOperatorNode Class publicly inherits from OperatorNode class
-  \warning Abstract class, because it does not redefine the print method of ExpNode
-*/
-class StringOperatorNode : public OperatorNode
-{
-	public:
-
-	/*!
-		\brief Constructor of StringOperatorNode uses OperatorNode's constructor as members initializer
-		\param L: pointer to ExpNode
-		\param R: pointer to ExpNode
-		\post  A new StringOperatorNode is created with the parameters
-	*/
-    StringOperatorNode(ExpNode *L, ExpNode *R): OperatorNode(L,R)
-	{
-		//	Empty
-	}
-
-	/*!
-	\brief   Get the type of the children expressions
-	\return  int
-	\sa		 print()
-	*/
-	int getType();
-};
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-/*!
-  \class   RelationalOperatorNode
-  \brief   Definition of atributes and methods of RelationalOperatorNode class
-  \note    RelationalOperatorNode Class publicly inherits from OperatorNode class
-  \warning Abstract class, because it does not redefine the print method of ExpNode
-*/
-class RelationalOperatorNode : public OperatorNode
-{
-public:
-/*!
-	\brief Constructor of RelationalOperatorNode uses OperatorNode's constructor as members initializer
-	\param L: pointer to ExpNode
-	\param R: pointer to ExpNode
-	\post  A new RelationalOperatorNode is created with the parameters
-*/
-    RelationalOperatorNode(ExpNode *L, ExpNode *R): OperatorNode(L,R)
-	{
-		//	Empty
-	}
-
-	/*!
-	\brief   Get the type of the children expressions
-	\return  int
-	\sa		 print()
-	*/
-	int getType();
-
-};
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-/*!
-  \class   LogicalOperatorNode
-  \brief   Definition of atributes and methods of LogicalOperatorNode class
-  \note    NumericOperatorNode Class publicly inherits from OperatorNode class
-  \warning Abstract class, because it does not redefine the print method of ExpNode
-*/
-class LogicalOperatorNode : public OperatorNode
-{
-	public:
-
-	/*!
-		\brief Constructor of LogicalOperatorNode uses OperatorNode's constructor as members initializer
-		\param L: pointer to ExpNode
-		\param R: pointer to ExpNode
-		\post  A new NumericOperatorNode is created with the parameters
-	*/
-    LogicalOperatorNode(ExpNode *L, ExpNode *R): OperatorNode(L,R)
-	{
-		//	Empty
-	}
-
-	/*!
-	\brief   Get the type of the children expressions
-	\return  int
-	\sa		 print()
-	*/
-	int getType();
-};
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -915,46 +854,6 @@ class PlusNode : public NumericOperatorNode
   double evaluateNumber();
 };
 
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*!
-  \class   ConcatenateNode
-  \brief   Definition of atributes and methods of ConcatenateNode class
-  \note    ConcatenateNode Class publicly inherits from StringOperatorNode class
-		   and adds its own print and evaluate functions
-*/
-class ConcatenateNode : public StringOperatorNode
-{
-  public:
-/*!
-	\brief Constructor of ConcatenateNode uses ConcatenateOperatorNode's constructor as members initializer
-	\param L: pointer to ExpNode
-	\param R: pointer to ExpNode
-	\post  A new ConcatenateNode is created with the parameter
-*/
-  ConcatenateNode(ExpNode *L, ExpNode *R) : StringOperatorNode(L,R)
-  {
-		// Empty
-  }
-
-/*!
-	\brief   Print the ConcatenateNode
-	\return  void
-	\sa		 evaluate()
-*/
-  void print();
-
-/*!
-	\brief   Evaluate the ConcatenateNode
-	\return  string
-	\sa		 print
-*/
-  std::string evaluateString();
-};
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1188,188 +1087,110 @@ class PowerNode : public NumericOperatorNode
   double evaluateNumber();
 };
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 /*!
-  \class   BuiltinFunctionNode
-  \brief   Definition of atributes and methods of BuiltinFunctionNode class
-  \note    BuiltinFunctionNode Class publicly inherits from ExpNode class
+  \class   StringOperatorNode
+  \brief   Definition of atributes and methods of StringOperatorNode class
+  \note    StringOperatorNode Class publicly inherits from OperatorNode class
+  \warning Abstract class, because it does not redefine the print method of ExpNode
 */
-class BuiltinFunctionNode : public ExpNode
+class StringOperatorNode : public OperatorNode
 {
-  protected:
-	std::string _id; //!< Name of the BuiltinFunctionNode
-
-  public:
-/*!
-	\brief Constructor of BuiltinFunctionNode
-	\param id: string, name of the BuiltinFunction
-	\post  A new BuiltinFunctionNode is created with the parameter
-*/
-  BuiltinFunctionNode(std::string id)
-	{
-		this->_id = id;
-	}
-
-};
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*!
-  \class   BuiltinFunctionNode_0
-  \brief   Definition of atributes and methods of BuiltinFunctionNode_0 class
-  \note    BuiltinFunctionNode_0 Class publicly inherits from BuiltinFunctionNode class
-		   and adds its own print and evaluate functions
-*/
-class BuiltinFunctionNode_0 : public BuiltinFunctionNode
-{
-  public:
-/*!
-	\brief Constructor of BuiltinFunctionNode_0 uses BuiltinFunctionNode's constructor as member initializer
-	\param id: string, name of the BuiltinFunction
-	\post  A new BuiltinFunctionNode_2 is created with the parameter
-*/
-  BuiltinFunctionNode_0(std::string id): BuiltinFunctionNode(id)
-	{
-		//
-	}
-
-	/*!
-		\brief   Get the type of the child expression:
-		\return  int
-		\sa		 print
-	*/
-	int getType();
-
-
-
-	/*!
-		\brief   Print the BuiltinFunctionNode_0
-		\return  void
-		\sa		 evaluate()
-	*/
-	  void print();
-
-	/*!
-		\brief   Evaluate the BuiltinFunctionNode_0
-		\return  double
-		\sa		 print
-	*/
-	  double evaluateNumber();
-};
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*!
-  \class   BuiltinFunctionNode_1
-  \brief   Definition of atributes and methods of BuiltinFunctionNode_1 class
-  \note    BuiltinFunctionNode_1 Class publicly inherits from BuiltinFunctionNode class
-		   and adds its own print and evaluate functions
-*/
-class BuiltinFunctionNode_1: public BuiltinFunctionNode
-{
-  private:
-	ExpNode *_exp;  //!< Argument of the BuiltinFunctionNode_1
-
-  public:
-/*!
-	\brief Constructor of BuiltinFunctionNode_1 uses BuiltinFunctionNode's constructor as member initializer
-	\param id: string, name of the BuiltinFunction
-	\param expression: pointer to ExpNode, argument of the BuiltinFunctionNode_1
-	\post  A new BuiltinFunctionNode_1 is created with the parameters
-*/
-  BuiltinFunctionNode_1(std::string id, ExpNode *expression): BuiltinFunctionNode(id)
-	{
-		this->_exp = expression;
-	}
-
-	/*!
-		\brief   Get the type of the child expression:
-		\return  int
-		\sa		 print
-	*/
-	int getType();
-
-	/*!
-		\brief   Print the BuiltinFunctionNode_1
-		\return  void
-		\sa		 evaluate()
-	*/
-	  void print();
-
-	/*!
-		\brief   Evaluate the BuiltinFunctionNode_1
-		\return  double
-		\sa		 print
-	*/
-	  double evaluateNumber();
-};
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*!
-  \class   BuiltinFunctionNode_2
-  \brief   Definition of atributes and methods of BuiltinFunctionNode_2 class
-  \note    BuiltinFunctionNode_2 Class publicly inherits from BuiltinFunctionNode class
-		   and adds its own print and evaluate functions
-*/
-class BuiltinFunctionNode_2 : public BuiltinFunctionNode
-{
-	private:
-		ExpNode *_exp1; //!< First argument of the BuiltinFunction_2
-		ExpNode *_exp2; //!< Second argument of the BuiltinFunction_2
-
 	public:
+
 	/*!
-		\brief Constructor of BuiltinFunctionNode_2 uses BuiltinFunctionNode's constructor as member initializer
-		\param id: string, name of the BuiltinFunction_2
-		\param expression1: pointer to ExpNode, first argument of the BuiltinFunctionNode
-		\param expression2: pointer to ExpNode, second argument of the BuiltinFunctionNode
-		\post  A new BuiltinFunctionNode_2 is created with the parameters
+		\brief Constructor of StringOperatorNode uses OperatorNode's constructor as members initializer
+		\param L: pointer to ExpNode
+		\param R: pointer to ExpNode
+		\post  A new StringOperatorNode is created with the parameters
 	*/
-	  BuiltinFunctionNode_2(std::string id,ExpNode *expression1,ExpNode *expression2): BuiltinFunctionNode(id)
+    StringOperatorNode(ExpNode *L, ExpNode *R): OperatorNode(L,R)
 	{
-		this->_exp1 = expression1;
-		this->_exp2 = expression2;
+		//	Empty
 	}
 
 	/*!
 	\brief   Get the type of the children expressions
 	\return  int
+	\sa		 print()
+	*/
+	int getType();
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
+  \class   ConcatenateNode
+  \brief   Definition of atributes and methods of ConcatenateNode class
+  \note    ConcatenateNode Class publicly inherits from StringOperatorNode class
+		   and adds its own print and evaluate functions
+*/
+class ConcatenateNode : public StringOperatorNode
+{
+  public:
+/*!
+	\brief Constructor of ConcatenateNode uses ConcatenateOperatorNode's constructor as members initializer
+	\param L: pointer to ExpNode
+	\param R: pointer to ExpNode
+	\post  A new ConcatenateNode is created with the parameter
+*/
+  ConcatenateNode(ExpNode *L, ExpNode *R) : StringOperatorNode(L,R)
+  {
+		// Empty
+  }
+
+/*!
+	\brief   Print the ConcatenateNode
+	\return  void
+	\sa		 evaluate()
+*/
+  void print();
+
+/*!
+	\brief   Evaluate the ConcatenateNode
+	\return  string
 	\sa		 print
+*/
+  std::string evaluateString();
+};
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
+  \class   RelationalOperatorNode
+  \brief   Definition of atributes and methods of RelationalOperatorNode class
+  \note    RelationalOperatorNode Class publicly inherits from OperatorNode class
+  \warning Abstract class, because it does not redefine the print method of ExpNode
+*/
+class RelationalOperatorNode : public OperatorNode
+{
+public:
+/*!
+	\brief Constructor of RelationalOperatorNode uses OperatorNode's constructor as members initializer
+	\param L: pointer to ExpNode
+	\param R: pointer to ExpNode
+	\post  A new RelationalOperatorNode is created with the parameters
+*/
+    RelationalOperatorNode(ExpNode *L, ExpNode *R): OperatorNode(L,R)
+	{
+		//	Empty
+	}
+
+	/*!
+	\brief   Get the type of the children expressions
+	\return  int
+	\sa		 print()
 	*/
 	int getType();
 
-
-
-	/*!
-		\brief   Print the BuiltinFunctionNode_2
-		\return  void
-		\sa		 evaluate()
-	*/
-	  void print();
-
-	/*!
-		\brief   Evaluate the BuiltinFunctionNode_2
-		\return  double
-		\sa		 print
-	*/
-	  double evaluateNumber();
 };
 
 
@@ -1619,6 +1440,38 @@ class NotEqualNode : public RelationalOperatorNode
 };
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
+  \class   LogicalOperatorNode
+  \brief   Definition of atributes and methods of LogicalOperatorNode class
+  \note    NumericOperatorNode Class publicly inherits from OperatorNode class
+  \warning Abstract class, because it does not redefine the print method of ExpNode
+*/
+class LogicalOperatorNode : public OperatorNode
+{
+	public:
+
+	/*!
+		\brief Constructor of LogicalOperatorNode uses OperatorNode's constructor as members initializer
+		\param L: pointer to ExpNode
+		\param R: pointer to ExpNode
+		\post  A new NumericOperatorNode is created with the parameters
+	*/
+    LogicalOperatorNode(ExpNode *L, ExpNode *R): OperatorNode(L,R)
+	{
+		//	Empty
+	}
+
+	/*!
+	\brief   Get the type of the children expressions
+	\return  int
+	\sa		 print()
+	*/
+	int getType();
+};
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1704,44 +1557,191 @@ class OrNode : public LogicalOperatorNode
 };
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
 
 /*!
-  \class   NotNode
-  \brief   Definition of atributes and methods of UnaryPlusNode class
-  \note    NotNode Class publicly inherits from LogicalUnaryOperatorNode class
+  \class   BuiltinFunctionNode
+  \brief   Definition of atributes and methods of BuiltinFunctionNode class
+  \note    BuiltinFunctionNode Class publicly inherits from ExpNode class
 */
-class NotNode : public LogicalUnaryOperatorNode
+class BuiltinFunctionNode : public ExpNode
 {
+  protected:
+	std::string _id; //!< Name of the BuiltinFunctionNode
 
- public:
-
+  public:
 /*!
-	\brief Constructor of NotNode uses LogicalUnaryOperatorNode's constructor as member initializer
-	\param expression: pointer to ExpNode
-	\post  A new NotNode is created with the parameter
+	\brief Constructor of BuiltinFunctionNode
+	\param id: string, name of the BuiltinFunction
+	\post  A new BuiltinFunctionNode is created with the parameter
 */
-  NotNode(ExpNode *expression): LogicalUnaryOperatorNode(expression)
+  BuiltinFunctionNode(std::string id)
 	{
-		// empty
+		this->_id = id;
 	}
 
-/*!
-	\brief   Print the NotNode
-	\return  void
-	\sa		 evaluate()
-*/
-  void print();
+};
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 
 /*!
-	\brief   Evaluate the NotNode
-	\return  bool
-	\sa		 print()
+  \class   BuiltinFunctionNode_0
+  \brief   Definition of atributes and methods of BuiltinFunctionNode_0 class
+  \note    BuiltinFunctionNode_0 Class publicly inherits from BuiltinFunctionNode class
+		   and adds its own print and evaluate functions
 */
-  bool evaluateBool();
+class BuiltinFunctionNode_0 : public BuiltinFunctionNode
+{
+  public:
+/*!
+	\brief Constructor of BuiltinFunctionNode_0 uses BuiltinFunctionNode's constructor as member initializer
+	\param id: string, name of the BuiltinFunction
+	\post  A new BuiltinFunctionNode_2 is created with the parameter
+*/
+  BuiltinFunctionNode_0(std::string id): BuiltinFunctionNode(id)
+	{
+		//
+	}
+
+	/*!
+		\brief   Get the type of the child expression:
+		\return  int
+		\sa		 print
+	*/
+	int getType();
+
+
+
+	/*!
+		\brief   Print the BuiltinFunctionNode_0
+		\return  void
+		\sa		 evaluate()
+	*/
+	  void print();
+
+	/*!
+		\brief   Evaluate the BuiltinFunctionNode_0
+		\return  double
+		\sa		 print
+	*/
+	  double evaluateNumber();
 };
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*!
+  \class   BuiltinFunctionNode_1
+  \brief   Definition of atributes and methods of BuiltinFunctionNode_1 class
+  \note    BuiltinFunctionNode_1 Class publicly inherits from BuiltinFunctionNode class
+		   and adds its own print and evaluate functions
+*/
+class BuiltinFunctionNode_1: public BuiltinFunctionNode
+{
+  private:
+	ExpNode *_exp;  //!< Argument of the BuiltinFunctionNode_1
+
+  public:
+/*!
+	\brief Constructor of BuiltinFunctionNode_1 uses BuiltinFunctionNode's constructor as member initializer
+	\param id: string, name of the BuiltinFunction
+	\param expression: pointer to ExpNode, argument of the BuiltinFunctionNode_1
+	\post  A new BuiltinFunctionNode_1 is created with the parameters
+*/
+  BuiltinFunctionNode_1(std::string id, ExpNode *expression): BuiltinFunctionNode(id)
+	{
+		this->_exp = expression;
+	}
+
+	/*!
+		\brief   Get the type of the child expression:
+		\return  int
+		\sa		 print
+	*/
+	int getType();
+
+	/*!
+		\brief   Print the BuiltinFunctionNode_1
+		\return  void
+		\sa		 evaluate()
+	*/
+	  void print();
+
+	/*!
+		\brief   Evaluate the BuiltinFunctionNode_1
+		\return  double
+		\sa		 print
+	*/
+	  double evaluateNumber();
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*!
+  \class   BuiltinFunctionNode_2
+  \brief   Definition of atributes and methods of BuiltinFunctionNode_2 class
+  \note    BuiltinFunctionNode_2 Class publicly inherits from BuiltinFunctionNode class
+		   and adds its own print and evaluate functions
+*/
+class BuiltinFunctionNode_2 : public BuiltinFunctionNode
+{
+	private:
+		ExpNode *_exp1; //!< First argument of the BuiltinFunction_2
+		ExpNode *_exp2; //!< Second argument of the BuiltinFunction_2
+
+	public:
+	/*!
+		\brief Constructor of BuiltinFunctionNode_2 uses BuiltinFunctionNode's constructor as member initializer
+		\param id: string, name of the BuiltinFunction_2
+		\param expression1: pointer to ExpNode, first argument of the BuiltinFunctionNode
+		\param expression2: pointer to ExpNode, second argument of the BuiltinFunctionNode
+		\post  A new BuiltinFunctionNode_2 is created with the parameters
+	*/
+	  BuiltinFunctionNode_2(std::string id,ExpNode *expression1,ExpNode *expression2): BuiltinFunctionNode(id)
+	{
+		this->_exp1 = expression1;
+		this->_exp2 = expression2;
+	}
+
+	/*!
+	\brief   Get the type of the children expressions
+	\return  int
+	\sa		 print
+	*/
+	int getType();
+
+
+
+	/*!
+		\brief   Print the BuiltinFunctionNode_2
+		\return  void
+		\sa		 evaluate()
+	*/
+	  void print();
+
+	/*!
+		\brief   Evaluate the BuiltinFunctionNode_2
+		\return  double
+		\sa		 print
+	*/
+	  double evaluateNumber();
+};
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1773,166 +1773,6 @@ class Statement {
 */
   virtual void evaluate() = 0;
 };
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*!
-  \class   StatementList
-  \brief   Definition of atributes and methods of StatementList class
-*/
-class StatementList {
- private:
-
- 	std::list<Statement *> *_stmts; //!< List of statements
-
-
- public:
-
- /*!
-	\brief Constructor of StatementList class
-*/
- 	StatementList(){
- 		_stmts=new std::list<Statement *>();
-
- 	}
-
-/*!
-	\brief   Print the list of Statemets
-	\param   smg: Message used to print
-	\return  void
-	\sa		 evaluate
-*/
-
-  void print(std::string smg);
-
-/*!
-	\brief   Evaluate the list of Statemets
-	\return  void
-	\sa		 print
-*/
-  void evaluate();
-
- /*!
-	\brief   Add new statement to the statement list
-	\param   stmt: pointer to Statement
-	\return  void
-	\sa		 print
-*/
-  void addStatement(Statement* stmt);
-
-
-};
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-/*!
-  \class   Case
-  \brief   Definition of atributes and methods of Statement class
-  \warning Abstract class
-*/
-
-class Case {
- 
- private:
-
- 	StatementList* _stmts; //!< List of statements
- 	double _value; //!< Value of the case
-
- public:
-
-
- /*!
-	\brief Constructor of Case class
-	\param value: double that represents the value of the case
-	\param stmtList: pointer to StatementList of the case 
-	\post  A new Case is created with the parameters
-*/
- 	Case(double value,StatementList* stmtList){
-
- 		_value = value;
- 		_stmts = stmtList;
-
- 	}
-
-/*!
-	\brief   Print the list of statement of the case
-	\param 	 msg: Message used to print
-	\sa		 print
-*/
-  void print(std::string msg);
-
-/*!
-	\brief   Evaluate the list of statement of the case
-	\sa		 print
-*/
-  void evaluate();
-
-/*!
-	\brief   Evaluate the value of the case
-	\return  double
-	\sa		 evaluate
-*/
-  double evaluateNumber();
-
-};
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*!
-  \class   CaseList
-  \brief   Definition of atributes and methods of CaseList class
-*/
-class CaseList {
- private:
-
- 	std::list<Case *> *_cases; //!< List of cases
-
- public:
-
-
-/*!
-	\brief Constructor of CaseList class
-*/
- 	CaseList(){
- 		_cases = new std::list<Case *>();
- 	}
-
-/*!
-	\brief   Print the list of statement of case
-	\param 	 smg: Message used to print
-	\sa		 print
-*/
-  void print(std::string smg);
-
-/*!
-	\brief   Evaluate the list of cases
-	\param 	 exp: Expresion of switch
-	\return  bool: Return true if some case is evaluated
-	\sa		 print
-*/
-  bool evaluate(ExpNode * exp);
-
- /*!
-	\brief   Add new value to the cases list
-	\param   value: pointer to Case
-	\return  void
-	\sa		 print
-*/
-  void addCase(Case* value);
-
-
-};
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -2753,7 +2593,162 @@ class PlaceStmt : public Statement
 };
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
+
+/*!
+  \class   StatementList
+  \brief   Definition of atributes and methods of StatementList class
+*/
+class StatementList {
+ private:
+
+ 	std::list<Statement *> *_stmts; //!< List of statements
+
+
+ public:
+
+ /*!
+	\brief Constructor of StatementList class
+*/
+ 	StatementList(){
+ 		_stmts=new std::list<Statement *>();
+
+ 	}
+
+/*!
+	\brief   Print the list of Statemets
+	\param   smg: Message used to print
+	\return  void
+	\sa		 evaluate
+*/
+
+  void print(std::string smg);
+
+/*!
+	\brief   Evaluate the list of Statemets
+	\return  void
+	\sa		 print
+*/
+  void evaluate();
+
+ /*!
+	\brief   Add new statement to the statement list
+	\param   stmt: pointer to Statement
+	\return  void
+	\sa		 print
+*/
+  void addStatement(Statement* stmt);
+
+
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
+  \class   Case
+  \brief   Definition of atributes and methods of Statement class
+  \warning Abstract class
+*/
+
+class Case {
+ 
+ private:
+
+ 	StatementList* _stmts; //!< List of statements
+ 	double _value; //!< Value of the case
+
+ public:
+
+
+ /*!
+	\brief Constructor of Case class
+	\param value: double that represents the value of the case
+	\param stmtList: pointer to StatementList of the case 
+	\post  A new Case is created with the parameters
+*/
+ 	Case(double value,StatementList* stmtList){
+
+ 		_value = value;
+ 		_stmts = stmtList;
+
+ 	}
+
+/*!
+	\brief   Print the list of statement of the case
+	\param 	 msg: Message used to print
+	\sa		 print
+*/
+  void print(std::string msg);
+
+/*!
+	\brief   Evaluate the list of statement of the case
+	\sa		 print
+*/
+  void evaluate();
+
+/*!
+	\brief   Evaluate the value of the case
+	\return  double
+	\sa		 evaluate
+*/
+  double evaluateNumber();
+
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*!
+  \class   CaseList
+  \brief   Definition of atributes and methods of CaseList class
+*/
+class CaseList {
+ private:
+
+ 	std::list<Case *> *_cases; //!< List of cases
+
+ public:
+
+
+/*!
+	\brief Constructor of CaseList class
+*/
+ 	CaseList(){
+ 		_cases = new std::list<Case *>();
+ 	}
+
+/*!
+	\brief   Print the list of statement of case
+	\param 	 smg: Message used to print
+	\sa		 print
+*/
+  void print(std::string smg);
+
+/*!
+	\brief   Evaluate the list of cases
+	\param 	 exp: Expresion of switch
+	\return  bool: Return true if some case is evaluated
+	\sa		 print
+*/
+  bool evaluate(ExpNode * exp);
+
+ /*!
+	\brief   Add new value to the cases list
+	\param   value: pointer to Case
+	\return  void
+	\sa		 print
+*/
+  void addCase(Case* value);
+
+
+};
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
