@@ -42,7 +42,7 @@ extern lp::Table table; //!< External Table of Symbols
 
 extern int lineNumber; //!< External line counter
 
-extern int sentenciaDeControl; //!< External sentencia de control
+extern int sentenciaDeControl; //!< External control statement
 
 extern bool interactiveMode; //!< Control the interactive mode of execution of the interpreter
 
@@ -193,7 +193,6 @@ NUMBER_INVALID 	({DIGIT}+(\.{DIGIT}*)+)?(E[+\-]?{DIGIT}+)?
 
 "("     { return LPAREN; } 		
 ")"	    { return RPAREN; } 			
-
 
 
 (?i:_mod)    { return MODULO; }			

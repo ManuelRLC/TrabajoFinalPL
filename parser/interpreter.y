@@ -83,7 +83,7 @@ extern int lineNumber; //!< External line counter
 
 extern bool interactiveMode; //!< Control the interactive mode of execution of the interpreter
 
-extern int sentenciaDeControl; //!< External sentencia de control
+extern int sentenciaDeControl; //!< External control statement
 
 /***********************************************************/
 extern std::string progname; //!<  Program name
@@ -332,7 +332,6 @@ if:	/* Simple conditional statement */
 	 }
 ;
 
-	/*  NEW in example 17 */
 while:  WHILE cond DO stmtlist ENDWHILE
 		{
 			// Create a new while statement node
@@ -400,6 +399,11 @@ case: VALUE NUMBER COLON stmtlist
 			$$ = new lp::Case($2,$4);
 
 		}
+	| VALUE NUMBER stmtlist
+		{
+			warning("Error sintactico: en \"sentencia SEGUN\": falta ':' en algun valor ","");
+			$$ = new lp::Case($2,$3);
+		}
 ;
 
 
@@ -421,7 +425,6 @@ listOfCase: {
 ;
 
 
-	/*  NEW in example 17 */
 cond: 	LPAREN exp RPAREN
 		{ 
 			$$ = $2;
@@ -531,7 +534,6 @@ read:  READ LPAREN VARIABLE RPAREN
 			$$ = new lp::ReadStringStmt($3);
 		}
 
-  	  /* NEW rule in example 11 */
 	| READ LPAREN CONSTANT RPAREN  
 		{   
  			execerror("Error semantico en \"la lectura de la setencia\": no se puede modificar una constante ",$3);

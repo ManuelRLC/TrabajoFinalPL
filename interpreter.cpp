@@ -33,7 +33,7 @@
 int lineNumber = 1; //!< Line counter
 
 bool interactiveMode; //!< Control the interactive mode of execution of the interpreter
-int sentenciaDeControl; 
+int sentenciaDeControl; //!< External control statement
 
 extern FILE * yyin; //!< Standard input device for yylex() 
 std::string progname; //!<  Program name

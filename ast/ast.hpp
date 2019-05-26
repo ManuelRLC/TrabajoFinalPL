@@ -110,7 +110,7 @@ class VariableNode : public ExpNode
 		}
 
 	/*!
-		\brief   Id of the Variable
+		\brief   Observer for the id of the variable
 		\return  string
 		\sa		 print
 	*/
@@ -1793,7 +1793,6 @@ class StatementList {
 
  /*!
 	\brief Constructor of StatementList class
-	\post  A new StatementList is created with the parameter
 */
  	StatementList(){
  		_stmts=new std::list<Statement *>();
@@ -1802,6 +1801,7 @@ class StatementList {
 
 /*!
 	\brief   Print the list of Statemets
+	\param   smg: Message used to print
 	\return  void
 	\sa		 evaluate
 */
@@ -1898,6 +1898,10 @@ class CaseList {
 
  public:
 
+
+/*!
+	\brief Constructor of CaseList class
+*/
  	CaseList(){
  		_cases = new std::list<Case *>();
  	}
@@ -2067,8 +2071,6 @@ class PlusAssignmentStmt : public AssignmentStmt
   PlusAssignmentStmt(std::string id, ExpNode *expression): AssignmentStmt( id,expression)
 	{
 	}
-
-
 
 
 /*!
@@ -2401,7 +2403,6 @@ class EmptyStmt : public Statement
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// NEW in example 17
 
 /*!
   \class   IfStmt

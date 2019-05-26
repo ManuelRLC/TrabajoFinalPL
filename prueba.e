@@ -13,7 +13,7 @@ segun ('hola')
 	valor 7:
 		escribir('El valor de la variable es 7\n');
 
-	defecto:
+	defecto
 		escribir('He entrado en defecto\n');
 
 
