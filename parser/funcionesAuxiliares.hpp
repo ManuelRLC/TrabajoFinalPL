@@ -9,7 +9,7 @@
 #include <string>
 
 /*!
-	\brief   Function that converts '\\n' and '\\t'  into a unique character
+	\brief   Function that converts '\\n' and '\\t' into a unique character
 	\param 	 str: char*
 	\param 	 leng: int
 	\return  string

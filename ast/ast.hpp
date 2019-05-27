@@ -1779,6 +1779,161 @@ class Statement {
 
 
 /*!
+  \class   StatementList
+  \brief   Definition of atributes and methods of StatementList class
+*/
+class StatementList {
+ private:
+
+ 	std::list<Statement *> *_stmts; //!< List of statements
+
+
+ public:
+
+ /*!
+	\brief Constructor of StatementList class
+*/
+ 	StatementList(){
+ 		_stmts=new std::list<Statement *>();
+
+ 	}
+
+/*!
+	\brief   Print the list of Statemets
+	\param   smg: Message used to print
+	\return  void
+	\sa		 evaluate
+*/
+
+  void print(std::string smg);
+
+/*!
+	\brief   Evaluate the list of Statemets
+	\return  void
+	\sa		 print
+*/
+  void evaluate();
+
+ /*!
+	\brief   Add new statement to the statement list
+	\param   stmt: pointer to Statement
+	\return  void
+	\sa		 print
+*/
+  void addStatement(Statement* stmt);
+
+
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
+  \class   Case
+  \brief   Definition of atributes and methods of Statement class
+  \warning Abstract class
+*/
+
+class Case {
+ 
+ private:
+
+ 	StatementList* _stmts; //!< List of statements
+ 	double _value; //!< Value of the case
+
+ public:
+
+
+ /*!
+	\brief Constructor of Case class
+	\param value: double that represents the value of the case
+	\param stmtList: pointer to StatementList of the case 
+	\post  A new Case is created with the parameters
+*/
+ 	Case(double value,StatementList* stmtList){
+
+ 		_value = value;
+ 		_stmts = stmtList;
+
+ 	}
+
+/*!
+	\brief   Print the list of statement of the case
+	\param 	 msg: Message used to print
+	\sa		 print
+*/
+  void print(std::string msg);
+
+/*!
+	\brief   Evaluate the list of statement of the case
+	\sa		 print
+*/
+  void evaluate();
+
+/*!
+	\brief   Evaluate the value of the case
+	\return  double
+	\sa		 evaluate
+*/
+  double evaluateNumber();
+
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*!
+  \class   CaseList
+  \brief   Definition of atributes and methods of CaseList class
+*/
+class CaseList {
+ private:
+
+ 	std::list<Case *> *_cases; //!< List of cases
+
+ public:
+
+
+/*!
+	\brief Constructor of CaseList class
+*/
+ 	CaseList(){
+ 		_cases = new std::list<Case *>();
+ 	}
+
+/*!
+	\brief   Print the list of statement of case
+	\param 	 smg: Message used to print
+	\sa		 print
+*/
+  void print(std::string smg);
+
+/*!
+	\brief   Evaluate the list of cases
+	\param 	 exp: Expresion of switch
+	\return  bool: Return true if some case is evaluated
+	\sa		 print
+*/
+  bool evaluate(ExpNode * exp);
+
+ /*!
+	\brief   Add new value to the cases list
+	\param   value: pointer to Case
+	\return  void
+	\sa		 print
+*/
+  void addCase(Case* value);
+
+
+};
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
   \class   AssignmentStmt
   \brief   Definition of atributes and methods of AssignmentStmt class
   \note    AssignmentStmt Class publicly inherits from Statement class
@@ -2593,162 +2748,6 @@ class PlaceStmt : public Statement
 };
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*!
-  \class   StatementList
-  \brief   Definition of atributes and methods of StatementList class
-*/
-class StatementList {
- private:
-
- 	std::list<Statement *> *_stmts; //!< List of statements
-
-
- public:
-
- /*!
-	\brief Constructor of StatementList class
-*/
- 	StatementList(){
- 		_stmts=new std::list<Statement *>();
-
- 	}
-
-/*!
-	\brief   Print the list of Statemets
-	\param   smg: Message used to print
-	\return  void
-	\sa		 evaluate
-*/
-
-  void print(std::string smg);
-
-/*!
-	\brief   Evaluate the list of Statemets
-	\return  void
-	\sa		 print
-*/
-  void evaluate();
-
- /*!
-	\brief   Add new statement to the statement list
-	\param   stmt: pointer to Statement
-	\return  void
-	\sa		 print
-*/
-  void addStatement(Statement* stmt);
-
-
-};
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-/*!
-  \class   Case
-  \brief   Definition of atributes and methods of Statement class
-  \warning Abstract class
-*/
-
-class Case {
- 
- private:
-
- 	StatementList* _stmts; //!< List of statements
- 	double _value; //!< Value of the case
-
- public:
-
-
- /*!
-	\brief Constructor of Case class
-	\param value: double that represents the value of the case
-	\param stmtList: pointer to StatementList of the case 
-	\post  A new Case is created with the parameters
-*/
- 	Case(double value,StatementList* stmtList){
-
- 		_value = value;
- 		_stmts = stmtList;
-
- 	}
-
-/*!
-	\brief   Print the list of statement of the case
-	\param 	 msg: Message used to print
-	\sa		 print
-*/
-  void print(std::string msg);
-
-/*!
-	\brief   Evaluate the list of statement of the case
-	\sa		 print
-*/
-  void evaluate();
-
-/*!
-	\brief   Evaluate the value of the case
-	\return  double
-	\sa		 evaluate
-*/
-  double evaluateNumber();
-
-};
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*!
-  \class   CaseList
-  \brief   Definition of atributes and methods of CaseList class
-*/
-class CaseList {
- private:
-
- 	std::list<Case *> *_cases; //!< List of cases
-
- public:
-
-
-/*!
-	\brief Constructor of CaseList class
-*/
- 	CaseList(){
- 		_cases = new std::list<Case *>();
- 	}
-
-/*!
-	\brief   Print the list of statement of case
-	\param 	 smg: Message used to print
-	\sa		 print
-*/
-  void print(std::string smg);
-
-/*!
-	\brief   Evaluate the list of cases
-	\param 	 exp: Expresion of switch
-	\return  bool: Return true if some case is evaluated
-	\sa		 print
-*/
-  bool evaluate(ExpNode * exp);
-
- /*!
-	\brief   Add new value to the cases list
-	\param   value: pointer to Case
-	\return  void
-	\sa		 print
-*/
-  void addCase(Case* value);
-
-
-};
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
